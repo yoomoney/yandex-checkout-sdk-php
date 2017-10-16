@@ -1,0 +1,25 @@
+{
+  "name": "yandex-money/yandex-checkout-sdk-php",
+  "version":"1.0.0",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.3.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "psr/log": "^1.0"
+  },
+  "require-dev": {
+    "ext-xml": "*",
+    "phpunit/phpunit": "4.*",
+    "symfony/yaml": "*",
+    "symfony/console": "*",
+    "mockery/mockery": "^0.9.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "YandexCheckout\\CodeGeneratorBundle\\": "code-generator/CodeGeneratorBundle/",
+      "YandexCheckout\\": "lib/"
+    }
+  }
+}
