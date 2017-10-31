@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,7 +36,6 @@ use YandexCheckout\Model\PaymentMethodType;
  * PaymentMethodYandexWallet
  * Объект, описывающий метод оплаты, при оплате через Яндекс Деньги
  * @property string $type Тип объекта
- * @property string $phone Номер телефона в формате ITU-T E.164 с которого была произведена оплата.
  * @property string $accountNumber Номер кошелька в Яндекс.Деньгах с которого была произведена оплата.
  */
 class PaymentMethodYandexWallet extends AbstractPaymentMethod
@@ -54,36 +53,6 @@ class PaymentMethodYandexWallet extends AbstractPaymentMethod
     public function __construct()
     {
         $this->_setType(PaymentMethodType::YANDEX_MONEY);
-    }
-
-    /**
-     * @return string Номер телефона в формате ITU-T E.164 с которого была произведена оплата.
-     */
-    public function getPhone()
-    {
-        return $this->_phone;
-    }
-
-    /**
-     * @param string $value Номер телефона в формате ITU-T E.164 с которого была произведена оплата.
-     */
-    public function setPhone($value)
-    {
-        if ($value === null || $value === '') {
-            throw new EmptyPropertyValueException('Empty phone value', 0, 'PaymentMethodYandexWallet.phone');
-        } elseif (TypeCast::canCastToString($value)) {
-            if (preg_match('/^[0-9]{4,15}$/', $value)) {
-                $this->_phone = (string)$value;
-            } else {
-                throw new InvalidPropertyValueException(
-                    'Invalid phone value', 0, 'PaymentMethodYandexWallet.phone', $value
-                );
-            }
-        } else {
-            throw new InvalidPropertyValueTypeException(
-                'Invalid phone value type', 0, 'PaymentMethodYandexWallet.phone', $value
-            );
-        }
     }
 
     /**

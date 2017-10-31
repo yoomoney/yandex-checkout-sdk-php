@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,7 +32,6 @@ use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\Metadata;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Payment;
-use YandexCheckout\Model\PaymentError;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodFactory;
@@ -74,15 +73,6 @@ class PaymentsResponse
             $payment->setPaymentMethod($this->factoryPaymentMethod($paymentInfo['payment_method']));
             $payment->setPaid($paymentInfo['paid']);
 
-            if (!empty($paymentInfo['error'])) {
-                $error = new PaymentError();
-                $error->setCode($paymentInfo['error']['code']);
-                if (!empty($paymentInfo['error']['description'])) {
-                    $error->setDescription($paymentInfo['error']['description']);
-                }
-                $payment->setError($error);
-
-            }
             if (!empty($paymentInfo['recipient'])) {
                 $recipient = new Recipient();
                 $recipient->setAccountId($paymentInfo['recipient']['account_id']);

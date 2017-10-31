@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,7 +38,6 @@ use YandexCheckout\Helpers\TypeCast;
  * @property string $id Идентификатор возврата платежа
  * @property string $paymentId Идентификатор платежа
  * @property string $status Статус возврата
- * @property RefundErrorInterface $error Описание ошибки или null если ошибок нет
  * @property \DateTime $createdAt Время создания возврата
  * @property \DateTime $authorizedAt Время проведения возврата
  * @property AmountInterface $amount Сумма возврата
@@ -61,11 +60,6 @@ class Refund extends AbstractObject implements RefundInterface
      * @var string Статус возврата
      */
     private $_status;
-
-    /**
-     * @var RefundErrorInterface Описание ошибки или null если ошибок нет
-     */
-    private $_error;
 
     /**
      * @var \DateTime Время создания возврата
@@ -199,24 +193,6 @@ class Refund extends AbstractObject implements RefundInterface
                 'Invalid refund status value type', 0, 'Refund.status', $value
             );
         }
-    }
-
-    /**
-     * Возвращает описание ошибки, если она есть, либо null
-     * @return RefundErrorInterface Инстанс объекта с описанием ошибки или null
-     */
-    public function getError()
-    {
-        return $this->_error;
-    }
-
-    /**
-     * Устанавливает информацию о ошибке проведения возврата
-     * @param RefundErrorInterface $value Инстанс объекта с описанием ошибки
-     */
-    public function setError(RefundErrorInterface $value)
-    {
-        $this->_error = $value;
     }
 
     /**

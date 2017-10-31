@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,7 +28,6 @@ namespace YandexCheckout\Request\Refunds;
 
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Refund;
-use YandexCheckout\Model\RefundError;
 
 /**
  * Абстрактный класс ответа от API с информацией о возврате
@@ -48,15 +47,6 @@ abstract class AbstractRefundResponse extends Refund
         $this->setStatus(empty($options['status']) ? null : $options['status']);
         $this->setCreatedAt(empty($options['created_at']) ? null : $options['created_at']);
         $this->setAmount(new MonetaryAmount($options['amount']['value'], $options['amount']['currency']));
-
-        if (!empty($options['error'])) {
-            $error = new RefundError();
-            $error->setCode($options['error']['code']);
-            if (!empty($options['error']['description'])) {
-                $error->setDescription($options['error']['description']);
-            }
-            $this->setError($error);
-        }
 
         if (!empty($options['authorized_at'])) {
             $this->setAuthorizedAt($options['authorized_at']);

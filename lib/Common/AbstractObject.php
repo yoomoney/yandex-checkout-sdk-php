@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -157,7 +157,8 @@ abstract class AbstractObject implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * @param array|\Traversable $sourceArray
+     * Устанавливает значения свойств текущего объекта из массива
+     * @param array|\Traversable $sourceArray Ассоциативный массив с найтройками
      */
     public function fromArray($sourceArray)
     {
@@ -167,7 +168,8 @@ abstract class AbstractObject implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * @return array
+     * Возвращает ассоциативный массив со свойствами текущего объекта для его дальнейшей JSON сериализации
+     * @return array Ассоциативный массив со свойствами текущего объекта
      */
     public function jsonSerialize()
     {
@@ -178,16 +180,8 @@ abstract class AbstractObject implements \ArrayAccess, \JsonSerializable
                     continue;
                 }
                 $property = strtolower(preg_replace('/[A-Z]/', '_\0', lcfirst(substr($method, 3))));
-                $value = $this->{$method} ();
-                if ($value === null) {
-                    continue;
-                } elseif (is_scalar($value) || is_array($value)) {
-                    $result[$property] = $value;
-                } elseif (is_object($value) && $value instanceof \JsonSerializable) {
-                    $result[$property] = $value->jsonSerialize();
-                } elseif (is_object($value) && $value instanceof \DateTime) {
-                    $result[$property] = $value->format(DATE_ATOM);
-                } else {
+                $value = $this->serializeValueToJson($this->{$method} ());
+                if ($value !== null) {
                     $result[$property] = $value;
                 }
             }
@@ -195,23 +189,28 @@ abstract class AbstractObject implements \ArrayAccess, \JsonSerializable
         if (!empty($this->unknownProperties)) {
             foreach ($this->unknownProperties as $property => $value) {
                 if (!array_key_exists($property, $result)) {
-                    if (is_scalar($value) || is_array($value) || $value === null) {
-                        $result[$property] = $value;
-                    } elseif (is_object($value) && $value instanceof \JsonSerializable) {
-                        $result[$property] = $value->jsonSerialize();
-                    } elseif (is_object($value) && $value instanceof \DateTime) {
-                        $result[$property] = $value->format(DATE_ATOM);
-                    } else {
-                        $result[$property] = $value;
-                    }
+                    $result[$property] = $this->serializeValueToJson($value);
                 }
             }
         }
         return $result;
     }
 
+    private function serializeValueToJson($value)
+    {
+        if ($value === null || is_scalar($value) || is_array($value)) {
+            return $value;
+        } elseif (is_object($value) && $value instanceof \JsonSerializable) {
+            return $value->jsonSerialize();
+        } elseif (is_object($value) && $value instanceof \DateTime) {
+            return $value->format(DATE_ATOM);
+        }
+        return $value;
+    }
+
     /**
-     * @return array
+     * Возвращает массив свойств которые не существуют, но были заданы у объекта
+     * @return array Ассоциативный массив с не существующими у текущего объекта свойствами
      */
     protected function getUnknownProperties()
     {
@@ -219,8 +218,9 @@ abstract class AbstractObject implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * @param string $property
-     * @return string
+     * Преобразует имя свойства из snake_case в camelCase
+     * @param string $property Преобразуемое значение
+     * @return string Значение в камэл кейсе
      */
     private static function matchPropertyName($property)
     {

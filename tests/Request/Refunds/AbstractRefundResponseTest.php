@@ -7,7 +7,6 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
-use YandexCheckout\Model\RefundError;
 use YandexCheckout\Model\RefundStatus;
 use YandexCheckout\Request\Refunds\AbstractRefundResponse;
 
@@ -47,24 +46,6 @@ abstract class AbstractRefundResponseTest extends TestCase
     {
         $instance = $this->getTestInstance($options);
         self::assertEquals($options['status'], $instance->getStatus());
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param array $options
-     */
-    public function testGetError($options)
-    {
-        $instance = $this->getTestInstance($options);
-        if (empty($options['error'])) {
-            self::assertNull($instance->getError());
-        } else {
-            self::assertTrue($instance->getError() instanceof RefundError);
-            self::assertEquals($options['error']['code'], $instance->getError()->getCode());
-            if (!empty($options['error']['description'])) {
-                self::assertEquals($options['error']['description'], $instance->getError()->getDescription());
-            }
-        }
     }
 
     /**
@@ -141,10 +122,6 @@ abstract class AbstractRefundResponseTest extends TestCase
                 'id' => Random::str(36),
                 'payment_id' => Random::str(36),
                 'status' => Random::value(RefundStatus::getValidValues()),
-                'error' => array(
-                    'code' => mt_rand(0, 100),
-                    'description' => Random::str(10),
-                ),
                 'created_at' => date(DATE_ATOM, mt_rand(1, time())),
                 'authorized_at' => date(DATE_ATOM, mt_rand(1, time())),
                 'amount' => array(

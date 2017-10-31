@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,7 +35,6 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  *
  * @property-read string $id Идентификатор платежа
  * @property-read string $status Текущее состояние платежа
- * @property-read PaymentErrorInterface $error Описание ошибки, возникшей при проведении платежа
  * @property-read RecipientInterface $recipient Получатель платежа
  * @property-read AmountInterface $amount Сумма заказа
  * @property-read AbstractPaymentMethod $paymentMethod Способ проведения платежа
@@ -63,12 +62,6 @@ interface PaymentInterface
      * @return string Текущее состояние платежа
      */
     public function getStatus();
-
-    /**
-     * Возвращает описание ошибки, возникшей при проведении платежа
-     * @return PaymentErrorInterface|null Описание ошибки или null если ошибка не задана
-     */
-    public function getError();
 
     /**
      * Возвращает получателя платежа

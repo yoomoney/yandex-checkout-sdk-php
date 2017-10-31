@@ -8,7 +8,7 @@ use YandexCheckout\Model\PaymentMethodType;
 
 require_once __DIR__ . '/AbstractPaymentMethodPhoneTest.php';
 
-class PaymentMethodYandexWalletTest extends AbstractPaymentMethodPhoneTest
+class PaymentMethodYandexWalletTest extends AbstractPaymentMethodTest
 {
     /**
      * @return PaymentMethodYandexWallet

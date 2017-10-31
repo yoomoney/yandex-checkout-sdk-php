@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,6 @@ namespace YandexCheckout\Model;
  * @property-read string $id Идентификатор возврата платежа
  * @property-read string $paymentId Идентификатор платежа
  * @property-read string $status Статус возврата
- * @property-read RefundErrorInterface|null $error Описание ошибки или null если ошибок нет
  * @property-read \DateTime $createdAt Время создания возврата
  * @property-read \DateTime|null $authorizedAt Время проведения возврата
  * @property-read AmountInterface $amount Сумма возврата
@@ -60,12 +59,6 @@ interface RefundInterface
      * @return string Статус возврата
      */
     function getStatus();
-
-    /**
-     * Возвращает описание ошибки, если она есть, либо null
-     * @return RefundErrorInterface Инстанс объекта с описанием ошибки или null
-     */
-    function getError();
 
     /**
      * Возвращает дату создания возврата

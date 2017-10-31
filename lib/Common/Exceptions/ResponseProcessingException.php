@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,27 +24,34 @@
  * THE SOFTWARE.
  */
 
-namespace YandexCheckout\Model;
+namespace YandexCheckout\Common\Exceptions;
 
-use YandexCheckout\Common\AbstractEnum;
 
-class PaymentErrorCode extends AbstractEnum
+class ResponseProcessingException extends ApiException
 {
-    const ORDER_REFUSED = 'order_refused';
-    const AUTHORIZATION_REJECTED = 'authorization_rejected';
-    const PAYMENT_EXPIRED = 'payment_expired';
-    const IDENTIFICATION_REQUIRED = 'identification_required';
-    const INSUFFICIENT_FUNDS = 'insufficient_funds';
-    const PAYER_NOT_FOUND = 'payer_not_found';
-    const INAPPROPRIATE_STATUS = 'inappropriate_status';
+    const HTTP_CODE = 202;
 
-    protected static $validValues = array(
-        self::ORDER_REFUSED => true,
-        self::AUTHORIZATION_REJECTED => true,
-        self::PAYMENT_EXPIRED => true,
-        self::IDENTIFICATION_REQUIRED => true,
-        self::INSUFFICIENT_FUNDS => true,
-        self::PAYER_NOT_FOUND => true,
-        self::INAPPROPRIATE_STATUS => true,
-    );
+    public $type;
+
+    public $retryAfter;
+
+    public function __construct($responseHeaders = array(), $responseBody = null)
+    {
+        $errorData = json_decode($responseBody, true);
+        $message   = '';
+
+        if (isset($errorData['description'])) {
+            $message .= $errorData['description'].'.';
+        }
+
+        if (isset($errorData['retry_after'])) {
+            $this->retryAfter = $errorData['retry_after'];
+        }
+
+        if (isset($errorData['type'])) {
+            $this->type = $errorData['type'];
+        }
+
+        parent::__construct($message, self::HTTP_CODE, $responseHeaders, $responseBody);
+    }
 }

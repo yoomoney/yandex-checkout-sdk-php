@@ -8,7 +8,6 @@ use YandexCheckout\Model\Confirmation\ConfirmationRedirect;
 use YandexCheckout\Model\Metadata;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Payment;
-use YandexCheckout\Model\PaymentError;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodQiwi;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Recipient;
@@ -100,53 +99,6 @@ class PaymentTest extends TestCase
     {
         $instance = new Payment();
         $instance->status = $value['status'];
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param array $options
-     */
-    public function testGetSetError($options)
-    {
-        $instance = new Payment();
-
-        self::assertNull($instance->getError());
-        self::assertNull($instance->error);
-
-        $instance->setError($options['error']);
-        self::assertSame($options['error'], $instance->getError());
-        self::assertSame($options['error'], $instance->error);
-
-        $instance = new Payment();
-        $instance->error = $options['error'];
-        self::assertSame($options['error'], $instance->getError());
-        self::assertSame($options['error'], $instance->error);
-    }
-
-    /**
-     * @dataProvider invalidDataProvider
-     * @param $value
-     */
-    public function testSetInvalidError($value)
-    {
-        if (class_exists('TypeError')) {
-            self::setExpectedException('TypeError');
-            $instance = new Payment();
-            $instance->setError($value['error']);
-        }
-    }
-
-    /**
-     * @dataProvider invalidDataProvider
-     * @param $value
-     */
-    public function testSetterInvalidError($value)
-    {
-        if (class_exists('TypeError')) {
-            self::setExpectedException('TypeError');
-            $instance = new Payment();
-            $instance->error = $value['error'];
-        }
     }
 
     /**
@@ -605,7 +557,6 @@ class PaymentTest extends TestCase
             $payment = array(
                 'id' => Random::str(36),
                 'status' => Random::value(Status::getValidValues()),
-                'error' => new PaymentError(),
                 'recipient' => new Recipient(),
                 'amount' => new MonetaryAmount(Random::int(1, 10000), 'RUB'),
                 'payment_method' => new PaymentMethodQiwi(),
@@ -632,7 +583,6 @@ class PaymentTest extends TestCase
                 array(
                     'id' => null,
                     'status' => null,
-                    'error' => null,
                     'recipient' => null,
                     'amount' => null,
                     'payment_method' => null,
@@ -651,7 +601,6 @@ class PaymentTest extends TestCase
                 array(
                     'id' => '',
                     'status' => '',
-                    'error' => '',
                     'recipient' => '',
                     'amount' => '',
                     'payment_method' => '',
@@ -671,7 +620,6 @@ class PaymentTest extends TestCase
             $payment = array(
                 'id' => Random::str($i < 5 ? mt_rand(1, 35) : mt_rand(37, 64)),
                 'status' => Random::str(1, 35),
-                'error' => 'test',
                 'recipient' => 'test',
                 'amount' => 'test',
                 'payment_method' => 'test',

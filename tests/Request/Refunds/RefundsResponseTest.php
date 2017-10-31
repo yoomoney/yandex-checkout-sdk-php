@@ -107,9 +107,6 @@ class RefundsResponseTest extends TestCase
                                 'currency' => Random::value(CurrencyCode::getValidValues()),
                             ),
                             'created_at' => date(DATE_ATOM, Random::int(0, time())),
-                            'error' => array(
-                                'code' => Random::str(1, 32),
-                            ),
                             'authorized_at' => date(DATE_ATOM, Random::int(0, time())),
                             'receipt_registered' => Random::value(ReceiptRegistrationStatus::getValidValues()),
                             'comment' => Random::str(64, 250),

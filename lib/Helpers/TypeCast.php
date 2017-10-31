@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,11 +26,17 @@
 
 namespace YandexCheckout\Helpers;
 
+/**
+ * Класс хэлпер для преобразования типов значений
+ *
+ * @package YandexCheckout\Helpers
+ */
 class TypeCast
 {
     /**
-     * @param mixed $value
-     * @return bool
+     * Проверяет может ли переданное значение быть преобразовано в строку
+     * @param mixed $value Проверяемое значение
+     * @return bool True если значение преобразовать в строку можно, false если нет
      */
     public static function canCastToString($value)
     {
@@ -43,8 +49,9 @@ class TypeCast
     }
 
     /**
-     * @param mixed $value
-     * @return bool
+     * Проверяет можно ли преобразовать переданное значение в строку из перечисления
+     * @param mixed $value Проверяемое значение
+     * @return bool True если значение преобразовать в строку можно, false если нет
      */
     public static function canCastToEnumString($value)
     {
@@ -57,8 +64,9 @@ class TypeCast
     }
 
     /**
-     * @param mixed $value
-     * @return bool
+     * Проверяет, можно ли преобразовать переданное значение в объект даты-времени
+     * @param mixed $value Провеяремое значение
+     * @return bool True если значение можно преобразовать в объект даты, false если нет
      */
     public static function canCastToDateTime($value)
     {
@@ -76,8 +84,9 @@ class TypeCast
     }
 
     /**
-     * @param string|int|\DateTime $value
-     * @return \DateTime|null
+     * Преобразует переданне значение в объект типа \DateTime
+     * @param string|int|\DateTime $value Преобразуемое значение
+     * @return \DateTime|null Объект типа \DateTime или null если при парсинг даты не удался
      */
     public static function castToDateTime($value)
     {
@@ -99,8 +108,9 @@ class TypeCast
     }
 
     /**
-     * @param mixed $value
-     * @return bool
+     * Проверяет можно ли преобразовать переданное значение в буллево значение
+     * @param mixed $value Проверяемое значение
+     * @return bool True если значение качтится в bool, false если нет
      */
     public static function canCastToBoolean($value)
     {

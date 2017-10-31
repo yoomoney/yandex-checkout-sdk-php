@@ -55,7 +55,6 @@ class PaymentMethodFactoryTest extends TestCase
             'card_type'      => 'cardType',
             'expiry_month'   => 'expiryMonth',
             'expiry_year'    => 'expiryYear',
-            'bind_id'        => 'bindId',
             'account_number' => 'accountNumber',
         );
 
@@ -193,7 +192,6 @@ class PaymentMethodFactoryTest extends TestCase
                 array(
                     'type'     => PaymentMethodType::SBERBANK,
                     'phone'    => Random::str(4, 15, '0123456789'),
-                    'bindId'   => Random::str(4, 15, '0123456789'),
                     'id'       => Random::str(1, 64),
                     'saved'    => Random::int() % 2 ? true : false,
                     'title'    => Random::str(10, 20),
@@ -202,7 +200,6 @@ class PaymentMethodFactoryTest extends TestCase
             array(
                 array(
                     'type'          => PaymentMethodType::YANDEX_MONEY,
-                    'phone'         => Random::str(4, 15, '0123456789'),
                     'accountNumber' => Random::str(31, '0123456789'),
                     'id'            => Random::str(1, 64),
                     'saved'         => Random::int() % 2 ? true : false,
@@ -212,7 +209,6 @@ class PaymentMethodFactoryTest extends TestCase
             array(
                 array(
                     'type'           => PaymentMethodType::YANDEX_MONEY,
-                    'phone'          => Random::str(4, 15, '0123456789'),
                     'account_number' => Random::str(31, '0123456789'),
                     'id'             => Random::str(1, 64),
                     'saved'          => Random::int() % 2 ? true : false,

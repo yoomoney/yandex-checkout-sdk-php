@@ -6,13 +6,17 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
-use YandexCheckout\Model\PaymentErrorCode;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Status;
+use YandexCheckout\Request\Payments\PaymentResponse;
 
 abstract class AbstractPaymentResponseTest extends TestCase
 {
+    /**
+     * @param $options
+     * @return PaymentResponse
+     */
     abstract protected function getTestInstance($options);
 
     /**
@@ -33,23 +37,6 @@ abstract class AbstractPaymentResponseTest extends TestCase
     {
         $instance = $this->getTestInstance($options);
         self::assertEquals($options['status'], $instance->getStatus());
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param array $options
-     */
-    public function testGetError($options)
-    {
-        $instance = $this->getTestInstance($options);
-        if (empty($options['error'])) {
-            self::assertNull($instance->getError());
-        } else {
-            self::assertEquals($options['error']['code'], $instance->getError()->getCode());
-            if (!empty($options['error']['description'])) {
-                self::assertEquals($options['error']['description'], $instance->getError()->getDescription());
-            }
-        }
     }
 
     /**
@@ -213,10 +200,6 @@ abstract class AbstractPaymentResponseTest extends TestCase
             $payment = array(
                 'id' => Random::str(36),
                 'status' => Random::value($statuses),
-                'error' => array(
-                    'code' => Random::value(PaymentErrorCode::getValidValues()),
-                    'description' => Random::str(1, 256),
-                ),
                 'recipient' => array(
                     'account_id' => Random::str(1, 64, '0123456789'),
                     'gateway_id' => Random::str(1, 256),

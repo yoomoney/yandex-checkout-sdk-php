@@ -476,6 +476,78 @@ class ReceiptTest extends TestCase
                 ),
                 true
             ),
+            array(
+                array(
+                    array('price' => 10, 'quantity' => 1),
+                    array('price' => 300, 'quantity' => 1, 'shipping' => 1),
+                ),
+                10.0,
+                array(
+                    array('price' => 32, 'quantity' => 1),
+                    array('price' => 968, 'quantity' => 1, 'shipping' => 1),
+                ),
+                true
+            ),
+            array(
+                array(
+                    array('price' => 10, 'quantity' => 1),
+                    array('price' => 300, 'quantity' => 1, 'shipping' => 1),
+                ),
+                10.0,
+                array(
+                    array('price' => 32, 'quantity' => 1),
+                    array('price' => 968, 'quantity' => 1, 'shipping' => 1),
+                ),
+                false
+            ),
+            array(
+                array(
+                    array('price' => 0.01, 'quantity' => 1),
+                    array('price' => 0.02, 'quantity' => 1),
+                    array('price' => 0.03, 'quantity' => 1),
+                    array('price' => 300, 'quantity' => 1, 'shipping' => 1),
+                ),
+                0.06,
+                array(
+                    array('price' => 1, 'quantity' => 1),
+                    array('price' => 1, 'quantity' => 1),
+                    array('price' => 1, 'quantity' => 1),
+                    array('price' => 3, 'quantity' => 1, 'shipping' => 1),
+                ),
+                false
+            ),
+            array(
+                array(
+                    array('price' => 0.01, 'quantity' => 7),
+                    array('price' => 0.02, 'quantity' => 11),
+                    array('price' => 0.03, 'quantity' => 13),
+                    array('price' => 300, 'quantity' => 1, 'shipping' => 1),
+                ),
+                0.60,
+                array(
+                    array('price' => 1, 'quantity' => 7),
+                    array('price' => 1, 'quantity' => 11),
+                    array('price' => 1, 'quantity' => 13),
+                    array('price' => 29, 'quantity' => 1, 'shipping' => 1),
+                ),
+                false
+            ),
+            array(
+                array(
+                    array('price' => 0.01, 'quantity' => 7),
+                    array('price' => 0.02, 'quantity' => 11),
+                    array('price' => 10, 'quantity' => 1),
+                    array('price' => 300, 'quantity' => 1, 'shipping' => 1),
+                ),
+                10.29,
+                array(
+                    array('price' => 1, 'quantity' => 7),
+                    array('price' => 1, 'quantity' => 11),
+                    array('price' => 33, 'quantity' => 1),
+                    array('price' => 978, 'quantity' => 1, 'shipping' => 1),
+                ),
+                false
+            ),
         );
     }
 

@@ -1,7 +1,7 @@
 
 # Yandex.Checkout API PHP Client Library
 
-Клиент для работы с платежами по [API Яндкс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
+Клиент для работы с платежами по [API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
 Подходит тем, у кого способ подключения к Яндекс.Кассе называется API.
 
 ## Требования
@@ -18,7 +18,7 @@ composer require yandex-money/yandex-checkout-sdk-php
 
 ### В файле composer.json своего проекта
 1. Добавьте строку `"yandex-money/yandex-checkout-sdk-php": "*"` в список зависимостей вашего проекта в файле composer.json
-```
+```json
 ...
     "require": {
         "php": ">=5.3.2",
@@ -46,11 +46,11 @@ require __DIR__ . '/vendor/autoload.php';
 ```
 2. Импортируйте нужные классы
 ```php
-use YandexCheckout\Client\YandexMoneyApi;
+use YandexCheckout\Client;
 ```
 3. Создайте экземпляр объекта клиента и задайте идентификатор магазина и секретный ключ (их можно получить в личном кабинете Яндекс.Кассы). [Как выпустить секретный ключ](https://yandex.ru/support/checkout/payments/keys.html)
 ```php
-$client = new YandexMoneyApi();
+$client = new Client();
 $client->setAuth('shopId', 'secretKey');
 ```
 4. Вызовите нужный метод API. [Подробнее в документации к API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)

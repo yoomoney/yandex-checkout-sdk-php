@@ -6,7 +6,8 @@
          syntaxCheck="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true">
+         convertWarningsToExceptions="true"
+         beStrictAboutTestsThatDoNotTestAnything="true">
 
     <testsuites>
         <testsuite name="all">
@@ -22,10 +23,6 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./lib</directory>
-            <exclude>
-                <directory suffix=".php">./lib/CodeGenerator</directory>
-                <directory suffix=".php">./lib/ConfigParser</directory>
-            </exclude>
         </whitelist>
     </filter>
 </phpunit>

@@ -7,12 +7,9 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\MonetaryAmount;
-use YandexCheckout\Model\PaymentError;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Refund;
-use YandexCheckout\Model\RefundError;
 use YandexCheckout\Model\RefundStatus;
-use YandexCheckout\Model\Status;
 
 class RefundTest extends TestCase
 {
@@ -192,75 +189,6 @@ class RefundTest extends TestCase
     {
         $instance = new Refund();
         $instance->status = $value;
-    }
-
-    /**
-     * @dataProvider validErrorDataProvider
-     * @param RefundStatus $value
-     */
-    public function testGetSetError($value)
-    {
-        $instance = new Refund();
-
-        self::assertNull($instance->getError());
-        self::assertNull($instance->error);
-
-        $instance->setError($value);
-        self::assertSame($value, $instance->getError());
-        self::assertSame($value, $instance->error);
-
-        $instance = new Refund();
-        $instance->error = $value;
-        self::assertSame($value, $instance->getError());
-        self::assertSame($value, $instance->error);
-    }
-
-    /**
-     * @return array
-     */
-    public function validErrorDataProvider()
-    {
-        return array(
-            array(new RefundError()),
-        );
-    }
-
-    /**
-     * @dataProvider invalidErrorDataProvider
-     * @param $value
-     */
-    public function testSetInvalidError($value)
-    {
-        if (class_exists('TypeError')) {
-            self::setExpectedException('TypeError');
-            $instance = new Refund();
-            $instance->setError($value);
-        }
-    }
-
-    /**
-     * @dataProvider invalidErrorDataProvider
-     * @param $value
-     */
-    public function testSetterInvalidError($value)
-    {
-        if (class_exists('TypeError')) {
-            self::setExpectedException('TypeError');
-            $instance = new Refund();
-            $instance->error = $value;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function invalidErrorDataProvider()
-    {
-        return array(
-            array(new Status()),
-            array(new PaymentError()),
-            array(null),
-        );
     }
 
     /**

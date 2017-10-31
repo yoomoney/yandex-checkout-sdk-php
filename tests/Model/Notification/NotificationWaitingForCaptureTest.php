@@ -9,7 +9,6 @@ use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\Notification\NotificationWaitingForCapture;
 use YandexCheckout\Model\NotificationEventType;
 use YandexCheckout\Model\NotificationType;
-use YandexCheckout\Model\PaymentErrorCode;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
@@ -77,10 +76,6 @@ class NotificationWaitingForCaptureTest extends AbstractNotificationTest
             $payment = array(
                 'id' => Random::str(36),
                 'status' => Random::value($statuses),
-                'error' => array(
-                    'code' => Random::value(PaymentErrorCode::getValidValues()),
-                    'description' => Random::str(1, 256),
-                ),
                 'recipient' => array(
                     'account_id' => Random::str(1, 64, '0123456789'),
                     'gateway_id' => Random::str(1, 256),

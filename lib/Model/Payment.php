@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,7 +38,6 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  *
  * @property string $id Идентификатор платежа
  * @property string $status Текущее состояние платежа
- * @property PaymentErrorInterface $error Описание ошибки, возникшей при проведении платежа
  * @property RecipientInterface $recipient  Получатель платежа
  * @property AmountInterface $amount Сумма заказа
  * @property AbstractPaymentMethod $paymentMethod Способ проведения платежа
@@ -64,11 +63,6 @@ class Payment extends AbstractObject implements PaymentInterface
      * @var string Текущее состояние платежа
      */
     private $_status;
-
-    /**
-     * @var PaymentErrorInterface|null Описание ошибки, возникшей при проведении платежа
-     */
-    private $_error;
 
     /**
      * @var RecipientInterface|null Получатель платежа
@@ -177,24 +171,6 @@ class Payment extends AbstractObject implements PaymentInterface
                 'Invalid payment status value type', 0, 'Payment.status', $value
             );
         }
-    }
-
-    /**
-     * Возвращает описание ошибки, возникшей при проведении платежа
-     * @return PaymentErrorInterface|null Описание ошибки или null если ошибка не задана
-     */
-    public function getError()
-    {
-        return $this->_error;
-    }
-
-    /**
-     * Устанавливает описание ошибки
-     * @param PaymentErrorInterface $value Инстанс объекта с описанием ошибки
-     */
-    public function setError(PaymentErrorInterface $value)
-    {
-        $this->_error = $value;
     }
 
     /**

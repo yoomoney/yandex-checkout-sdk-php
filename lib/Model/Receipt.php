@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -233,15 +233,46 @@ class Receipt extends AbstractObject implements ReceiptInterface
         $amount = $orderAmount->getIntegerValue();
         if (!$withShipping) {
             if ($this->_shippingItems !== null) {
-                $amount -= $this->getShippingAmountValue();
+                if ($amount > $this->getShippingAmountValue()) {
+                    $amount -= $this->getShippingAmountValue();
+                } else {
+                    $withShipping = true;
+                }
             }
         }
         $realAmount = $this->getAmountValue($withShipping);
         if ($realAmount !== $amount) {
             $coefficient = (float)$amount / (float)$realAmount;
+            $items = array();
+            $realAmount = 0;
+            foreach ($this->_items as $item) {
+                if ($withShipping || !$item->isShipping()) {
+                    $price = round($coefficient * $item->getPrice()->getIntegerValue());
+                    if ($price < 1.0) {
+                        if ($item->getPrice()->getIntegerValue() > 1) {
+                            $item->getPrice()->setValue(0.01);
+                        }
+                        $amount -= $item->getAmount();
+                    } else {
+                        $items[] = $item;
+                        $realAmount += $item->getAmount();
+                    }
+                }
+            }
+            uasort($items, function (ReceiptItemInterface $a, ReceiptItemInterface $b) {
+                if ($a->getPrice()->getIntegerValue() > $b->getPrice()->getIntegerValue()) {
+                    return -1;
+                }
+                if ($a->getPrice()->getIntegerValue() < $b->getPrice()->getIntegerValue()) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            $coefficient = (float)$amount / (float)$realAmount;
             $realAmount = 0;
             $aloneId = null;
-            foreach ($this->_items as $index => $item) {
+            foreach ($items as $index => $item) {
                 if ($withShipping || !$item->isShipping()) {
                     $item->applyDiscountCoefficient($coefficient);
                     $realAmount += $item->getAmount();

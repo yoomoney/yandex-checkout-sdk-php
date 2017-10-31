@@ -201,6 +201,11 @@ class AbstractObjectTest extends TestCase
         $data = $instance->jsonSerialize();
         $expected['property_camel_case'] = $obj;
         self::assertEquals($expected, $data);
+
+        $instance->property_camel_case = null;
+        $data = $instance->jsonSerialize();
+        unset($expected['property_camel_case']);
+        self::assertEquals($expected, $data);
     }
 }
 

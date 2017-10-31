@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
-use YandexCheckout\Model\PaymentErrorCode;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
@@ -123,9 +122,6 @@ class PaymentsResponseTest extends TestCase
                                 'type' => PaymentMethodType::QIWI,
                             ),
                             'paid' => false,
-                            'error' => array(
-                                'code' => Random::value(PaymentErrorCode::getValidValues()),
-                            ),
                             'recipient' => array(
                                 'account_id' => uniqid(),
                                 'gateway_id' => uniqid(),
@@ -165,10 +161,6 @@ class PaymentsResponseTest extends TestCase
                                 'confirmation_url' => Random::str(10),
                                 'return_url' => Random::str(10),
                                 'enforce' => false,
-                            ),
-                            'error' => array(
-                                'code' => Random::value(PaymentErrorCode::getValidValues()),
-                                'description' => Random::str(100),
                             ),
                         ),
                     ),

@@ -24,12 +24,8 @@ class RefundsRequestBuilderTest extends TestCase
                 self::assertEquals($options['accountId'], $instance->getAccountId());
                 return;
             } else {
-                try {
-                    $builder->build();
-                } catch (\RuntimeException $e) {
-                    // ok - empty shop id
-                    return;
-                }
+                $this->setExpectedException('\RuntimeException');
+                $builder->build();
             }
         }
         self::fail('Exception not thrown');
