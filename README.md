@@ -18,7 +18,7 @@ composer require yandex-money/yandex-checkout-sdk-php
 
 ### В файле composer.json своего проекта
 1. Добавьте строку `"yandex-money/yandex-checkout-sdk-php": "*"` в список зависимостей вашего проекта в файле composer.json
-```json
+```
 ...
     "require": {
         "php": ">=5.3.2",
