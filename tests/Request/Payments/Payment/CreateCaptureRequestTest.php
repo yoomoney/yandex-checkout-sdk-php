@@ -5,6 +5,8 @@ namespace Tests\YandexCheckout\Request\Payments\Payment;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\MonetaryAmount;
+use YandexCheckout\Model\Receipt;
+use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Request\Payments\Payment\CreateCaptureRequest;
 use YandexCheckout\Request\Payments\Payment\CreateCaptureRequestBuilder;
 
@@ -41,12 +43,36 @@ class CreateCaptureRequestTest extends TestCase
     {
         $instance = new CreateCaptureRequest();
 
-        self::assertFalse($instance->validate());
+        self::assertTrue($instance->validate());
         $amount = new MonetaryAmount();
         $instance->setAmount($amount);
         self::assertFalse($instance->validate());
         $amount->setValue(1);
         self::assertTrue($instance->validate());
+
+        $receipt = new Receipt();
+        $instance->setReceipt($receipt);
+        $item = new ReceiptItem();
+        $item->setPrice(new MonetaryAmount(10));
+        $item->setDescription('test');
+        $receipt->addItem($item);
+        self::assertFalse($instance->validate());
+        $receipt->setPhone('123123');
+        self::assertFalse($instance->validate());
+        $item->setVatCode(3);
+        self::assertTrue($instance->validate());
+        $item->setVatCode(null);
+        self::assertFalse($instance->validate());
+        $receipt->setTaxSystemCode(4);
+        self::assertTrue($instance->validate());
+
+        self::assertNotNull($instance->getReceipt());
+        $instance->removeReceipt();
+        self::assertTrue($instance->validate());
+        self::assertNull($instance->getReceipt());
+
+        $instance->setAmount(new MonetaryAmount());
+        self::assertFalse($instance->validate());
     }
 
     public function testBuilder()

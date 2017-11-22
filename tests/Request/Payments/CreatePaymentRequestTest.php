@@ -101,10 +101,12 @@ class CreatePaymentRequestTest extends TestCase
             self::assertFalse($instance->hasPaymentToken());
             self::assertNull($instance->getPaymentToken());
             self::assertNull($instance->paymentToken);
+            self::assertNull($instance->payment_token);
         } else {
             self::assertTrue($instance->hasPaymentToken());
             self::assertSame($options['paymentToken'], $instance->getPaymentToken());
             self::assertSame($options['paymentToken'], $instance->paymentToken);
+            self::assertSame($options['paymentToken'], $instance->payment_token);
         }
 
         $instance->setPaymentToken(null);
@@ -117,10 +119,30 @@ class CreatePaymentRequestTest extends TestCase
             self::assertFalse($instance->hasPaymentToken());
             self::assertNull($instance->getPaymentToken());
             self::assertNull($instance->paymentToken);
+            self::assertNull($instance->payment_token);
         } else {
             self::assertTrue($instance->hasPaymentToken());
             self::assertSame($options['paymentToken'], $instance->getPaymentToken());
             self::assertSame($options['paymentToken'], $instance->paymentToken);
+            self::assertSame($options['paymentToken'], $instance->payment_token);
+        }
+
+        $instance->paymentToken = null;
+        self::assertFalse($instance->hasPaymentToken());
+        self::assertNull($instance->getPaymentToken());
+        self::assertNull($instance->paymentToken);
+
+        $instance->payment_token = $options['paymentToken'];
+        if (empty($options['paymentToken'])) {
+            self::assertFalse($instance->hasPaymentToken());
+            self::assertNull($instance->getPaymentToken());
+            self::assertNull($instance->paymentToken);
+            self::assertNull($instance->payment_token);
+        } else {
+            self::assertTrue($instance->hasPaymentToken());
+            self::assertSame($options['paymentToken'], $instance->getPaymentToken());
+            self::assertSame($options['paymentToken'], $instance->paymentToken);
+            self::assertSame($options['paymentToken'], $instance->payment_token);
         }
     }
 
@@ -136,6 +158,28 @@ class CreatePaymentRequestTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidPaymentTokenDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPaymentToken($value)
+    {
+        $instance = new CreatePaymentRequest();
+        $instance->paymentToken = $value;
+    }
+
+    /**
+     * @dataProvider invalidPaymentTokenDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPayment_token($value)
+    {
+        $instance = new CreatePaymentRequest();
+        $instance->payment_token = $value;
+    }
+
+    /**
      * @dataProvider validDataProvider
      * @param $options
      */
@@ -146,16 +190,19 @@ class CreatePaymentRequestTest extends TestCase
         self::assertFalse($instance->hasPaymentMethodId());
         self::assertNull($instance->getPaymentMethodId());
         self::assertNull($instance->paymentMethodId);
+        self::assertNull($instance->payment_method_id);
 
         $instance->setPaymentMethodId($options['paymentMethodId']);
         if (empty($options['paymentMethodId'])) {
             self::assertFalse($instance->hasPaymentMethodId());
             self::assertNull($instance->getPaymentMethodId());
             self::assertNull($instance->paymentMethodId);
+            self::assertNull($instance->payment_method_id);
         } else {
             self::assertTrue($instance->hasPaymentMethodId());
             self::assertSame($options['paymentMethodId'], $instance->getPaymentMethodId());
             self::assertSame($options['paymentMethodId'], $instance->paymentMethodId);
+            self::assertSame($options['paymentMethodId'], $instance->payment_method_id);
         }
 
         $instance->setPaymentMethodId(null);
@@ -168,10 +215,30 @@ class CreatePaymentRequestTest extends TestCase
             self::assertFalse($instance->hasPaymentMethodId());
             self::assertNull($instance->getPaymentMethodId());
             self::assertNull($instance->paymentMethodId);
+            self::assertNull($instance->payment_method_id);
         } else {
             self::assertTrue($instance->hasPaymentMethodId());
             self::assertSame($options['paymentMethodId'], $instance->getPaymentMethodId());
             self::assertSame($options['paymentMethodId'], $instance->paymentMethodId);
+            self::assertSame($options['paymentMethodId'], $instance->payment_method_id);
+        }
+
+        $instance->setPaymentMethodId(null);
+        self::assertFalse($instance->hasPaymentMethodId());
+        self::assertNull($instance->getPaymentMethodId());
+        self::assertNull($instance->paymentMethodId);
+
+        $instance->payment_method_id = $options['paymentMethodId'];
+        if (empty($options['paymentMethodId'])) {
+            self::assertFalse($instance->hasPaymentMethodId());
+            self::assertNull($instance->getPaymentMethodId());
+            self::assertNull($instance->paymentMethodId);
+            self::assertNull($instance->payment_method_id);
+        } else {
+            self::assertTrue($instance->hasPaymentMethodId());
+            self::assertSame($options['paymentMethodId'], $instance->getPaymentMethodId());
+            self::assertSame($options['paymentMethodId'], $instance->paymentMethodId);
+            self::assertSame($options['paymentMethodId'], $instance->payment_method_id);
         }
     }
 
@@ -184,6 +251,28 @@ class CreatePaymentRequestTest extends TestCase
     {
         $instance = new CreatePaymentRequest();
         $instance->setPaymentMethodId($value);
+    }
+
+    /**
+     * @dataProvider invalidPaymentMethodIdDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPaymentMethodId($value)
+    {
+        $instance = new CreatePaymentRequest();
+        $instance->paymentMethodId = $value;
+    }
+
+    /**
+     * @dataProvider invalidPaymentMethodIdDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPayment_method_id($value)
+    {
+        $instance = new CreatePaymentRequest();
+        $instance->payment_method_id = $value;
     }
 
     /**

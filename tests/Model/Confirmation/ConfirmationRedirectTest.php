@@ -88,27 +88,44 @@ class ConfirmationRedirectTest extends AbstractConfirmationTest
 
         self::assertNull($instance->getReturnUrl());
         self::assertNull($instance->returnUrl);
+        self::assertNull($instance->return_url);
 
         $instance->setReturnUrl($value);
         if ($value === null || $value === '') {
             self::assertNull($instance->getReturnUrl());
             self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
         } else {
             self::assertEquals($value, $instance->getReturnUrl());
             self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
         }
 
         $instance->setReturnUrl(null);
         self::assertNull($instance->getReturnUrl());
         self::assertNull($instance->returnUrl);
+        self::assertNull($instance->return_url);
 
         $instance->returnUrl = $value;
         if ($value === null || $value === '') {
             self::assertNull($instance->getReturnUrl());
             self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
         } else {
             self::assertEquals($value, $instance->getReturnUrl());
             self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
+        }
+
+        $instance->return_url = $value;
+        if ($value === null || $value === '') {
+            self::assertNull($instance->getReturnUrl());
+            self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
+        } else {
+            self::assertEquals($value, $instance->getReturnUrl());
+            self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
         }
     }
 
@@ -135,6 +152,17 @@ class ConfirmationRedirectTest extends AbstractConfirmationTest
     }
 
     /**
+     * @dataProvider invalidUrlDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidReturn_url($value)
+    {
+        $instance = $this->getTestInstance();
+        $instance->return_url = $value;
+    }
+
+    /**
      * @dataProvider validUrlDataProvider
      * @param $value
      */
@@ -144,27 +172,44 @@ class ConfirmationRedirectTest extends AbstractConfirmationTest
 
         self::assertNull($instance->getConfirmationUrl());
         self::assertNull($instance->confirmationUrl);
+        self::assertNull($instance->confirmation_url);
 
         $instance->setConfirmationUrl($value);
         if ($value === null || $value === '') {
             self::assertNull($instance->getConfirmationUrl());
             self::assertNull($instance->confirmationUrl);
+            self::assertNull($instance->confirmation_url);
         } else {
             self::assertEquals($value, $instance->getConfirmationUrl());
             self::assertEquals($value, $instance->confirmationUrl);
+            self::assertEquals($value, $instance->confirmation_url);
         }
 
         $instance->setConfirmationUrl(null);
         self::assertNull($instance->getConfirmationUrl());
         self::assertNull($instance->confirmationUrl);
+        self::assertNull($instance->confirmation_url);
 
         $instance->confirmationUrl = $value;
         if ($value === null || $value === '') {
             self::assertNull($instance->getConfirmationUrl());
             self::assertNull($instance->confirmationUrl);
+            self::assertNull($instance->confirmation_url);
         } else {
             self::assertEquals($value, $instance->getConfirmationUrl());
             self::assertEquals($value, $instance->confirmationUrl);
+            self::assertEquals($value, $instance->confirmation_url);
+        }
+
+        $instance->confirmation_url = $value;
+        if ($value === null || $value === '') {
+            self::assertNull($instance->getConfirmationUrl());
+            self::assertNull($instance->confirmationUrl);
+            self::assertNull($instance->confirmation_url);
+        } else {
+            self::assertEquals($value, $instance->getConfirmationUrl());
+            self::assertEquals($value, $instance->confirmationUrl);
+            self::assertEquals($value, $instance->confirmation_url);
         }
     }
 
@@ -188,6 +233,17 @@ class ConfirmationRedirectTest extends AbstractConfirmationTest
     {
         $instance = $this->getTestInstance();
         $instance->confirmationUrl = $value;
+    }
+
+    /**
+     * @dataProvider invalidUrlDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidConfirmation_url($value)
+    {
+        $instance = $this->getTestInstance();
+        $instance->confirmation_url = $value;
     }
 
     public function validEnforceDataProvider()

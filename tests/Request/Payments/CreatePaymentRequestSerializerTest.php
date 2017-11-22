@@ -98,11 +98,6 @@ class CreatePaymentRequestSerializerTest extends TestCase
                     break;
                 case PaymentMethodType::SBERBANK:
                     $expected['payment_method_data']['phone'] = $options['paymentMethodData']->getPhone();
-                    $expected['payment_method_data']['bind_id'] = $options['paymentMethodData']->getBindId();
-                    break;
-                case PaymentMethodType::YANDEX_MONEY:
-                    $expected['payment_method_data']['phone'] = $options['paymentMethodData']->getPhone();
-                    $expected['payment_method_data']['account_number'] = $options['paymentMethodData']->getAccountNumber();
                     break;
             }
         }
@@ -191,10 +186,6 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $paymentData[4]->setPhone(Random::str(14, '0123456789'));
 
         $paymentData[6]->setPhone(Random::str(14, '0123456789'));
-        $paymentData[6]->setBindId(Random::str(10, '0123456789'));
-
-        $paymentData[8]->setPhone(Random::str(14, '0123456789'));
-        $paymentData[8]->setAccountNumber(Random::str(16, '0123456789'));
 
         $paymentData[9] = Random::value($paymentData);
 

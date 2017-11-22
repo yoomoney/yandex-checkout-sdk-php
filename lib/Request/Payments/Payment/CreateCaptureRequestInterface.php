@@ -28,6 +28,7 @@ namespace YandexCheckout\Request\Payments\Payment;
 
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\MonetaryAmount;
+use YandexCheckout\Model\ReceiptInterface;
 
 /**
  * Interface CreateCaptureRequestInterface
@@ -35,6 +36,7 @@ use YandexCheckout\Model\MonetaryAmount;
  * @package YandexCheckout\Request\Payments\Payment
  *
  * @property-read MonetaryAmount $amount Подтверждаемая сумма оплаты
+ * @property-read ReceiptInterface $receipt Данные фискального чека 54-ФЗ
  */
 interface CreateCaptureRequestInterface
 {
@@ -49,4 +51,18 @@ interface CreateCaptureRequestInterface
      * @return bool True если сумма оплаты была установлена, false если нет
      */
     function hasAmount();
+
+    /**
+     * Возвращает чек, если он есть
+     * @return ReceiptInterface|null Данные фискального чека 54-ФЗ или null если чека нет
+     * @since 1.0.2
+     */
+    function getReceipt();
+
+    /**
+     * Проверяет наличие чека в создаваемом платеже
+     * @return bool True если чек есть, false если нет
+     * @since 1.0.2
+     */
+    function hasReceipt();
 }

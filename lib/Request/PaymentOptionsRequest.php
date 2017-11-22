@@ -179,7 +179,7 @@ class PaymentOptionsRequest extends AbstractRequest implements PaymentOptionsReq
             } elseif ($value < 0.01) {
                 $this->_amount = null;
             } else {
-                $this->_amount = (string)round($value, 2);
+                $this->_amount = number_format($value, 2, '.', '');
             }
         }
     }

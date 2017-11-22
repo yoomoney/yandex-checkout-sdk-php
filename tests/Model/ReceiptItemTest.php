@@ -171,13 +171,16 @@ class ReceiptItemTest extends TestCase
 
         self::assertNull($instance->getVatCode());
         self::assertNull($instance->vatCode);
+        self::assertNull($instance->vat_code);
         $instance->setVatCode($value);
         if ($value === null || $value === '') {
             self::assertNull($instance->getVatCode());
             self::assertNull($instance->vatCode);
+            self::assertNull($instance->vat_code);
         } else {
             self::assertEquals((int)$value, $instance->getVatCode());
             self::assertEquals((int)$value, $instance->vatCode);
+            self::assertEquals((int)$value, $instance->vat_code);
         }
     }
 
@@ -193,9 +196,31 @@ class ReceiptItemTest extends TestCase
         if ($value === null || $value === '') {
             self::assertNull($instance->getVatCode());
             self::assertNull($instance->vatCode);
+            self::assertNull($instance->vat_code);
         } else {
             self::assertEquals((int)$value, $instance->getVatCode());
             self::assertEquals((int)$value, $instance->vatCode);
+            self::assertEquals((int)$value, $instance->vat_code);
+        }
+    }
+
+    /**
+     * @dataProvider validVatCodeDataProvider
+     * @param $value
+     */
+    public function testSetterVat_code($value)
+    {
+        $instance = $this->getTestInstance();
+
+        $instance->vat_code = $value;
+        if ($value === null || $value === '') {
+            self::assertNull($instance->getVatCode());
+            self::assertNull($instance->vatCode);
+            self::assertNull($instance->vat_code);
+        } else {
+            self::assertEquals((int)$value, $instance->getVatCode());
+            self::assertEquals((int)$value, $instance->vatCode);
+            self::assertEquals((int)$value, $instance->vat_code);
         }
     }
 
@@ -231,6 +256,16 @@ class ReceiptItemTest extends TestCase
     public function testSetterInvalidVatCode($value)
     {
         $this->getTestInstance()->vatCode = $value;
+    }
+
+    /**
+     * @dataProvider invalidVatCodeDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidVat_code($value)
+    {
+        $this->getTestInstance()->vat_code = $value;
     }
 
     public function invalidVatCodeDataProvider()

@@ -102,15 +102,24 @@ class RefundTest extends TestCase
 
         self::assertNull($instance->getPaymentId());
         self::assertNull($instance->paymentId);
+        self::assertNull($instance->payment_id);
 
         $instance->setPaymentId($value);
         self::assertEquals((string)$value, $instance->getPaymentId());
         self::assertEquals((string)$value, $instance->paymentId);
+        self::assertEquals((string)$value, $instance->payment_id);
 
         $instance = new Refund();
         $instance->paymentId = $value;
         self::assertEquals((string)$value, $instance->getPaymentId());
         self::assertEquals((string)$value, $instance->paymentId);
+        self::assertEquals((string)$value, $instance->payment_id);
+
+        $instance = new Refund();
+        $instance->payment_id = $value;
+        self::assertEquals((string)$value, $instance->getPaymentId());
+        self::assertEquals((string)$value, $instance->paymentId);
+        self::assertEquals((string)$value, $instance->payment_id);
     }
 
     /**
@@ -133,6 +142,17 @@ class RefundTest extends TestCase
     {
         $instance = new Refund();
         $instance->paymentId = $value;
+    }
+
+    /**
+     * @dataProvider invalidIdDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPayment_id($value)
+    {
+        $instance = new Refund();
+        $instance->payment_id = $value;
     }
 
     /**
@@ -209,15 +229,24 @@ class RefundTest extends TestCase
 
         self::assertNull($instance->getCreatedAt());
         self::assertNull($instance->createdAt);
+        self::assertNull($instance->created_at);
 
         $instance->setCreatedAt($value);
         self::assertSame($expected, $instance->getCreatedAt()->getTimestamp());
         self::assertSame($expected, $instance->createdAt->getTimestamp());
+        self::assertSame($expected, $instance->created_at->getTimestamp());
 
         $instance = new Refund();
         $instance->createdAt = $value;
         self::assertSame($expected, $instance->getCreatedAt()->getTimestamp());
         self::assertSame($expected, $instance->createdAt->getTimestamp());
+        self::assertSame($expected, $instance->created_at->getTimestamp());
+
+        $instance = new Refund();
+        $instance->created_at = $value;
+        self::assertSame($expected, $instance->getCreatedAt()->getTimestamp());
+        self::assertSame($expected, $instance->createdAt->getTimestamp());
+        self::assertSame($expected, $instance->created_at->getTimestamp());
     }
 
     /**
@@ -260,6 +289,17 @@ class RefundTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidCreatedAtDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidCreated_at($value)
+    {
+        $instance = new Refund();
+        $instance->created_at = $value;
+    }
+
+    /**
      * @return array
      */
     public function invalidCreatedAtDataProvider()
@@ -270,98 +310,6 @@ class RefundTest extends TestCase
             array(array()),
             array(new \stdClass()),
             array('test'),
-        );
-    }
-
-    /**
-     * @dataProvider validAuthorizedAtDataProvider
-     * @param mixed $value
-     */
-    public function testGetSetAuthorizedAt($value)
-    {
-        $instance = new Refund();
-
-        if (is_numeric($value)) {
-            $expected = $value;
-        } elseif ($value instanceof \DateTime) {
-            $expected = $value->getTimestamp();
-        } else {
-            $expected = strtotime((string)$value);
-        }
-
-        self::assertNull($instance->getAuthorizedAt());
-        self::assertNull($instance->authorizedAt);
-
-        $instance->setAuthorizedAt($value);
-        if ($value === null || $value === '') {
-            self::assertNull($instance->getAuthorizedAt());
-            self::assertNull($instance->authorizedAt);
-        } else {
-            self::assertSame($expected, $instance->getAuthorizedAt()->getTimestamp());
-            self::assertSame($expected, $instance->authorizedAt->getTimestamp());
-        }
-
-        $instance = new Refund();
-        $instance->authorizedAt = $value;
-        if ($value === null || $value === '') {
-            self::assertNull($instance->getAuthorizedAt());
-            self::assertNull($instance->authorizedAt);
-        } else {
-            self::assertSame($expected, $instance->getAuthorizedAt()->getTimestamp());
-            self::assertSame($expected, $instance->authorizedAt->getTimestamp());
-        }
-    }
-
-    /**
-     * @dataProvider invalidAuthorizedAtDataProvider
-     * @expectedException \InvalidArgumentException
-     * @param $value
-     */
-    public function testSetInvalidAuthorizedAt($value)
-    {
-        $instance = new Refund();
-        $instance->setAuthorizedAt($value);
-    }
-
-    /**
-     * @dataProvider invalidAuthorizedAtDataProvider
-     * @expectedException \InvalidArgumentException
-     * @param $value
-     */
-    public function testSetterInvalidAuthorizedAt($value)
-    {
-        $instance = new Refund();
-        $instance->authorizedAt = $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function invalidAuthorizedAtDataProvider()
-    {
-        return array(
-            array(array()),
-            array(new \stdClass()),
-            array('test'),
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function validAuthorizedAtDataProvider()
-    {
-        return array(
-            array(null),
-            array(''),
-            array(new \DateTime()),
-            array(new \DateTime(date(DATE_ATOM, Random::int(1, time())))),
-            array(time()),
-            array(Random::int(1, time())),
-            array(date(DATE_ATOM)),
-            array(date(DATE_ATOM, Random::int(1, time()))),
-            array(new StringObject(date(DATE_ATOM))),
-            array(new StringObject(date(DATE_ATOM, Random::int(1, time())))),
         );
     }
 
@@ -458,15 +406,24 @@ class RefundTest extends TestCase
 
         self::assertNull($instance->getReceiptRegistration());
         self::assertNull($instance->receiptRegistration);
+        self::assertNull($instance->receipt_registration);
 
         $instance->setReceiptRegistration($value);
         self::assertEquals((string)$value, $instance->getReceiptRegistration());
         self::assertEquals((string)$value, $instance->receiptRegistration);
+        self::assertEquals((string)$value, $instance->receipt_registration);
 
         $instance = new Refund();
         $instance->receiptRegistration = $value;
         self::assertEquals((string)$value, $instance->getReceiptRegistration());
         self::assertEquals((string)$value, $instance->receiptRegistration);
+        self::assertEquals((string)$value, $instance->receipt_registration);
+
+        $instance = new Refund();
+        $instance->receipt_registration = $value;
+        self::assertEquals((string)$value, $instance->getReceiptRegistration());
+        self::assertEquals((string)$value, $instance->receiptRegistration);
+        self::assertEquals((string)$value, $instance->receipt_registration);
     }
 
     /**
@@ -498,10 +455,21 @@ class RefundTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @param $value
      */
-    public function testSetterInvalidReceiptRegistered($value)
+    public function testSetterInvalidReceiptRegistration($value)
     {
         $instance = new Refund();
         $instance->receiptRegistration = $value;
+    }
+
+    /**
+     * @dataProvider invalidReceiptRegisteredDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidReceipt_registration($value)
+    {
+        $instance = new Refund();
+        $instance->receipt_registration = $value;
     }
 
     /**

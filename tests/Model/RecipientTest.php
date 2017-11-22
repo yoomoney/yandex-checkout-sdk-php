@@ -20,14 +20,23 @@ class RecipientTest extends TestCase
 
         self::assertEquals(null, $instance->getAccountId());
         self::assertEquals(null, $instance->accountId);
+        self::assertEquals(null, $instance->account_id);
         $instance->setAccountId($value);
         self::assertEquals((string)$value, $instance->getAccountId());
         self::assertEquals((string)$value, $instance->accountId);
+        self::assertEquals((string)$value, $instance->account_id);
 
         $instance = new Recipient();
         $instance->accountId = $value;
         self::assertEquals((string)$value, $instance->getAccountId());
         self::assertEquals((string)$value, $instance->accountId);
+        self::assertEquals((string)$value, $instance->account_id);
+
+        $instance = new Recipient();
+        $instance->account_id = $value;
+        self::assertEquals((string)$value, $instance->getAccountId());
+        self::assertEquals((string)$value, $instance->accountId);
+        self::assertEquals((string)$value, $instance->account_id);
     }
 
     /**
@@ -53,6 +62,17 @@ class RecipientTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidAccount_id($value)
+    {
+        $instance = new Recipient();
+        $instance->account_id = $value;
+    }
+
+    /**
      * @dataProvider validDataProvider
      *
      * @param $value
@@ -63,14 +83,23 @@ class RecipientTest extends TestCase
 
         self::assertEquals(null, $instance->getGatewayId());
         self::assertEquals(null, $instance->gatewayId);
+        self::assertEquals(null, $instance->gateway_id);
         $instance->setGatewayId($value);
         self::assertEquals((string)$value, $instance->getGatewayId());
         self::assertEquals((string)$value, $instance->gatewayId);
+        self::assertEquals((string)$value, $instance->gateway_id);
 
         $instance = new Recipient();
         $instance->gatewayId = $value;
         self::assertEquals((string)$value, $instance->getGatewayId());
         self::assertEquals((string)$value, $instance->gatewayId);
+        self::assertEquals((string)$value, $instance->gateway_id);
+
+        $instance = new Recipient();
+        $instance->gateway_id = $value;
+        self::assertEquals((string)$value, $instance->getGatewayId());
+        self::assertEquals((string)$value, $instance->gatewayId);
+        self::assertEquals((string)$value, $instance->gateway_id);
     }
 
     /**
@@ -93,6 +122,17 @@ class RecipientTest extends TestCase
     {
         $instance = new Recipient();
         $instance->gatewayId = $value;
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidGateway_id($value)
+    {
+        $instance = new Recipient();
+        $instance->gateway_id = $value;
     }
 
     public function validDataProvider()

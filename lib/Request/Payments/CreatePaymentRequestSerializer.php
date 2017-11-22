@@ -162,12 +162,6 @@ class CreatePaymentRequestSerializer
         $result = array(
             'type' => $paymentData->getType(),
         );
-        if ($paymentData->getAccountNumber() !== null) {
-            $result['account_number'] = $paymentData->getAccountNumber();
-        }
-        if ($paymentData->getPhone() !== null) {
-            $result['phone'] = $paymentData->getPhone();
-        }
         return $result;
     }
 
@@ -187,9 +181,6 @@ class CreatePaymentRequestSerializer
         $result = array(
             'type' => $paymentData->getType(),
         );
-        if ($paymentData->getBindId() !== null) {
-            $result['bind_id'] = $paymentData->getBindId();
-        }
         if ($paymentData->getPhone() !== null) {
             $result['phone'] = $paymentData->getPhone();
         }

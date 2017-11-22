@@ -46,12 +46,6 @@ class PaymentMethodSberbank extends AbstractPaymentMethod
      */
     private $_phone;
 
-    /**
-     * Необходим для безакцептной оплаты привязкой созданной через deep link приложения Сбербанк Онлайн.
-     * @var string Идентификатор привязки клиента СБОЛ.
-     */
-    private $_bindId;
-
     public function __construct()
     {
         $this->_setType(PaymentMethodType::SBERBANK);

@@ -37,14 +37,10 @@ use YandexCheckout\Model\PaymentMethodType;
  * Объект, описывающий метод оплаты, при оплате через Яндекс Деньги
  * @property string $type Тип объекта
  * @property string $accountNumber Номер кошелька в Яндекс.Деньгах с которого была произведена оплата.
+ * @property string $account_number Номер кошелька в Яндекс.Деньгах с которого была произведена оплата.
  */
 class PaymentMethodYandexWallet extends AbstractPaymentMethod
 {
-    /**
-     * @var string Номер телефона в формате ITU-T E.164 с которого была произведена оплата.
-     */
-    private $_phone;
-
     /**
      * @var string Номер кошелька в Яндекс.Деньгах с которого была произведена оплата.
      */

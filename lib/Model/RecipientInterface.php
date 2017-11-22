@@ -27,21 +27,30 @@
 namespace YandexCheckout\Model;
 
 /**
- * Interface RecipientInterface
+ * Интерфейс получателя платежа.
  *
- * @package YandexCheckout\Model
+ * Получатель платежа нужен, если вы разделяете потоки платежей в рамках одного аккаунта или создаете платеж в адрес
+ * другого аккаунта.
  *
  * @property-read string $accountId Идентификатор магазина
+ * @property-read string $account_id Идентификатор магазина
  * @property-read string $gatewayId Идентификатор шлюза
+ * @property-read string $gateway_id Идентификатор шлюза
  */
 interface RecipientInterface
 {
     /**
+     * Возвращает идентификатор магазина
+     *
      * @return string Идентификатор магазина
      */
     function getAccountId();
 
     /**
+     * Возвращает идентификатор шлюза.
+     *
+     * Идентификатор шлюза используется для разделения потоков платежей в рамках одного аккаунта.
+     *
      * @return string Идентификатор шлюза
      */
     function getGatewayId();

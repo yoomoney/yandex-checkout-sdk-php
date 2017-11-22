@@ -445,7 +445,7 @@ class CreatePaymentRequestBuilder extends AbstractRequestBuilder
 
     /**
      * Устанавливает метаданные, привязанные к платежу
-     * @param Metadata|null $value Метаданные платежа, устанавливаемые мерчантом
+     * @param Metadata|array|null $value Метаданные платежа, устанавливаемые мерчантом
      * @return CreatePaymentRequestBuilder Инстанс текущего билдера
      *
      * @throws InvalidPropertyValueTypeException Выбрасывается если переданные данные не удалось интерпретировать как

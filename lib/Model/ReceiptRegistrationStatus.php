@@ -29,18 +29,30 @@ namespace YandexCheckout\Model;
 use YandexCheckout\Common\AbstractEnum;
 
 /**
- * ReceiptRegistrationStatus - Состояние регистрации фискального чека
- * |Код|Описание|
- * --- | ---
- * |pending|Чек ожидает доставки|
- * |succeeded|Успешно доставлен|
- * |canceled|Чек не доставлен|
- * 
+ * Класс с перечислением статусов доставки данных для чека в онлайн-кассу (`pending`, `succeeded` или `canceled`)
+ *
+ * Состояние регистрации фискального чека:
+ * <ul>
+ * <li>pending - Чек ожидает доставки</li>
+ * <li>succeeded - Успешно доставлен</li>
+ * <li>canceled - Чек не доставлен</li>
+ * </ul>
  */
 class ReceiptRegistrationStatus extends AbstractEnum
 {
+    /**
+     * @var string Состояние регистрации фискального чека: ожидает доставки
+     */
     const PENDING = 'pending';
+
+    /**
+     * @var string Состояние регистрации фискального чека: успешно доставлен
+     */
     const SUCCEEDED = 'succeeded';
+
+    /**
+     * @var string Состояние регистрации фискального чека: не доставлен
+     */
     const CANCELED = 'canceled';
 
     protected static $validValues = array(

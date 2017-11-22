@@ -205,15 +205,24 @@ class PaymentTest extends TestCase
 
         self::assertNull($instance->getPaymentMethod());
         self::assertNull($instance->paymentMethod);
+        self::assertNull($instance->payment_method);
 
         $instance->setPaymentMethod($options['payment_method']);
         self::assertSame($options['payment_method'], $instance->getPaymentMethod());
         self::assertSame($options['payment_method'], $instance->paymentMethod);
+        self::assertSame($options['payment_method'], $instance->payment_method);
 
         $instance = new Payment();
         $instance->paymentMethod = $options['payment_method'];
         self::assertSame($options['payment_method'], $instance->getPaymentMethod());
         self::assertSame($options['payment_method'], $instance->paymentMethod);
+        self::assertSame($options['payment_method'], $instance->payment_method);
+
+        $instance = new Payment();
+        $instance->payment_method = $options['payment_method'];
+        self::assertSame($options['payment_method'], $instance->getPaymentMethod());
+        self::assertSame($options['payment_method'], $instance->paymentMethod);
+        self::assertSame($options['payment_method'], $instance->payment_method);
     }
 
     /**
@@ -243,6 +252,19 @@ class PaymentTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidDataProvider
+     * @param $value
+     */
+    public function testSetterInvalidPayment_method($value)
+    {
+        if (class_exists('TypeError')) {
+            self::setExpectedException('TypeError');
+            $instance = new Payment();
+            $instance->payment_method = $value['payment_method'];
+        }
+    }
+
+    /**
      * @dataProvider validDataProvider
      * @param array $options
      */
@@ -252,15 +274,24 @@ class PaymentTest extends TestCase
 
         self::assertNull($instance->getCreatedAt());
         self::assertNull($instance->createdAt);
+        self::assertNull($instance->created_at);
 
         $instance->setCreatedAt($options['created_at']);
         self::assertSame($options['created_at'], $instance->getCreatedAt()->format(DATE_ATOM));
         self::assertSame($options['created_at'], $instance->createdAt->format(DATE_ATOM));
+        self::assertSame($options['created_at'], $instance->created_at->format(DATE_ATOM));
 
         $instance = new Payment();
         $instance->createdAt = $options['created_at'];
         self::assertSame($options['created_at'], $instance->getCreatedAt()->format(DATE_ATOM));
         self::assertSame($options['created_at'], $instance->createdAt->format(DATE_ATOM));
+        self::assertSame($options['created_at'], $instance->created_at->format(DATE_ATOM));
+
+        $instance = new Payment();
+        $instance->created_at = $options['created_at'];
+        self::assertSame($options['created_at'], $instance->getCreatedAt()->format(DATE_ATOM));
+        self::assertSame($options['created_at'], $instance->createdAt->format(DATE_ATOM));
+        self::assertSame($options['created_at'], $instance->created_at->format(DATE_ATOM));
     }
 
     /**
@@ -286,6 +317,17 @@ class PaymentTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidCreated_at($value)
+    {
+        $instance = new Payment();
+        $instance->created_at = $value['created_at'];
+    }
+
+    /**
      * @dataProvider validDataProvider
      * @param array $options
      */
@@ -295,14 +337,17 @@ class PaymentTest extends TestCase
 
         self::assertNull($instance->getCapturedAt());
         self::assertNull($instance->capturedAt);
+        self::assertNull($instance->captured_at);
 
         $instance->setCapturedAt($options['captured_at']);
         if ($options['captured_at'] === null || $options['captured_at'] === '') {
             self::assertNull($instance->getCapturedAt());
             self::assertNull($instance->capturedAt);
+            self::assertNull($instance->captured_at);
         } else {
             self::assertSame($options['captured_at'], $instance->getCapturedAt()->format(DATE_ATOM));
             self::assertSame($options['captured_at'], $instance->capturedAt->format(DATE_ATOM));
+            self::assertSame($options['captured_at'], $instance->captured_at->format(DATE_ATOM));
         }
 
         $instance = new Payment();
@@ -310,9 +355,23 @@ class PaymentTest extends TestCase
         if ($options['captured_at'] === null || $options['captured_at'] === '') {
             self::assertNull($instance->getCapturedAt());
             self::assertNull($instance->capturedAt);
+            self::assertNull($instance->captured_at);
         } else {
             self::assertSame($options['captured_at'], $instance->getCapturedAt()->format(DATE_ATOM));
             self::assertSame($options['captured_at'], $instance->capturedAt->format(DATE_ATOM));
+            self::assertSame($options['captured_at'], $instance->captured_at->format(DATE_ATOM));
+        }
+
+        $instance = new Payment();
+        $instance->captured_at = $options['captured_at'];
+        if ($options['captured_at'] === null || $options['captured_at'] === '') {
+            self::assertNull($instance->getCapturedAt());
+            self::assertNull($instance->capturedAt);
+            self::assertNull($instance->captured_at);
+        } else {
+            self::assertSame($options['captured_at'], $instance->getCapturedAt()->format(DATE_ATOM));
+            self::assertSame($options['captured_at'], $instance->capturedAt->format(DATE_ATOM));
+            self::assertSame($options['captured_at'], $instance->captured_at->format(DATE_ATOM));
         }
     }
 
@@ -336,6 +395,17 @@ class PaymentTest extends TestCase
     {
         $instance = new Payment();
         $instance->capturedAt = $value['captured_at'];
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidCaptured_at($value)
+    {
+        $instance = new Payment();
+        $instance->captured_at = $value['captured_at'];
     }
 
     /**
@@ -395,15 +465,24 @@ class PaymentTest extends TestCase
 
         self::assertNull($instance->getRefundedAmount());
         self::assertNull($instance->refundedAmount);
+        self::assertNull($instance->refunded_amount);
 
         $instance->setRefundedAmount($options['refunded_amount']);
         self::assertSame($options['refunded_amount'], $instance->getRefundedAmount());
         self::assertSame($options['refunded_amount'], $instance->refundedAmount);
+        self::assertSame($options['refunded_amount'], $instance->refunded_amount);
 
         $instance = new Payment();
         $instance->refundedAmount = $options['refunded_amount'];
         self::assertSame($options['refunded_amount'], $instance->getRefundedAmount());
         self::assertSame($options['refunded_amount'], $instance->refundedAmount);
+        self::assertSame($options['refunded_amount'], $instance->refunded_amount);
+
+        $instance = new Payment();
+        $instance->refunded_amount = $options['refunded_amount'];
+        self::assertSame($options['refunded_amount'], $instance->getRefundedAmount());
+        self::assertSame($options['refunded_amount'], $instance->refundedAmount);
+        self::assertSame($options['refunded_amount'], $instance->refunded_amount);
     }
 
     /**
@@ -429,6 +508,19 @@ class PaymentTest extends TestCase
             self::setExpectedException('TypeError');
             $instance = new Payment();
             $instance->refundedAmount = $value['refunded_amount'];
+        }
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @param $value
+     */
+    public function testSetterInvalidRefunded_amount($value)
+    {
+        if (class_exists('TypeError')) {
+            self::setExpectedException('TypeError');
+            $instance = new Payment();
+            $instance->refunded_amount = $value['refunded_amount'];
         }
     }
 
@@ -485,14 +577,17 @@ class PaymentTest extends TestCase
 
         self::assertNull($instance->getReceiptRegistration());
         self::assertNull($instance->receiptRegistration);
+        self::assertNull($instance->receipt_registration);
 
         $instance->setReceiptRegistration($options['receipt_registration']);
         if ($options['receipt_registration'] === null || $options['receipt_registration'] === '') {
             self::assertNull($instance->getReceiptRegistration());
             self::assertNull($instance->receiptRegistration);
+            self::assertNull($instance->receipt_registration);
         } else {
             self::assertSame($options['receipt_registration'], $instance->getReceiptRegistration());
             self::assertSame($options['receipt_registration'], $instance->receiptRegistration);
+            self::assertSame($options['receipt_registration'], $instance->receipt_registration);
         }
 
 
@@ -501,9 +596,23 @@ class PaymentTest extends TestCase
         if ($options['receipt_registration'] === null || $options['receipt_registration'] === '') {
             self::assertNull($instance->getReceiptRegistration());
             self::assertNull($instance->receiptRegistration);
+            self::assertNull($instance->receipt_registration);
         } else {
             self::assertSame($options['receipt_registration'], $instance->getReceiptRegistration());
             self::assertSame($options['receipt_registration'], $instance->receiptRegistration);
+            self::assertSame($options['receipt_registration'], $instance->receipt_registration);
+        }
+
+        $instance = new Payment();
+        $instance->receipt_registration = $options['receipt_registration'];
+        if ($options['receipt_registration'] === null || $options['receipt_registration'] === '') {
+            self::assertNull($instance->getReceiptRegistration());
+            self::assertNull($instance->receiptRegistration);
+            self::assertNull($instance->receipt_registration);
+        } else {
+            self::assertSame($options['receipt_registration'], $instance->getReceiptRegistration());
+            self::assertSame($options['receipt_registration'], $instance->receiptRegistration);
+            self::assertSame($options['receipt_registration'], $instance->receipt_registration);
         }
     }
 
@@ -527,6 +636,17 @@ class PaymentTest extends TestCase
     {
         $instance = new Payment();
         $instance->receiptRegistration = $value['receipt_registration'];
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidReceipt_registration($value)
+    {
+        $instance = new Payment();
+        $instance->receipt_registration = $value['receipt_registration'];
     }
 
     /**
@@ -563,6 +683,7 @@ class PaymentTest extends TestCase
                 'reference_id' => ($i == 0 ? null :  ($i == 1 ? '' : Random::str(10, 20, 'abcdef0123456789'))),
                 'created_at' => date(DATE_ATOM, mt_rand(1, time())),
                 'captured_at' => ($i == 0 ? null : ($i == 1 ? '' : date(DATE_ATOM, mt_rand(1, time())))),
+                'expires_at' => ($i == 0 ? null : ($i == 1 ? '' : date(DATE_ATOM, mt_rand(1, time())))),
                 'confirmation' => new ConfirmationRedirect(),
                 'charge' => new MonetaryAmount(),
                 'income' => new MonetaryAmount(),
@@ -636,5 +757,86 @@ class PaymentTest extends TestCase
             $result[] = array($payment);
         }
         return $result;
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetSetExpiresAt($options)
+    {
+        $instance = new Payment();
+
+        self::assertNull($instance->getExpiresAt());
+        self::assertNull($instance->expiresAt);
+        self::assertNull($instance->expires_at);
+
+        $instance->setExpiresAt($options['expires_at']);
+        if ($options['expires_at'] === null || $options['expires_at'] === '') {
+            self::assertNull($instance->getExpiresAt());
+            self::assertNull($instance->expiresAt);
+            self::assertNull($instance->expires_at);
+        } else {
+            self::assertSame($options['expires_at'], $instance->getExpiresAt()->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expiresAt->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expires_at->format(DATE_ATOM));
+        }
+
+        $instance = new Payment();
+        $instance->expiresAt = $options['expires_at'];
+        if ($options['expires_at'] === null || $options['expires_at'] === '') {
+            self::assertNull($instance->getExpiresAt());
+            self::assertNull($instance->expiresAt);
+            self::assertNull($instance->expires_at);
+        } else {
+            self::assertSame($options['expires_at'], $instance->getExpiresAt()->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expiresAt->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expires_at->format(DATE_ATOM));
+        }
+
+        $instance = new Payment();
+        $instance->expires_at = $options['expires_at'];
+        if ($options['expires_at'] === null || $options['expires_at'] === '') {
+            self::assertNull($instance->getExpiresAt());
+            self::assertNull($instance->expiresAt);
+            self::assertNull($instance->expires_at);
+        } else {
+            self::assertSame($options['expires_at'], $instance->getExpiresAt()->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expiresAt->format(DATE_ATOM));
+            self::assertSame($options['expires_at'], $instance->expires_at->format(DATE_ATOM));
+        }
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidExpiresAt($value)
+    {
+        $instance = new Payment();
+        $instance->setExpiresAt($value['captured_at']);
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidExpiresAt($value)
+    {
+        $instance = new Payment();
+        $instance->expiresAt = $value['captured_at'];
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidExpires_at($value)
+    {
+        $instance = new Payment();
+        $instance->expires_at = $value['captured_at'];
     }
 }

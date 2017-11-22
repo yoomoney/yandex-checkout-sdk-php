@@ -32,10 +32,15 @@ use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Helpers\TypeCast;
 
 /**
- * Recipient - Получатель платежа
+ * Класс получателя платежа.
+ *
+ * Получатель платежа нужен, если вы разделяете потоки платежей в рамках одного аккаунта или создаете платеж в адрес
+ * другого аккаунта.
  *
  * @property string $accountId Идентификатор магазина
+ * @property string $account_id Идентификатор магазина
  * @property string $gatewayId Идентификатор шлюза
+ * @property string $gateway_id Идентификатор шлюза
  */
 class Recipient extends AbstractObject implements RecipientInterface
 {
@@ -51,6 +56,7 @@ class Recipient extends AbstractObject implements RecipientInterface
 
     /**
      * Возвращает идентификатор магазина
+     *
      * @return string Идентификатор магазина
      */
     public function getAccountId()
@@ -60,7 +66,9 @@ class Recipient extends AbstractObject implements RecipientInterface
 
     /**
      * Устанавливает идентификатор магазина
+     *
      * @param string $value Идентификатор магазина
+     *
      * @throws EmptyPropertyValueException Выбрасывается если было передано пустое значение
      * @throws InvalidPropertyValueTypeException Выбрасывается если было передано не строковое значение
      */
@@ -78,7 +86,10 @@ class Recipient extends AbstractObject implements RecipientInterface
     }
 
     /**
-     * Возвращает идентификатор шлюза
+     * Возвращает идентификатор шлюза.
+     *
+     * Идентификатор шлюза используется для разделения потоков платежей в рамках одного аккаунта.
+     *
      * @return string Идентификатор шлюза
      */
     public function getGatewayId()
@@ -88,7 +99,9 @@ class Recipient extends AbstractObject implements RecipientInterface
 
     /**
      * Устанавливает идентификатор шлюза
+     *
      * @param string $value Идентификатор шлюза
+     *
      * @throws EmptyPropertyValueException Выбрасывается если было передано пустое значение
      * @throws InvalidPropertyValueTypeException Выбрасывается если было передано не строковое значение
      */

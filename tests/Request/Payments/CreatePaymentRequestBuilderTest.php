@@ -3,7 +3,6 @@
 namespace Tests\YandexCheckout\Request\Payments;
 
 use PHPUnit\Framework\TestCase;
-use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesExternal;
@@ -411,16 +410,26 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
         $instance = $builder->build($this->getRequiredData(null, 'paymentMethodId'));
         self::assertNull($instance->getPaymentToken());
+        self::assertNull($instance->paymentToken);
+        self::assertNull($instance->payment_token);
+
+        if (empty($options['paymentToken'])) {
+            $buildData = $this->getRequiredData(null, 'paymentMethodId');
+        } else {
+            $buildData = $this->getRequiredData('paymentToken');
+        }
 
         $builder->setPaymentToken($options['paymentToken']);
-        $instance = $builder->build(
-            empty($options['paymentToken']) ? $this->getRequiredData(null, 'paymentMethodId') : $this->getRequiredData('paymentToken')
-        );
+        $instance = $builder->build($buildData);
 
         if (empty($options['paymentToken'])) {
             self::assertNull($instance->getPaymentToken());
+            self::assertNull($instance->paymentToken);
+            self::assertNull($instance->payment_token);
         } else {
             self::assertEquals($options['paymentToken'], $instance->getPaymentToken());
+            self::assertEquals($options['paymentToken'], $instance->paymentToken);
+            self::assertEquals($options['paymentToken'], $instance->payment_token);
         }
     }
 
@@ -713,7 +722,6 @@ class CreatePaymentRequestBuilderTest extends TestCase
                     'amount' => new MonetaryAmount(Random::int(1, 1000)),
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                     'receiptItems' => array(),
-                    'referenceId' => null,
                     'paymentToken' => null,
                     'paymentMethodId' => null,
                     'paymentMethodData' => null,

@@ -36,15 +36,24 @@ class PaymentMethodYandexWalletTest extends AbstractPaymentMethodTest
 
         self::assertNull($instance->getAccountNumber());
         self::assertNull($instance->accountNumber);
+        self::assertNull($instance->account_number);
 
         $instance->setAccountNumber($value);
         self::assertEquals($value, $instance->getAccountNumber());
         self::assertEquals($value, $instance->accountNumber);
+        self::assertEquals($value, $instance->account_number);
 
         $instance = $this->getTestInstance();
         $instance->accountNumber = $value;
         self::assertEquals($value, $instance->getAccountNumber());
         self::assertEquals($value, $instance->accountNumber);
+        self::assertEquals($value, $instance->account_number);
+
+        $instance = $this->getTestInstance();
+        $instance->account_number = $value;
+        self::assertEquals($value, $instance->getAccountNumber());
+        self::assertEquals($value, $instance->accountNumber);
+        self::assertEquals($value, $instance->account_number);
     }
 
     /**
@@ -67,6 +76,17 @@ class PaymentMethodYandexWalletTest extends AbstractPaymentMethodTest
     {
         $instance = $this->getTestInstance();
         $instance->accountNumber = $value;
+    }
+
+    /**
+     * @dataProvider invalidAccountNumberDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidAccount_number($value)
+    {
+        $instance = $this->getTestInstance();
+        $instance->account_number = $value;
     }
 
     public function validAccountNumberDataProvider()

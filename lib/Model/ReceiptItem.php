@@ -40,6 +40,7 @@ use YandexCheckout\Helpers\TypeCast;
  * @property-read int $amount Суммарная стоимость покупаемого товара в копейках/центах
  * @property AmountInterface $price Цена товара
  * @property int $vatCode Ставка НДС, число 1-6
+ * @property int $vat_code Ставка НДС, число 1-6
  * @property-write bool $isShipping Флаг доставки
  */
 class ReceiptItem extends AbstractObject implements ReceiptItemInterface

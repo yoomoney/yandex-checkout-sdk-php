@@ -63,7 +63,7 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
      */
     public function testGetSetExpiryYear($value)
     {
-        $this->getAndSetTest($value, 'expiryYear');
+        $this->getAndSetTest($value, 'expiryYear', 'expiry_year');
     }
 
     /**
@@ -87,6 +87,16 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     }
 
     /**
+     * @dataProvider invalidYearDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalid_year($value)
+    {
+        $this->getTestInstance()->expiry_year = $value;
+    }
+
+    /**
      * @dataProvider invalidMonthDataProvider
      * @expectedException \InvalidArgumentException
      * @param mixed $value
@@ -97,12 +107,22 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     }
 
     /**
+     * @dataProvider invalidMonthDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalid_month($value)
+    {
+        $this->getTestInstance()->expiry_month = $value;
+    }
+
+    /**
      * @dataProvider validExpiryMonthDataProvider
      * @param $value
      */
     public function testGetSetExpiryMonth($value)
     {
-        $this->getAndSetTest($value, 'expiryMonth');
+        $this->getAndSetTest($value, 'expiryMonth', 'expiry_month');
     }
 
     /**
@@ -121,7 +141,7 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
      */
     public function testGetSetCardType($value)
     {
-        $this->getAndSetTest($value, 'cardType');
+        $this->getAndSetTest($value, 'cardType', 'card_type');
     }
 
     /**
@@ -142,6 +162,16 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     public function testSetterInvalidCardType($value)
     {
         $this->getTestInstance()->cardType = $value;
+    }
+
+    /**
+     * @dataProvider invalidCardTypeDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidCard_type($value)
+    {
+        $this->getTestInstance()->card_type = $value;
     }
 
     /**
@@ -262,7 +292,7 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
         );
     }
 
-    protected function getAndSetTest($value, $property)
+    protected function getAndSetTest($value, $property, $snakeCase = null)
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
@@ -271,11 +301,17 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
 
         self::assertNull($instance->{$getter}());
         self::assertNull($instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertNull($instance->{$snakeCase});
+        }
 
         $instance->{$setter}($value);
 
         self::assertEquals($value, $instance->{$getter}());
         self::assertEquals($value, $instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
 
         $instance = $this->getTestInstance();
 
@@ -283,5 +319,18 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
 
         self::assertEquals($value, $instance->{$getter}());
         self::assertEquals($value, $instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
+
+        if ($snakeCase !== null) {
+            $instance = $this->getTestInstance();
+
+            $instance->{$snakeCase} = $value;
+
+            self::assertEquals($value, $instance->{$getter}());
+            self::assertEquals($value, $instance->{$property});
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
     }
 }

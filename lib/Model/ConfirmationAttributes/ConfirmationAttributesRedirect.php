@@ -35,6 +35,8 @@ use YandexCheckout\Model\ConfirmationType;
  * оплаты банковскими картами. По умолчанию определяется политикой платежной системы.
  * @property string $returnUrl URL на который вернется плательщик после подтверждения или отмены платежа
  * на странице партнера.
+ * @property string $return_url URL на который вернется плательщик после подтверждения или отмены платежа
+ * на странице партнера.
  */
 class ConfirmationAttributesRedirect extends AbstractConfirmationAttributes
 {

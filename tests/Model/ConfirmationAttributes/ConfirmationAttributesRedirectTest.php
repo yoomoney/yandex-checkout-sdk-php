@@ -88,27 +88,49 @@ class ConfirmationAttributesRedirectTest extends AbstractConfirmationAttributesT
 
         self::assertNull($instance->getReturnUrl());
         self::assertNull($instance->returnUrl);
+        self::assertNull($instance->return_url);
 
         $instance->setReturnUrl($value);
         if ($value === null || $value === '') {
             self::assertNull($instance->getReturnUrl());
             self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
         } else {
             self::assertEquals($value, $instance->getReturnUrl());
             self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
         }
 
         $instance->setReturnUrl(null);
         self::assertNull($instance->getReturnUrl());
         self::assertNull($instance->returnUrl);
+        self::assertNull($instance->return_url);
 
         $instance->returnUrl = $value;
         if ($value === null || $value === '') {
             self::assertNull($instance->getReturnUrl());
             self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
         } else {
             self::assertEquals($value, $instance->getReturnUrl());
             self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
+        }
+
+        $instance->setReturnUrl(null);
+        self::assertNull($instance->getReturnUrl());
+        self::assertNull($instance->returnUrl);
+        self::assertNull($instance->return_url);
+
+        $instance->return_url = $value;
+        if ($value === null || $value === '') {
+            self::assertNull($instance->getReturnUrl());
+            self::assertNull($instance->returnUrl);
+            self::assertNull($instance->return_url);
+        } else {
+            self::assertEquals($value, $instance->getReturnUrl());
+            self::assertEquals($value, $instance->returnUrl);
+            self::assertEquals($value, $instance->return_url);
         }
     }
 
@@ -132,6 +154,17 @@ class ConfirmationAttributesRedirectTest extends AbstractConfirmationAttributesT
     {
         $instance = $this->getTestInstance();
         $instance->returnUrl = $value;
+    }
+
+    /**
+     * @dataProvider invalidUrlDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidReturn_url($value)
+    {
+        $instance = $this->getTestInstance();
+        $instance->return_url = $value;
     }
 
     public function validEnforceDataProvider()

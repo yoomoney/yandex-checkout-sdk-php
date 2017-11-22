@@ -2,10 +2,22 @@
 
 namespace Common\Exceptions;
 
+use YandexCheckout\Common\Exceptions\ResponseProcessingException;
+
 require_once __DIR__ . '/ApiExceptionTest.php';
 
-abstract class AbstractApiRequestExceptionTest extends ApiExceptionTest
+class ResponseProcessingExceptionTest extends ApiExceptionTest
 {
+    public function getTestInstance($message = '', $code = 0, $responseHeaders = array(), $responseBody = null)
+    {
+        return new ResponseProcessingException($responseHeaders, $responseBody);
+    }
+
+    public function expectedHttpCode()
+    {
+        return ResponseProcessingException::HTTP_CODE;
+    }
+
     /**
      * @dataProvider descriptionDataProvider
      * @param string $body
@@ -27,54 +39,6 @@ abstract class AbstractApiRequestExceptionTest extends ApiExceptionTest
             array('{}'),
             array('{"description":"test"}'),
             array('{"description":"У попа была собака"}'),
-        );
-    }
-
-    /**
-     * @dataProvider codeDataProvider
-     * @param string $body
-     */
-    public function testCode($body)
-    {
-        $instance = $this->getTestInstance('', 0, array(), $body);
-        $tmp = json_decode($body, true);
-        if (empty($tmp['code'])) {
-            self::assertEquals('', $instance->getMessage());
-        } else {
-            self::assertEquals('Error code: '.$tmp['code'].'.', $instance->getMessage());
-        }
-    }
-
-    public function codeDataProvider()
-    {
-        return array(
-            array('{}'),
-            array('{"code":"123"}'),
-            array('{"code":"server_error"}'),
-        );
-    }
-
-    /**
-     * @dataProvider parameterDataProvider
-     * @param string $body
-     */
-    public function testParameter($body)
-    {
-        $instance = $this->getTestInstance('', 0, array(), $body);
-        $tmp = json_decode($body, true);
-        if (empty($tmp['parameter'])) {
-            self::assertEquals('', $instance->getMessage());
-        } else {
-            self::assertEquals('Parameter name: '.$tmp['parameter'].'.', $instance->getMessage());
-        }
-    }
-
-    public function parameterDataProvider()
-    {
-        return array(
-            array('{}'),
-            array('{"parameter":"parameter_name"}'),
-            array('{"parameter":null}'),
         );
     }
 
@@ -139,12 +103,6 @@ abstract class AbstractApiRequestExceptionTest extends ApiExceptionTest
         if (!empty($tmp['description'])) {
             $message = $tmp['description'].'.';
         }
-        if (!empty($tmp['code'])) {
-            $message .= 'Error code: '.$tmp['code'].'.';
-        }
-        if (!empty($tmp['parameter'])) {
-            $message .= 'Parameter name: '.$tmp['parameter'].'.';
-        }
         self::assertEquals($message, $instance->getMessage());
 
         if (empty($tmp['retry_after'])) {
@@ -169,8 +127,6 @@ abstract class AbstractApiRequestExceptionTest extends ApiExceptionTest
             array('{"code":"server_error","description":"Invalid parameter value","parameter":"shop_id","retry_after":333}'),
         );
     }
-
-    abstract public function expectedHttpCode();
 
     public function testExceptionCode()
     {

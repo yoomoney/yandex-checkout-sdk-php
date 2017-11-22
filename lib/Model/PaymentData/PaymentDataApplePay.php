@@ -36,6 +36,7 @@ use YandexCheckout\Model\PaymentMethodType;
  * Платежные данные для проведения оплаты при помощи Apple Pay
  * @property string $type Тип объекта
  * @property string $paymentData содержимое поля paymentData объекта PKPaymentToken, закодированное в Base64
+ * @property string $payment_data содержимое поля paymentData объекта PKPaymentToken, закодированное в Base64
  */
 class PaymentDataApplePay extends AbstractPaymentData
 {

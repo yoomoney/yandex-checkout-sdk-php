@@ -32,7 +32,7 @@ composer update
 
 ### Вручную
 
-1. Скачайте [архив Yandex.Checkout API PHP Client Library](https://github.com/yandex-money/yandex-checkout-sdk-php/releases/download/1.0.1/yandex-checkout-sdk-php-1.0.1.zip), распакуйте его и скопируйте каталог lib в нужное место в вашем проекте.
+1. Скачайте [архив Yandex.Checkout API PHP Client Library](https://github.com/yandex-money/yandex-checkout-sdk-php/releases/download/v1.0.2/yandex-checkout-sdk-php-v1.0.2.zip), распакуйте его и скопируйте каталог lib в нужное место в вашем проекте.
 2. В коде вашего проекта подключите автозагрузку файлов нашего клиента:
 ```php
 require __DIR__ . '/lib/autoload.php'; 

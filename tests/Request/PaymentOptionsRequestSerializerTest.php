@@ -35,7 +35,7 @@ class PaymentOptionsRequestSerializerTest extends TestCase
                 $value = $options[$field];
                 if (!empty($value)) {
                     if ($mapped === 'amount') {
-                        $expected[$mapped] = (string)round($value, 2);
+                        $expected[$mapped] = (string)number_format($options['amount'], 2, '.', '');
                     } else {
                         $expected[$mapped] = $value;
                     }

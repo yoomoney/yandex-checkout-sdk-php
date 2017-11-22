@@ -46,15 +46,20 @@ use YandexCheckout\Model\RecipientInterface;
  * @property RecipientInterface $recipient Получатель платежа, если задан
  * @property AmountInterface $amount Сумма создаваемого платежа
  * @property ReceiptInterface $receipt Данные фискального чека 54-ФЗ
- * @property string $referenceId Айди заказа на стороне мерчанта
  * @property string $paymentToken Одноразовый токен для проведения оплаты, сформированный Yandex.Checkout JS widget
+ * @property string $payment_token Одноразовый токен для проведения оплаты, сформированный Yandex.Checkout JS widget
  * @property string $paymentMethodId Идентификатор записи о сохраненных платежных данных покупателя
+ * @property string $payment_method_id Идентификатор записи о сохраненных платежных данных покупателя
  * @property AbstractPaymentData $paymentMethodData Данные используемые для создания метода оплаты
+ * @property AbstractPaymentData $payment_method_data Данные используемые для создания метода оплаты
  * @property AbstractConfirmationAttributes $confirmation Способ подтверждения платежа
  * @property bool $savePaymentMethod Сохранить платежные данные для последующего использования. Значение true
  * инициирует создание многоразового payment_method.
+ * @property bool $save_payment_method Сохранить платежные данные для последующего использования. Значение true
+ * инициирует создание многоразового payment_method.
  * @property bool $capture Автоматически принять поступившую оплату
  * @property string $clientIp IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес TCP-подключения.
+ * @property string $client_ip IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес TCP-подключения.
  * @property Metadata $metadata Метаданные привязанные к платежу
  */
 class CreatePaymentRequest extends AbstractRequest implements CreatePaymentRequestInterface
@@ -499,7 +504,7 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
 
     /**
      * Устанавливает метаданные, привязанные к платежу
-     * @param Metadata|null $value Метаданные платежа, устанавливаемые мерчантом
+     * @param Metadata|array|null $value Метаданные платежа, устанавливаемые мерчантом
      *
      * @throws InvalidPropertyValueTypeException Выбрасывается если переданные данные не удалось интерпретировать как
      * метаданные платежа
@@ -567,10 +572,7 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
                 $this->setValidationError('Both paymentMethodID and paymentData values are specified');
                 return false;
             }
-        } /* elseif (!$this->hasPaymentMethodData()) {
-            $this->setValidationError('Payment method not specified, set paymentToken, paymentMethodID or paymentData');
-            return false;
-        }*/
+        }
         return true;
     }
 

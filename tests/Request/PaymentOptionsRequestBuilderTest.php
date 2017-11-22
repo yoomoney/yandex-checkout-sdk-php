@@ -70,7 +70,7 @@ class PaymentOptionsRequestBuilderTest extends TestCase
         if (empty($options['amount'])) {
             self::assertNull($instance->getAmount());
         } elseif (is_numeric($options['amount'])) {
-            self::assertEquals(round($options['amount'], 2), $instance->getAmount());
+            self::assertEquals(number_format($options['amount'], 2, '.', ''), $instance->getAmount());
         } else {
             self::assertEquals($instance->getAmount(), $instance->getAmount());
         }
@@ -140,7 +140,7 @@ class PaymentOptionsRequestBuilderTest extends TestCase
         if (empty($options['amount'])) {
             self::assertNull($instance->getAmount());
         } elseif (is_numeric($options['amount'])) {
-            self::assertEquals(round($options['amount'], 2), $instance->getAmount());
+            self::assertEquals(number_format($options['amount'], 2, '.', ''), $instance->getAmount());
         } else {
             self::assertEquals($options['amount']->getValue(), $instance->getAmount());
         }

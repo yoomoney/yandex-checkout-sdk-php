@@ -41,14 +41,22 @@ use YandexCheckout\Model\RecipientInterface;
  * @property-read RecipientInterface|null $recipient Получатель платежа, если задан
  * @property-read AmountInterface $amount Сумма создаваемого платежа
  * @property-read ReceiptInterface $receipt Данные фискального чека 54-ФЗ
- * @property-read string $referenceId Айди заказа на стороне мерчанта
- * @property-read string $paymentToken Одноразовый токен для проведения оплаты, сформированный Yandex.Checkout JS widget
+ * @property-read string $paymentToken Одноразовый токен для проведения оплаты, сформированный
+ * Yandex.Checkout JS widget
+ * @property-read string $payment_token Одноразовый токен для проведения оплаты, сформированный
+ * Yandex.Checkout JS widget
  * @property-read string $paymentMethodId Идентификатор записи о сохраненных платежных данных покупателя
+ * @property-read string $payment_method_id Идентификатор записи о сохраненных платежных данных покупателя
  * @property-read AbstractPaymentData $paymentMethodData Данные используемые для создания метода оплаты
+ * @property-read AbstractPaymentData $payment_method_data Данные используемые для создания метода оплаты
  * @property-read AbstractConfirmationAttributes $confirmation Способ подтверждения платежа
  * @property-read bool $savePaymentMethod Сохранить платежные данные для последующего использования
+ * @property-read bool $save_payment_method Сохранить платежные данные для последующего использования
  * @property-read bool $capture Автоматически принять поступившую оплату
- * @property-read string $clientIp IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес TCP-подключения.
+ * @property-read string $clientIp IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес
+ * TCP-подключения.
+ * @property-read string $client_ip IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес
+ * TCP-подключения.
  * @property-read Metadata $metadata Метаданные привязанные к платежу
  */
 interface CreatePaymentRequestInterface

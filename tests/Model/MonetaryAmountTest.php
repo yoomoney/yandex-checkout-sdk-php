@@ -32,7 +32,7 @@ class MonetaryAmountTest extends TestCase
 
         $instance = new MonetaryAmount($value, $currency);
 
-        self::assertEquals(round($value, 2), $instance->getValue());
+        self::assertEquals(number_format($value, 2, '.', ''), $instance->getValue());
         self::assertEquals(strtoupper($currency), $instance->getCurrency());
     }
 
@@ -43,7 +43,7 @@ class MonetaryAmountTest extends TestCase
      */
     public function testGetSetValue($value)
     {
-        $expected = (string)round($value, 2);
+        $expected = number_format($value, 2, '.', '');
 
         $instance = self::getInstance();
         self::assertEquals(self::DEFAULT_VALUE, $instance->getValue());
@@ -327,7 +327,7 @@ class MonetaryAmountTest extends TestCase
     {
         $instance = new MonetaryAmount($value, $currency);
         $expected = array(
-            'value' => round($value, 2),
+            'value' => number_format($value, 2, '.', ''),
             'currency' => strtoupper($currency),
         );
         self::assertEquals($expected, $instance->jsonSerialize());

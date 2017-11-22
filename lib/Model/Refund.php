@@ -37,11 +37,13 @@ use YandexCheckout\Helpers\TypeCast;
  *
  * @property string $id Идентификатор возврата платежа
  * @property string $paymentId Идентификатор платежа
+ * @property string $payment_id Идентификатор платежа
  * @property string $status Статус возврата
  * @property \DateTime $createdAt Время создания возврата
- * @property \DateTime $authorizedAt Время проведения возврата
+ * @property \DateTime $created_at Время создания возврата
  * @property AmountInterface $amount Сумма возврата
  * @property string $receiptRegistration Статус регистрации чека
+ * @property string $receipt_registration Статус регистрации чека
  * @property string $comment Комментарий, основание для возврата средств покупателю
  */
 class Refund extends AbstractObject implements RefundInterface
@@ -65,11 +67,6 @@ class Refund extends AbstractObject implements RefundInterface
      * @var \DateTime Время создания возврата
      */
     private $_createdAt;
-
-    /**
-     * @var \DateTime Время проведения возврата
-     */
-    private $_authorizedAt;
 
     /**
      * @var MonetaryAmount Сумма возврата
@@ -225,40 +222,6 @@ class Refund extends AbstractObject implements RefundInterface
             $this->_createdAt = $dateTime;
         } else {
             throw new InvalidPropertyValueTypeException('Invalid created_at value', 0, 'Refund.createdAt', $value);
-        }
-    }
-
-    /**
-     * Возвращает дату проведения возврата
-     * @return \DateTime|null Время проведения возврата
-     *
-     * @throws InvalidPropertyValueException Выбрасывается если переданную строку или число не удалось интерпретировать
-     * как дату и время
-     * @throws InvalidPropertyValueTypeException Выбрасывается если было передано значение невалидного типа
-     */
-    public function getAuthorizedAt()
-    {
-        return $this->_authorizedAt;
-    }
-
-    /**
-     * Устанавливает время проведения возврата
-     * @param \DateTime|null $value Время проведения возврата
-     *
-     *
-     */
-    public function setAuthorizedAt($value)
-    {
-        if ($value === null || $value === '') {
-            $this->_authorizedAt = null;
-        } elseif (TypeCast::canCastToDateTime($value)) {
-            $dateTime = TypeCast::castToDateTime($value);
-            if ($dateTime === null) {
-                throw new InvalidPropertyValueException('Invalid authorizedAt value', 0, 'Refund.authorizedAt', $value);
-            }
-            $this->_authorizedAt = $dateTime;
-        } else {
-            throw new InvalidPropertyValueTypeException('Invalid authorizedAt value', 0, 'Refund.authorizedAt', $value);
         }
     }
 

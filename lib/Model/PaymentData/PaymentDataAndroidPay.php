@@ -35,6 +35,7 @@ use YandexCheckout\Model\PaymentMethodType;
  * PaymentDataAndroidPay
  * Платежные данные для проведения оплаты при помощи Android Pay.
  * @property string $paymentData содержимое поля paymentData объекта PKPaymentToken, закодированное в Base64
+ * @property string $payment_data содержимое поля paymentData объекта PKPaymentToken, закодированное в Base64
  */
 class PaymentDataAndroidPay extends AbstractPaymentData
 {

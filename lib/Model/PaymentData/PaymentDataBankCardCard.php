@@ -37,7 +37,9 @@ use YandexCheckout\Helpers\TypeCast;
  * Необходим при оплате PCI-DSS данными.
  * @property string $number Номер банковской карты
  * @property string $expiryYear Срок действия, год, YY
+ * @property string $expiry_year Срок действия, год, YY
  * @property string $expiryMonth Срок действия, месяц, MM
+ * @property string $expiry_month Срок действия, месяц, MM
  * @property string $csc CVV2/CVC2 код
  * @property string $cardholder Имя держателя карты
  */

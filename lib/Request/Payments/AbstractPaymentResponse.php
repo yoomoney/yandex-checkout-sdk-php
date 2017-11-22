@@ -69,6 +69,9 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
         if (!empty($paymentInfo['captured_at'])) {
             $this->setCapturedAt(strtotime($paymentInfo['captured_at']));
         }
+        if (!empty($paymentInfo['expires_at'])) {
+            $this->setExpiresAt($paymentInfo['expires_at']);
+        }
         if (!empty($paymentInfo['confirmation'])) {
             if ($paymentInfo['confirmation']['type'] === ConfirmationType::REDIRECT) {
                 $confirmation = new ConfirmationRedirect();

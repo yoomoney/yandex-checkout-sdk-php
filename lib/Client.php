@@ -43,7 +43,6 @@ use YandexCheckout\Helpers\Config\ConfigurationLoader;
 use YandexCheckout\Helpers\Config\ConfigurationLoaderInterface;
 use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Model\PaymentInterface;
-use YandexCheckout\Model\RefundInterface;
 use YandexCheckout\Request\PaymentOptionsRequest;
 use YandexCheckout\Request\PaymentOptionsRequestInterface;
 use YandexCheckout\Request\PaymentOptionsRequestSerializer;
@@ -84,7 +83,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.1';
+    const SDK_VERSION = '1.0.2';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key

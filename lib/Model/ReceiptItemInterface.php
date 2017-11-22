@@ -36,6 +36,7 @@ namespace YandexCheckout\Model;
  * @property-read int $amount  Суммарная стоимость покупаемого товара в копейках/центах
  * @property-read AmountInterface $price Цена товара
  * @property-read int $vatCode Ставка НДС, число 1-6
+ * @property-read int $vat_code Ставка НДС, число 1-6
  */
 interface ReceiptItemInterface
 {
@@ -70,7 +71,7 @@ interface ReceiptItemInterface
     function getVatCode();
 
     /**
-     * Проверяет, является ли текущий элемент чека доствкой
+     * Проверяет, является ли текущий элемент чека доставкой
      * @return bool True если доставка, false если обычный товар
      */
     function isShipping();

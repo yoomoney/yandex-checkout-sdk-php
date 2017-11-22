@@ -158,9 +158,9 @@ class PaymentOptionsRequestTest extends TestCase
 
         $expected = 0.0;
         if (is_object($options['amount'])) {
-            $expected = (string)round((string)$options['amount'], 2);
+            $expected = (string)$options['amount'];
         } elseif (!empty($options['amount'])) {
-            $expected = (string)round($options['amount'], 2);
+            $expected = number_format($options['amount'], 2, '.', '');
         }
         if ($expected <= 0.01) {
             $expected = 0.0;

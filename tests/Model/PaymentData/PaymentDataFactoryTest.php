@@ -145,14 +145,11 @@ class PaymentDataFactoryTest extends TestCase
                 array(
                     'type' => PaymentMethodType::SBERBANK,
                     'phone' => Random::str(4, 15, '0123456789'),
-                    'bindId' => Random::str(4, 15, '0123456789'),
                 ),
             ),
             array(
                 array(
                     'type' => PaymentMethodType::YANDEX_MONEY,
-                    'phone' => Random::str(4, 15, '0123456789'),
-                    'accountNumber' => Random::str(31, '0123456789'),
                 ),
             ),
         );

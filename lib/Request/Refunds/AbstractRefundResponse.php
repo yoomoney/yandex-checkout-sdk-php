@@ -48,10 +48,6 @@ abstract class AbstractRefundResponse extends Refund
         $this->setCreatedAt(empty($options['created_at']) ? null : $options['created_at']);
         $this->setAmount(new MonetaryAmount($options['amount']['value'], $options['amount']['currency']));
 
-        if (!empty($options['authorized_at'])) {
-            $this->setAuthorizedAt($options['authorized_at']);
-        }
-
         if (!empty($options['receipt_registration'])) {
             $this->setReceiptRegistration($options['receipt_registration']);
         }

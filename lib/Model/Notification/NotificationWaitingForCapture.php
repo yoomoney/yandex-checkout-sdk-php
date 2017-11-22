@@ -42,6 +42,8 @@ use YandexCheckout\Request\Payments\PaymentResponse;
  * структура такого объекта для магазинов, которые получают уведомления на HTTPS endpoint.
  *
  * @package YandexCheckout\Model\Notification
+ *
+ * @property-read PaymentInterface $object Объект с информацией о платеже, который можно подтвердить или отменить
  */
 class NotificationWaitingForCapture extends AbstractNotification
 {

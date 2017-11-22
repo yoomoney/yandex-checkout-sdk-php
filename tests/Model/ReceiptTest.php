@@ -57,32 +57,54 @@ class ReceiptTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testGetSetTaxSystemId($options)
+    public function testGetSetTaxSystemCode($options)
     {
         $instance = new Receipt();
 
         self::assertNull($instance->getTaxSystemCode());
         self::assertNull($instance->taxSystemCode);
+        self::assertNull($instance->tax_system_code);
 
         $instance->setTaxSystemCode($options['tax_system_code']);
         self::assertEquals($options['tax_system_code'], $instance->getTaxSystemCode());
         self::assertEquals($options['tax_system_code'], $instance->taxSystemCode);
+        self::assertEquals($options['tax_system_code'], $instance->tax_system_code);
     }
 
     /**
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetterTaxSystemId($options)
+    public function testSetterTaxSystemCode($options)
     {
         $instance = new Receipt();
 
         self::assertNull($instance->getTaxSystemCode());
         self::assertNull($instance->taxSystemCode);
+        self::assertNull($instance->tax_system_code);
 
         $instance->taxSystemCode = $options['tax_system_code'];
         self::assertEquals($options['tax_system_code'], $instance->getTaxSystemCode());
         self::assertEquals($options['tax_system_code'], $instance->taxSystemCode);
+        self::assertEquals($options['tax_system_code'], $instance->tax_system_code);
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetterTax_system_code($options)
+    {
+        $instance = new Receipt();
+
+        self::assertNull($instance->getTaxSystemCode());
+        self::assertNull($instance->taxSystemCode);
+        self::assertNull($instance->tax_system_code);
+
+        $instance->tax_system_code = $options['tax_system_code'];
+        self::assertEquals($options['tax_system_code'], $instance->getTaxSystemCode());
+        self::assertEquals($options['tax_system_code'], $instance->taxSystemCode);
+        self::assertEquals($options['tax_system_code'], $instance->tax_system_code);
     }
 
     /**
@@ -90,7 +112,7 @@ class ReceiptTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @param $value
      */
-    public function testSetInvalidTaxSystemId($value)
+    public function testSetInvalidTaxSystemCode($value)
     {
         $instance = new Receipt();
         $instance->setTaxSystemCode($value);
@@ -249,6 +271,22 @@ class ReceiptTest extends TestCase
             array(true),
             array(false),
             array(1.43),
+            array(
+                array(
+                    array(
+                        'description' => 'text',
+                        'quantity' => 1,
+                        'amount' => array(
+                            'value' => 1,
+                            'currency' => 'RUB',
+                        ),
+                        'vat_code' => 1,
+                    ),
+                ),
+            ),
+            array(
+                array(new \stdClass()),
+            ),
         );
     }
 

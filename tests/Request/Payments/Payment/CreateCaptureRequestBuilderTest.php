@@ -7,6 +7,7 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\MonetaryAmount;
+use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Request\Payments\Payment\CreateCaptureRequestBuilder;
 
 class CreateCaptureRequestBuilderTest extends TestCase
@@ -18,18 +19,15 @@ class CreateCaptureRequestBuilderTest extends TestCase
     public function testSetAmountValue($options)
     {
         $builder = new CreateCaptureRequestBuilder();
-        try {
-            $builder->build();
-        } catch (\Exception $e) {
-            $builder->setAmount($options['amount']);
-            $instance = $builder->build();
+        $builder->setAmount($options['amount']);
+        $instance = $builder->build();
 
+        if (empty($options['amount'])) {
+            self::assertNull($instance->getAmount());
+        } else {
             self::assertNotNull($instance->getAmount());
             self::assertEquals($options['amount'], $instance->getAmount()->getValue());
-
-            return;
         }
-        self::fail('Exception not thrown');
     }
 
     /**
@@ -39,29 +37,23 @@ class CreateCaptureRequestBuilderTest extends TestCase
     public function testSetAmount($amount)
     {
         $builder = new CreateCaptureRequestBuilder();
-        try {
-            $builder->build();
-        } catch (\Exception $e) {
-            $builder->setAmount($amount);
-            $instance = $builder->build();
 
-            self::assertNotNull($instance->getAmount());
-            self::assertEquals($amount->getValue(), $instance->getAmount()->getValue());
-            self::assertEquals($amount->getCurrency(), $instance->getAmount()->getCurrency());
+        $builder->setAmount($amount);
+        $instance = $builder->build();
 
-            $builder->setAmount(array(
-                'value' => $amount->getValue(),
-                'currency' => $amount->getCurrency(),
-            ));
-            $instance = $builder->build();
+        self::assertNotNull($instance->getAmount());
+        self::assertEquals($amount->getValue(), $instance->getAmount()->getValue());
+        self::assertEquals($amount->getCurrency(), $instance->getAmount()->getCurrency());
 
-            self::assertNotNull($instance->getAmount());
-            self::assertEquals($amount->getValue(), $instance->getAmount()->getValue());
-            self::assertEquals($amount->getCurrency(), $instance->getAmount()->getCurrency());
+        $builder->setAmount(array(
+            'value' => $amount->getValue(),
+            'currency' => $amount->getCurrency(),
+        ));
+        $instance = $builder->build();
 
-            return;
-        }
-        self::fail('Exception not thrown');
+        self::assertNotNull($instance->getAmount());
+        self::assertEquals($amount->getValue(), $instance->getAmount()->getValue());
+        self::assertEquals($amount->getCurrency(), $instance->getAmount()->getCurrency());
     }
 
     /**
@@ -83,18 +75,11 @@ class CreateCaptureRequestBuilderTest extends TestCase
     {
         $builder = new CreateCaptureRequestBuilder();
 
-        try {
-            $builder->build();
-        } catch (\Exception $e) {
-            $builder->setCurrency($options['currency']);
-            $instance = $builder->build(array('amount' => mt_rand(1, 100)));
+        $builder->setCurrency($options['currency']);
+        $instance = $builder->build(array('amount' => mt_rand(1, 100)));
 
-            self::assertNotNull($instance->getAmount());
-            self::assertEquals($options['currency'], $instance->getAmount()->getCurrency());
-
-            return;
-        }
-        self::fail('Exception not thrown');
+        self::assertNotNull($instance->getAmount());
+        self::assertEquals($options['currency'], $instance->getAmount()->getCurrency());
     }
 
     /**
@@ -112,22 +97,359 @@ class CreateCaptureRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
+    public function testSetReceiptItems($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        $builder->setReceiptItems($options['receiptItems']);
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals(count($options['receiptItems']), count($instance->getReceipt()->getItems()));
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testAddReceiptItems($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        foreach ($options['receiptItems'] as $item) {
+            if ($item instanceof ReceiptItem) {
+                $builder->addReceiptItem(
+                    $item->getDescription(), $item->getPrice()->getValue(), $item->getQuantity(), $item->getVatCode()
+                );
+            } else {
+                $builder->addReceiptItem($item['title'], $item['price'], $item['quantity'], $item['vatCode']);
+            }
+        }
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals(count($options['receiptItems']), count($instance->getReceipt()->getItems()));
+            foreach ($instance->getReceipt()->getItems() as $item) {
+                self::assertFalse($item->isShipping());
+            }
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testAddReceiptShipping($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        foreach ($options['receiptItems'] as $item) {
+            if ($item instanceof ReceiptItem) {
+                $builder->addReceiptShipping(
+                    $item->getDescription(), $item->getPrice()->getValue(), $item->getVatCode()
+                );
+            } else {
+                $builder->addReceiptShipping($item['title'], $item['price'], $item['vatCode']);
+            }
+        }
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals(count($options['receiptItems']), count($instance->getReceipt()->getItems()));
+            foreach ($instance->getReceipt()->getItems() as $item) {
+                self::assertTrue($item->isShipping());
+            }
+        }
+    }
+
+    /**
+     * @dataProvider invalidItemsDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $items
+     */
+    public function testSetInvalidReceiptItems($items)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceiptItems($items);
+    }
+
+    public function invalidItemsDataProvider()
+    {
+        return array(
+            array(
+                array(
+                    array(
+                        'price' => 1,
+                        'quantity' => 1.4,
+                        'vatCode' => 3,
+                    ),
+                )
+            ),
+            array(
+                array(
+                    array(
+                        'title' => 'test',
+                        'quantity' => 1.4,
+                        'vatCode' => 3,
+                    ),
+                )
+            ),
+            array(
+                array(
+                    array(
+                        'description' => 'test',
+                        'quantity' => 1.4,
+                        'vatCode' => 3,
+                    ),
+                )
+            ),
+            array(
+                array(
+                    array(
+                        'title' => 'test',
+                        'price' => 123,
+                        'quantity' => 1.4,
+                        'vatCode' => 7,
+                    ),
+                )
+            ),
+            array(
+                array(
+                    array(
+                        'description' => 'test',
+                        'price' => 123,
+                        'quantity' => -1.4,
+                    ),
+                )
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetReceiptEmail($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        $builder->setReceiptItems($options['receiptItems']);
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals($options['receiptEmail'], $instance->getReceipt()->getEmail());
+        }
+    }
+
+    /**
+     * @dataProvider invalidEmailDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidEmail($value)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceiptEmail($value);
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetReceiptPhone($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        $builder->setReceiptItems($options['receiptItems']);
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $builder->setReceiptPhone($options['receiptPhone']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals($options['receiptPhone'], $instance->getReceipt()->getPhone());
+        }
+    }
+
+    /**
+     * @dataProvider invalidPhoneDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidPhone($value)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceiptPhone($value);
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetReceiptTaxSystemCode($options)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+
+        $builder->setReceiptItems($options['receiptItems']);
+        $builder->setReceiptEmail($options['receiptEmail']);
+        $builder->setTaxSystemCode($options['taxSystemCode']);
+        $instance = $builder->build();
+
+        if (empty($options['receiptItems'])) {
+            self::assertNull($instance->getReceipt());
+        } else {
+            self::assertNotNull($instance->getReceipt());
+            self::assertEquals($options['taxSystemCode'], $instance->getReceipt()->getTaxSystemCode());
+        }
+    }
+
+    /**
+     * @dataProvider invalidVatIdDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidTaxSystemId($value)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setTaxSystemCode($value);
+    }
+
+    public function testSetReceipt()
+    {
+        $receipt = array(
+            'tax_system_code' => Random::int(1,6),
+            'email' => Random::str(10),
+            'phone' => Random::str(4, 15, '0123456789'),
+            'items' => array(
+                array(
+                    'description' => 'test',
+                    'quantity' => 123,
+                    'amount' => array(
+                        'value' => 321,
+                        'currency' => 'USD',
+                    ),
+                    'vat_code' => Random::int(1, 6),
+                ),
+            ),
+        );
+
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceipt($receipt);
+        $instance = $builder->build();
+
+        self::assertEquals($receipt['tax_system_code'], $instance->getReceipt()->getTaxSystemCode());
+        self::assertEquals($receipt['email'], $instance->getReceipt()->getEmail());
+        self::assertEquals($receipt['phone'], $instance->getReceipt()->getPhone());
+        self::assertEquals(1, count($instance->getReceipt()->getItems()));
+
+        $receipt = $instance->getReceipt();
+
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceipt($instance->getReceipt());
+        $instance = $builder->build();
+
+        self::assertEquals($receipt['tax_system_code'], $instance->getReceipt()->getTaxSystemCode());
+        self::assertEquals($receipt['email'], $instance->getReceipt()->getEmail());
+        self::assertEquals($receipt['phone'], $instance->getReceipt()->getPhone());
+        self::assertEquals(1, count($instance->getReceipt()->getItems()));
+    }
+
+    /**
+     * @dataProvider invalidReceiptDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetInvalidReceipt($value)
+    {
+        $builder = new CreateCaptureRequestBuilder();
+        $builder->setReceipt($value);
+    }
+
+    public function invalidReceiptDataProvider()
+    {
+        return array(
+            array(null),
+            array(true),
+            array(false),
+            array(1),
+            array(1.1),
+            array('test'),
+            array(new \stdClass()),
+        );
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
     public function testBuild($options)
     {
         $builder = new CreateCaptureRequestBuilder();
         $instance = $builder->build($options);
-        self::assertNotNull($instance->getAmount());
-        self::assertEquals($options['amount'], $instance->getAmount()->getValue());
-        self::assertEquals($options['currency'], $instance->getAmount()->getCurrency());
+        if (!empty($options['amount'])) {
+            self::assertNotNull($instance->getAmount());
+            self::assertEquals($options['amount'], $instance->getAmount()->getValue());
+            self::assertEquals($options['currency'], $instance->getAmount()->getCurrency());
+        } else {
+            self::assertNull($instance->getAmount());
+        }
     }
 
     public function validDataProvider()
     {
-        $result = array();
+        $receiptItem = new ReceiptItem();
+        $receiptItem->setPrice(new MonetaryAmount(1));
+        $receiptItem->setQuantity(1);
+        $receiptItem->setDescription('test');
+        $receiptItem->setVatCode(3);
+
+        $result = array(
+            array(
+                array(
+                    'amount'       => null,
+                    'currency'     => Random::value(CurrencyCode::getValidValues()),
+                    'receiptItems' => array(
+                        array(
+                            'title' => 'test',
+                            'quantity' => mt_rand(1, 100),
+                            'price' => mt_rand(1,100),
+                            'vatCode' => mt_rand(1, 6)
+                        ),
+                        $receiptItem,
+                    ),
+                    'receiptEmail' => Random::str(32),
+                    'receiptPhone' => null,
+                    'taxSystemCode' => null,
+                ),
+            ),
+        );
         for ($i = 0; $i < 10; $i++) {
             $request = array(
-                'amount'   => Random::int(1, 1000000),
-                'currency' => Random::value(CurrencyCode::getValidValues()),
+                'receiptItems' => array(),
+                'amount'       => Random::int(1, 1000000),
+                'currency'     => Random::value(CurrencyCode::getValidValues()),
+                'receiptEmail' => null,
+                'receiptPhone' => Random::str(10, '0123456789'),
+                'taxSystemCode' => Random::int(1, 6),
             );
             $result[] = array($request);
         }
@@ -145,8 +467,6 @@ class CreateCaptureRequestBuilderTest extends TestCase
     public function invalidAmountDataProvider()
     {
         return array(
-            array(null),
-            array(''),
             array(-1),
             array(Random::str(10)),
             array(new \stdClass()),
@@ -166,6 +486,43 @@ class CreateCaptureRequestBuilderTest extends TestCase
             array(Random::str(10)),
             array(true),
             array(false),
+        );
+    }
+
+    public function invalidEmailDataProvider()
+    {
+        return array(
+            array(array()),
+            array(true),
+            array(false),
+            array(new \stdClass()),
+        );
+    }
+
+    public function invalidPhoneDataProvider()
+    {
+        return array(
+            array(array()),
+            array(true),
+            array(false),
+            array(new \stdClass()),
+            array(Random::str(1, '0123456789')),
+            array(Random::str(32)),
+            array(Random::str(18, '0123456789')),
+        );
+    }
+
+    public function invalidVatIdDataProvider()
+    {
+        return array(
+            array(array()),
+            array(true),
+            array(false),
+            array(new \stdClass()),
+            array(0),
+            array(7),
+            array(Random::int(-100, -1)),
+            array(Random::int(7, 100)),
         );
     }
 }

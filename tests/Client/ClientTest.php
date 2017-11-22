@@ -5,6 +5,7 @@ namespace Tests\YandexCheckout\Client;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Client;
 use YandexCheckout\Common\Exceptions\ApiException;
+use YandexCheckout\Common\Exceptions\JsonException;
 use YandexCheckout\Common\Exceptions\ResponseProcessingException;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
@@ -176,12 +177,33 @@ class ClientTest extends TestCase
                 ->setApiClient($curlClientStub)
                 ->setAuth('shopId', 'shopPassword')
                 ->createPayment($payment, 123);
+            self::fail('Исключение не было выброшено');
         } catch (ApiException $e) {
             self::assertInstanceOf('YandexCheckout\Common\Exceptions\ResponseProcessingException', $e);
             return;
         }
 
-        self::fail('Исключение не было выброшено');
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->any())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                '{"type":"error","code":"request_accepted"}',
+                array('http_code' => 202)
+            ));
+
+        try {
+            $apiClient->setRetryTimeout(0);
+            $response = $apiClient
+                ->setApiClient($curlClientStub)
+                ->setAuth('shopId', 'shopPassword')
+                ->createPayment($payment, 123);
+            self::fail('Исключение не было выброшено');
+        } catch (ResponseProcessingException $e) {
+            self::assertEquals(Client::DEFAULT_DELAY, $e->retryAfter);
+            return;
+        }
     }
 
     /**
@@ -967,6 +989,47 @@ class ClientTest extends TestCase
             ->getPaymentInfo(\YandexCheckout\Helpers\Random::str(36));
     }
 
+    public function testAnotherExceptions()
+    {
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->any())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                '{}',
+                array('http_code' => 322)
+            ));
+
+        $apiClient = new Client();
+        $response = $apiClient
+            ->setApiClient($curlClientStub)
+            ->setAuth('shopId', 'shopPassword')
+            ->getPaymentInfo(Random::str(36));
+
+        self::assertNull($response);
+
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->any())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                '{}',
+                array('http_code' => 402)
+            ));
+
+        $apiClient = new Client();
+
+        $this->setExpectedException('YandexCheckout\Common\Exceptions\ApiException');
+        
+        $apiClient
+            ->setApiClient($curlClientStub)
+            ->setAuth('shopId', 'shopPassword')
+            ->getPaymentInfo(Random::str(36));
+        
+    }
+
     public function testConfig()
     {
         $apiClient = new Client();
@@ -1004,7 +1067,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function testEncodeData()
+    public function testDecodeInvalidData()
     {
         $curlClientStub = $this->getCurlClientStub();
         $curlClientStub
@@ -1022,6 +1085,30 @@ class ClientTest extends TestCase
             ->setApiClient($curlClientStub)
             ->setAuth('shopId', 'shopPassword')
             ->getPaymentInfo(Random::str(36));
+    }
+
+    public function testEncodeInvalidData()
+    {
+        $instance = new TestClient();
+
+        $value = array('test' => 'test', 'val' => null);
+        $value['val'] = &$value;
+        try {
+            $instance->encode($value);
+            self::fail('Exception not thrown');
+        } catch (JsonException $e) {
+            self::assertEquals(JSON_ERROR_RECURSION, $e->getCode());
+            self::assertEquals('Failed serialize json. Unknown error', $e->getMessage());
+        }
+
+        $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
+        try {
+            $instance->encode($value);
+            self::fail('Exception not thrown');
+        } catch (JsonException $e) {
+            self::assertEquals(JSON_ERROR_UTF8, $e->getCode());
+            self::assertEquals('Failed serialize json. Malformed UTF-8 characters, possibly incorrectly encoded', $e->getMessage());
+        }
     }
 
     public function testSdkVersion()
@@ -1074,5 +1161,15 @@ class ArrayLogger
     public function getLastLog()
     {
         return $this->lastLog;
+    }
+}
+
+class TestClient extends Client
+{
+    public function encode($data)
+    {
+        $refl = new \ReflectionMethod($this, 'encodeData');
+        $refl->setAccessible(true);
+        return $refl->invoke($this, $data);
     }
 }

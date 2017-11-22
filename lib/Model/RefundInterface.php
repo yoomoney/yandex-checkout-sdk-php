@@ -33,11 +33,13 @@ namespace YandexCheckout\Model;
  *
  * @property-read string $id Идентификатор возврата платежа
  * @property-read string $paymentId Идентификатор платежа
+ * @property-read string $payment_id Идентификатор платежа
  * @property-read string $status Статус возврата
  * @property-read \DateTime $createdAt Время создания возврата
- * @property-read \DateTime|null $authorizedAt Время проведения возврата
+ * @property-read \DateTime $create_at Время создания возврата
  * @property-read AmountInterface $amount Сумма возврата
  * @property-read string $receiptRegistration Статус регистрации чека
+ * @property-read string $receipt_registration Статус регистрации чека
  * @property-read string $comment Комментарий, основание для возврата средств покупателю
  */
 interface RefundInterface
@@ -65,12 +67,6 @@ interface RefundInterface
      * @return \DateTime Время создания возврата
      */
     function getCreatedAt();
-
-    /**
-     * Возвращает дату проведения возврата
-     * @return \DateTime|null Время проведения возврата
-     */
-    function getAuthorizedAt();
 
     /**
      * Возвращает сумму возврата

@@ -21,14 +21,17 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
 
         self::assertNull($instance->getPaymentData());
         self::assertNull($instance->paymentData);
+        self::assertNull($instance->payment_data);
 
         $instance->setPaymentData($value);
         if ($value === null || $value === '') {
             self::assertNull($instance->getPaymentData());
             self::assertNull($instance->paymentData);
+            self::assertNull($instance->payment_data);
         } else {
             self::assertEquals($value, $instance->getPaymentData());
             self::assertEquals($value, $instance->paymentData);
+            self::assertEquals($value, $instance->payment_data);
         }
 
         $instance = $this->getTestInstance();
@@ -36,9 +39,23 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
         if ($value === null || $value === '') {
             self::assertNull($instance->getPaymentData());
             self::assertNull($instance->paymentData);
+            self::assertNull($instance->payment_data);
         } else {
             self::assertEquals($value, $instance->getPaymentData());
             self::assertEquals($value, $instance->paymentData);
+            self::assertEquals($value, $instance->payment_data);
+        }
+
+        $instance = $this->getTestInstance();
+        $instance->payment_data = $value;
+        if ($value === null || $value === '') {
+            self::assertNull($instance->getPaymentData());
+            self::assertNull($instance->paymentData);
+            self::assertNull($instance->payment_data);
+        } else {
+            self::assertEquals($value, $instance->getPaymentData());
+            self::assertEquals($value, $instance->paymentData);
+            self::assertEquals($value, $instance->payment_data);
         }
     }
 
@@ -64,6 +81,18 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
         /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
         $instance = $this->getTestInstance();
         $instance->paymentData = $value;
+    }
+
+    /**
+     * @dataProvider invalidPaymentDataDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidPayment_data($value)
+    {
+        /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
+        $instance = $this->getTestInstance();
+        $instance->payment_data = $value;
     }
 
     public function validPaymentDataDataProvider()

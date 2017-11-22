@@ -41,15 +41,19 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  * @property RecipientInterface $recipient  Получатель платежа
  * @property AmountInterface $amount Сумма заказа
  * @property AbstractPaymentMethod $paymentMethod Способ проведения платежа
- * @property string $referenceId Идентификатор заказа
+ * @property AbstractPaymentMethod $payment_method Способ проведения платежа
  * @property \DateTime $createdAt Время создания заказа
+ * @property \DateTime $created_at Время создания заказа
  * @property \DateTime $capturedAt Время подтверждения платежа магазином
+ * @property \DateTime $captured_at Время подтверждения платежа магазином
+ * @property \DateTime $expiresAt Время, до которого можно бесплатно отменить или подтвердить платеж
+ * @property \DateTime $expires_at Время, до которого можно бесплатно отменить или подтвердить платеж
  * @property Confirmation\AbstractConfirmation $confirmation Способ подтверждения платежа
- * @property AmountInterface $charge Сумма к оплате покупателем
- * @property AmountInterface $income Сумма к получению магазином
  * @property AmountInterface $refundedAmount Сумма возвращенных средств платежа
+ * @property AmountInterface $refunded_amount Сумма возвращенных средств платежа
  * @property bool $paid Признак оплаты заказа
  * @property string $receiptRegistration Состояние регистрации фискального чека
+ * @property string $receipt_registration Состояние регистрации фискального чека
  * @property Metadata $metadata Метаданные платежа указанные мерчантом
  */
 class Payment extends AbstractObject implements PaymentInterface
@@ -113,6 +117,15 @@ class Payment extends AbstractObject implements PaymentInterface
      * @var Metadata Метаданные платежа указанные мерчантом
      */
     private $_metadata;
+
+    /**
+     * Время, до которого можно бесплатно отменить или подтвердить платеж. В указанное время платеж в статусе
+     * `waiting_for_capture` будет автоматически отменен.
+     *
+     * @var \DateTime Время, до которого можно бесплатно отменить или подтвердить платеж
+     * @since 1.0.2
+     */
+    private $_expiresAt;
 
     /**
      * Возвращает идентификатор платежа
@@ -407,5 +420,41 @@ class Payment extends AbstractObject implements PaymentInterface
     public function setMetadata(Metadata $value)
     {
         $this->_metadata = $value;
+    }
+
+    /**
+     * Возвращает время до которого можно бесплатно отменить или подтвердить платеж или null если оно не задано
+     * @return \DateTime|null Время, до которого можно бесплатно отменить или подтвердить платеж
+     *
+     * @since 1.0.2
+     */
+    public function getExpiresAt()
+    {
+        return $this->_expiresAt;
+    }
+
+    /**
+     * Устанавливает время до которого можно бесплатно отменить или подтвердить платеж
+     * @param \DateTime|string|int|null $value Время, до которого можно бесплатно отменить или подтвердить платеж
+     *
+     * @throws InvalidPropertyValueException Выбрасывается если передали строку, которую не удалось привести к дате
+     * @throws InvalidPropertyValueTypeException Выбрасывается если был передан аргумент, который невозможно
+     * интерпретировать как дату или время
+     *
+     * @since 1.0.2
+     */
+    public function setExpiresAt($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_expiresAt = null;
+        } elseif (TypeCast::canCastToDateTime($value)) {
+            $dateTime = TypeCast::castToDateTime($value);
+            if ($dateTime === null) {
+                throw new InvalidPropertyValueException('Invalid expires_at value', 0, 'payment.expires_at', $value);
+            }
+            $this->_expiresAt = $dateTime;
+        } else {
+            throw new InvalidPropertyValueTypeException('Invalid expires_at value', 0, 'payment.expires_at', $value);
+        }
     }
 }

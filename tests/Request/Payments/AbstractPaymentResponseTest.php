@@ -61,7 +61,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
     public function testGetAmount($options)
     {
         $instance = $this->getTestInstance($options);
-        self::assertEquals(round($options['amount']['value'], 2), $instance->getAmount()->getValue());
+        self::assertEquals(number_format($options['amount']['value'], 2, '.', ''), $instance->getAmount()->getValue());
         self::assertEquals($options['amount']['currency'], $instance->getAmount()->getCurrency());
     }
 
@@ -131,7 +131,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
         if (empty($options['refunded_amount'])) {
             self::assertNull($instance->getRefundedAmount());
         } else {
-            self::assertEquals(round($options['refunded_amount']['value'], 2), $instance->getRefundedAmount()->getValue());
+            self::assertEquals(number_format($options['refunded_amount']['value'], 2, '.', ''), $instance->getRefundedAmount()->getValue());
             self::assertEquals((string)$options['refunded_amount']['currency'], $instance->getRefundedAmount()->getCurrency());
         }
     }
@@ -213,6 +213,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
                 ),
                 'created_at' => date(DATE_ATOM, Random::int(1, time())),
                 'captured_at' => date(DATE_ATOM, Random::int(1, time())),
+                'expires_at' => date(DATE_ATOM, Random::int(1, time())),
                 'confirmation' => Random::value($confirmations),
                 'refunded_amount' => array(
                     'value' => Random::float(0.01, 1000000.0),

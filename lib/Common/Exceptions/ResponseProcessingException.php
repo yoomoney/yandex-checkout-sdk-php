@@ -26,7 +26,6 @@
 
 namespace YandexCheckout\Common\Exceptions;
 
-
 class ResponseProcessingException extends ApiException
 {
     const HTTP_CODE = 202;

@@ -63,21 +63,6 @@ abstract class AbstractRefundResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
-    public function testGetAuthorizedAt($options)
-    {
-        $instance = $this->getTestInstance($options);
-        if (empty($options['authorized_at'])) {
-            self::assertNull($instance->getAuthorizedAt());
-        } else {
-            self::assertTrue($instance->getAuthorizedAt() instanceof \DateTime);
-            self::assertEquals($options['authorized_at'], $instance->getAuthorizedAt()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param array $options
-     */
     public function testGetAmount($options)
     {
         $instance = $this->getTestInstance($options);

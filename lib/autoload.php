@@ -38,12 +38,7 @@ function yandexCheckoutLoadClass($className)
     } else {
         return;
     }
-    if (DIRECTORY_SEPARATOR === '/') {
-        $path .= str_replace('\\', '/', substr($className, $length));
-    } else {
-        $path .= substr($className, $length);
-    }
-    $path .= '.php';
+    $path .= str_replace('\\', '/', substr($className, $length)) . '.php';
     if (file_exists($path)) {
         require $path;
     }

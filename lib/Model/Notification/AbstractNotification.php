@@ -26,6 +26,7 @@
 
 namespace YandexCheckout\Model\Notification;
 
+use YandexCheckout\Common\AbstractObject;
 use YandexCheckout\Common\Exceptions\EmptyPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
@@ -37,8 +38,11 @@ use YandexCheckout\Model\NotificationType;
  * Базовый класс уведомлений
  *
  * @package YandexCheckout\Model\Notification
+ *
+ * @property-read string $type Тип уведомления в виде строки
+ * @property-read string $event Тип события
  */
-abstract class AbstractNotification
+abstract class AbstractNotification extends AbstractObject
 {
     /**
      * @var string Тип уведомления

@@ -48,7 +48,7 @@ class PaymentDataBankCardCardTest extends TestCase
      */
     public function testGetSetExpiryYear($value)
     {
-        $this->getAndSetTest($value, 'expiryYear');
+        $this->getAndSetTest($value, 'expiryYear', 'expiry_year');
     }
 
     /**
@@ -72,6 +72,16 @@ class PaymentDataBankCardCardTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidYearDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalid_year($value)
+    {
+        $this->getTestInstance()->expiry_year = $value;
+    }
+
+    /**
      * @dataProvider invalidMonthDataProvider
      * @expectedException \InvalidArgumentException
      * @param mixed $value
@@ -82,12 +92,22 @@ class PaymentDataBankCardCardTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidMonthDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalid_month($value)
+    {
+        $this->getTestInstance()->expiry_month = $value;
+    }
+
+    /**
      * @dataProvider validExpiryMonthDataProvider
      * @param $value
      */
     public function testGetSetExpiryMonth($value)
     {
-        $this->getAndSetTest($value, 'expiryMonth');
+        $this->getAndSetTest($value, 'expiryMonth', 'expiry_month');
     }
 
     /**
@@ -320,7 +340,7 @@ class PaymentDataBankCardCardTest extends TestCase
         return $result;
     }
 
-    protected function getAndSetTest($value, $property)
+    protected function getAndSetTest($value, $property, $snakeCase = null)
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
@@ -329,11 +349,17 @@ class PaymentDataBankCardCardTest extends TestCase
 
         self::assertNull($instance->{$getter}());
         self::assertNull($instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertNull($instance->{$snakeCase});
+        }
 
         $instance->{$setter}($value);
 
         self::assertEquals($value, $instance->{$getter}());
         self::assertEquals($value, $instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
 
         $instance = $this->getTestInstance();
 
@@ -341,5 +367,18 @@ class PaymentDataBankCardCardTest extends TestCase
 
         self::assertEquals($value, $instance->{$getter}());
         self::assertEquals($value, $instance->{$property});
+        if ($snakeCase !== null) {
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
+
+        if ($snakeCase !== null) {
+            $instance = $this->getTestInstance();
+
+            $instance->{$snakeCase} = $value;
+
+            self::assertEquals($value, $instance->{$getter}());
+            self::assertEquals($value, $instance->{$property});
+            self::assertEquals($value, $instance->{$snakeCase});
+        }
     }
 }

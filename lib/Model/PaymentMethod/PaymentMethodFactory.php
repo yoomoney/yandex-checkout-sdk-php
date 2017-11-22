@@ -47,7 +47,6 @@ class PaymentMethodFactory
         'card_type'      => 'cardType',
         'expiry_month'   => 'expiryMonth',
         'expiry_year'    => 'expiryYear',
-        'bind_id'        => 'bindId',
         'account_number' => 'accountNumber',
     );
 

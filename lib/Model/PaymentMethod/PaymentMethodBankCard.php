@@ -38,8 +38,11 @@ use YandexCheckout\Model\PaymentMethodType;
  * @property string $type Тип объекта
  * @property string $last4 Последние 4 цифры номера карты
  * @property string $expiryYear Срок действия, год
+ * @property string $expiry_year Срок действия, год
  * @property string $expiryMonth Срок действия, месяц
+ * @property string $expiry_month Срок действия, месяц
  * @property string $cardType Тип банковской карты
+ * @property string $card_type Тип банковской карты
  */
 class PaymentMethodBankCard extends AbstractPaymentMethod
 {
