@@ -27,8 +27,6 @@ class CreatePaymentRequestSerializerTest extends TestCase
     private $fieldMap = array(
         'payment_token'       => 'paymentToken',
         'payment_method_id'   => 'paymentMethodId',
-        'save_payment_method' => 'savePaymentMethod',
-        'capture'             => 'capture',
         'client_ip'           => 'clientIp',
     );
 
@@ -128,6 +126,12 @@ class CreatePaymentRequestSerializerTest extends TestCase
         }
         if (!empty($options['taxSystemCode'])) {
             $expected['receipt']['tax_system_code'] = $options['taxSystemCode'];
+        }
+        if (array_key_exists('capture', $options)) {
+            $expected['capture'] = (bool)$options['capture'];
+        }
+        if (array_key_exists('savePaymentMethod', $options)) {
+            $expected['save_payment_method'] = (bool)$options['savePaymentMethod'];
         }
         self::assertEquals($expected, $data);
     }

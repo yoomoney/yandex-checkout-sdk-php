@@ -236,7 +236,7 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
             $this->_paymentToken = null;
         } elseif (TypeCast::canCastToString($value)) {
             $length = mb_strlen((string)$value, 'utf-8');
-            if ($length > 200) {
+            if ($length > 10240) {
                 throw new InvalidPropertyValueException(
                     'Invalid paymentToken value', 0, 'CreatePaymentRequest.paymentToken', $value
                 );

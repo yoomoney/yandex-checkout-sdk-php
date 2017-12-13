@@ -42,6 +42,7 @@ use YandexCheckout\Common\ResponseObject;
 use YandexCheckout\Helpers\Config\ConfigurationLoader;
 use YandexCheckout\Helpers\Config\ConfigurationLoaderInterface;
 use YandexCheckout\Helpers\TypeCast;
+use YandexCheckout\Helpers\UUID;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Request\PaymentOptionsRequest;
 use YandexCheckout\Request\PaymentOptionsRequestInterface;
@@ -83,7 +84,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.2';
+    const SDK_VERSION = '1.0.3';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
@@ -155,8 +156,10 @@ class Client
      *
      * @internal-param null|ConfigurationLoader $config
      */
-    public function __construct(Client\ApiClientInterface $apiClient = null, ConfigurationLoaderInterface $configLoader = null)
-    {
+    public function __construct(
+        Client\ApiClientInterface $apiClient = null,
+        ConfigurationLoaderInterface $configLoader = null
+    ) {
         if ($apiClient === null) {
             $apiClient = new Client\CurlClient();
         }
@@ -167,7 +170,7 @@ class Client
             $this->setConfig($config);
             $apiClient->setConfig($config);
         }
-        $this->attempts     = self::DEFAULT_ATTEMPTS_COUNT;
+        $this->attempts  = self::DEFAULT_ATTEMPTS_COUNT;
         $this->apiClient = $apiClient;
     }
 
@@ -325,7 +328,7 @@ class Client
      *
      * @return CreatePaymentResponse
      */
-    public function createPayment($payment, $idempotencyKey)
+    public function createPayment($payment, $idempotencyKey = null)
     {
         $path = '/payments';
 
@@ -333,6 +336,8 @@ class Client
 
         if ($idempotencyKey) {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
         if (is_array($payment)) {
             $payment = CreatePaymentRequest::builder()->build($payment);
@@ -406,7 +411,7 @@ class Client
      *
      * @return CreateCaptureResponse
      */
-    public function capturePayment($captureRequest, $paymentId, $idempotencyKey)
+    public function capturePayment($captureRequest, $paymentId, $idempotencyKey = null)
     {
         if ($paymentId === null) {
             throw new \InvalidArgumentException('Missing the required parameter $paymentId');
@@ -422,6 +427,8 @@ class Client
 
         if ($idempotencyKey) {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
         if (is_array($captureRequest)) {
             $captureRequest = CreateCaptureRequest::builder()->build($captureRequest);
@@ -457,7 +464,7 @@ class Client
      *
      * @return CancelResponse
      */
-    public function cancelPayment($paymentId, $idempotencyKey)
+    public function cancelPayment($paymentId, $idempotencyKey = null)
     {
         if ($paymentId === null) {
             throw new \InvalidArgumentException('Missing the required parameter $paymentId');
@@ -471,6 +478,8 @@ class Client
         $headers = array();
         if ($idempotencyKey) {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
 
         $response = $this->execute($path, HttpVerb::POST, null, null, $headers);
@@ -532,7 +541,7 @@ class Client
      *
      * @return CreateRefundResponse
      */
-    public function createRefund($request, $idempotencyKey)
+    public function createRefund($request, $idempotencyKey = null)
     {
         $path = '/refunds';
 
@@ -540,6 +549,8 @@ class Client
 
         if ($idempotencyKey) {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
         if (is_array($request)) {
             $request = CreateRefundRequest::builder()->build($request);
@@ -751,7 +762,7 @@ class Client
      */
     private function execute($path, $method, $queryParams, $httpBody = null, $headers = array())
     {
-        $attempts    = $this->attempts;
+        $attempts = $this->attempts;
         $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
 
         while ($response->getCode() == 202 && $attempts > 0) {

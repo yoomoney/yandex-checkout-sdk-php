@@ -41,8 +41,12 @@ use YandexCheckout\Model\PaymentMethodType;
 class PaymentMethodSberbank extends AbstractPaymentMethod
 {
     /**
-     * Номер телефона в формате ITU-T E.164 на который зарегестрирован аккаунт в Сбербанк Онлайн. Необходим для оплаты `waiting` сценарием
-     * @var string
+     * Телефон пользователя, на который зарегистрирован аккаунт в Сбербанке Онлайн.
+     *
+     * Необходим для подтверждения оплаты по смс (сценарий подтверждения `external`).
+     * Указывается в формате [ITU-T E.164](https://ru.wikipedia.org/wiki/E.164), например `79000000000`.
+     *
+     * @var string Телефон пользователя
      */
     private $_phone;
 

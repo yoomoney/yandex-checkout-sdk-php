@@ -46,8 +46,6 @@ class CreatePaymentRequestSerializer
         'reference_id'        => 'referenceId',
         'payment_token'       => 'paymentToken',
         'payment_method_id'   => 'paymentMethodId',
-        'save_payment_method' => 'savePaymentMethod',
-        'capture'             => 'capture',
         'client_ip'           => 'clientIp',
     );
 
@@ -121,6 +119,12 @@ class CreatePaymentRequestSerializer
         }
         if ($request->hasMetadata()) {
             $result['metadata'] = $request->getMetadata()->toArray();
+        }
+        if ($request->hasCapture()) {
+            $result['capture'] = $request->getCapture();
+        }
+        if ($request->hasSavePaymentMethod()) {
+            $result['save_payment_method'] = $request->getSavePaymentMethod();
         }
 
         foreach (self::$propertyMap as $name => $property) {
