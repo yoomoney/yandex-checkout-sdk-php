@@ -83,7 +83,19 @@ class PaymentMethodFactory
                 );
             }
         }
+
         $paymentData = $this->factory($type);
+        $this->fillModel($paymentData, $data);
+
+        if ($paymentData instanceof PaymentMethodBankCard && isset($data['card'])) {
+            $this->fillModel($paymentData, $data['card']);
+        }
+
+        return $paymentData;
+    }
+
+    private function fillModel(AbstractPaymentMethod $paymentData, array $data)
+    {
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->optionsMap)) {
                 $key = $this->optionsMap[$key];
@@ -92,6 +104,5 @@ class PaymentMethodFactory
                 $paymentData->offsetSet($key, $value);
             }
         }
-        return $paymentData;
     }
 }
