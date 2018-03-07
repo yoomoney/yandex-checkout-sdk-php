@@ -1,5 +1,6 @@
-
 # Yandex.Checkout API PHP Client Library
+
+Russian | [English](https://github.com/yandex-money/yandex-checkout-sdk-php/blob/master/README.en.md)
 
 Клиент для работы с платежами по [API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
 Подходит тем, у кого способ подключения к Яндекс.Кассе называется API.
@@ -32,7 +33,7 @@ composer update
 
 ### Вручную
 
-1. Скачайте [архив Yandex.Checkout API PHP Client Library](https://github.com/yandex-money/yandex-checkout-sdk-php/releases/download/v1.0.3/yandex-checkout-sdk-php-v1.0.3.zip), распакуйте его и скопируйте каталог lib в нужное место в вашем проекте.
+1. Скачайте [архив Yandex.Checkout API PHP Client Library](https://github.com/yandex-money/yandex-checkout-sdk-php/releases/download/v1.0.4/yandex-checkout-sdk-php-v1.0.4.zip), распакуйте его и скопируйте каталог lib в нужное место в вашем проекте.
 2. В коде вашего проекта подключите автозагрузку файлов нашего клиента:
 ```php
 require __DIR__ . '/lib/autoload.php'; 

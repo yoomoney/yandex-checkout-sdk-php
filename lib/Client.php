@@ -84,7 +84,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.3';
+    const SDK_VERSION = '1.0.4';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
@@ -153,8 +153,6 @@ class Client
      *
      * @param Client\ApiClientInterface|null $apiClient
      * @param ConfigurationLoaderInterface|null $configLoader
-     *
-     * @internal-param null|ConfigurationLoader $config
      */
     public function __construct(
         Client\ApiClientInterface $apiClient = null,

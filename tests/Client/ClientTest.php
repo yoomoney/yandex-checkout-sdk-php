@@ -132,7 +132,7 @@ class ClientTest extends TestCase
         $response = $apiClient
             ->setApiClient($curlClientStub)
             ->setAuth('shopId', 'shopPassword')
-            ->createPayment($payment, 123);
+            ->createPayment($payment);
 
         self::assertSame($curlClientStub, $apiClient->getApiClient());
         self::assertTrue($response instanceof CreatePaymentResponse);
@@ -426,7 +426,7 @@ class ClientTest extends TestCase
         $response = $apiClient
             ->setApiClient($curlClientStub)
             ->setAuth('shopId', 'shopPassword')
-            ->capturePayment($capturePaymentRequest, '1ddd77af-0bd7-500d-895b-c475c55fdefc', 123);
+            ->capturePayment($capturePaymentRequest, '1ddd77af-0bd7-500d-895b-c475c55fdefc');
 
         $this->assertTrue($response instanceof CreateCaptureResponse);
 
@@ -578,7 +578,7 @@ class ClientTest extends TestCase
         $apiClient = new Client();
         $apiClient->setApiClient($curlClientStub)->setAuth('shopId', 'shopPassword');
         try {
-            $apiClient->cancelPayment(\YandexCheckout\Helpers\Random::str(36), 123);
+            $apiClient->cancelPayment(\YandexCheckout\Helpers\Random::str(36));
         } catch (ApiException $e) {
             self::assertInstanceOf($requiredException, $e);
             return;
@@ -699,7 +699,7 @@ class ClientTest extends TestCase
             ->setRetryTimeout(1000)
             ->setApiClient($curlClientStub)
             ->setAuth('shopId', 'shopPassword')
-            ->createRefund($refundRequest, 123);
+            ->createRefund($refundRequest);
 
         $this->assertTrue($response instanceof CreateRefundResponse);
 
@@ -1022,7 +1022,7 @@ class ClientTest extends TestCase
         $apiClient = new Client();
 
         $this->setExpectedException('YandexCheckout\Common\Exceptions\ApiException');
-        
+
         $apiClient
             ->setApiClient($curlClientStub)
             ->setAuth('shopId', 'shopPassword')
@@ -1091,14 +1091,16 @@ class ClientTest extends TestCase
     {
         $instance = new TestClient();
 
-        $value = array('test' => 'test', 'val' => null);
-        $value['val'] = &$value;
-        try {
-            $instance->encode($value);
-            self::fail('Exception not thrown');
-        } catch (JsonException $e) {
-            self::assertEquals(JSON_ERROR_RECURSION, $e->getCode());
-            self::assertEquals('Failed serialize json. Unknown error', $e->getMessage());
+        if(version_compare(PHP_VERSION, '5.5') < 0) {
+            $value = array('test' => 'test', 'val' => null);
+            $value['val'] = &$value;
+            try {
+                $instance->encode($value);
+                self::fail('Exception not thrown');
+            } catch (JsonException $e) {
+                self::assertEquals(JSON_ERROR_RECURSION, $e->getCode());
+                self::assertEquals('Failed serialize json. Unknown error', $e->getMessage());
+            }
         }
 
         $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
