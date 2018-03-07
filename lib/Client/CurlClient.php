@@ -253,6 +253,7 @@ class CurlClient implements ApiClientInterface
                 $this->setCurlOption(CURLOPT_NOBODY, true);
                 break;
             case HttpVerb::GET:
+                $this->setCurlOption(CURLOPT_HTTPGET, true);
                 break;
             default:
                 throw new ApiException('Invalid method verb: ' . $method);
