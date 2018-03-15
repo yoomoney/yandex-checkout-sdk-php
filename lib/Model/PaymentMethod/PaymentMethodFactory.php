@@ -83,15 +83,24 @@ class PaymentMethodFactory
                 );
             }
         }
+        
         $paymentData = $this->factory($type);
+        $this->fillModel($paymentData, $data);
+
+        return $paymentData;
+    }
+
+    private function fillModel(AbstractPaymentMethod $paymentData, array $data)
+    {
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->optionsMap)) {
                 $key = $this->optionsMap[$key];
             }
             if ($paymentData->offsetExists($key)) {
                 $paymentData->offsetSet($key, $value);
+            } else if (is_array($value)) {
+                $this->fillModel($paymentData, $value);
             }
         }
-        return $paymentData;
     }
 }
