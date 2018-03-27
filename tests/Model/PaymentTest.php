@@ -679,6 +679,8 @@ class PaymentTest extends TestCase
                 'status' => Random::value(Status::getValidValues()),
                 'recipient' => new Recipient(),
                 'amount' => new MonetaryAmount(Random::int(1, 10000), 'RUB'),
+                'description' => ($i == 0 ? null : ($i == 1 ? '' : ($i == 2 ? Random::str(Payment::MAX_LENGTH_DESCRIPTION)
+                    : Random::str(1, Payment::MAX_LENGTH_DESCRIPTION)))),
                 'payment_method' => new PaymentMethodQiwi(),
                 'reference_id' => ($i == 0 ? null :  ($i == 1 ? '' : Random::str(10, 20, 'abcdef0123456789'))),
                 'created_at' => date(DATE_ATOM, mt_rand(1, time())),
@@ -838,5 +840,40 @@ class PaymentTest extends TestCase
     {
         $instance = new Payment();
         $instance->expires_at = $value['captured_at'];
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetDescription($options)
+    {
+        $instance = new Payment();
+        $instance->setDescription($options['description']);
+
+        if (empty($options['description'])) {
+            self::assertNull($instance->getDescription());
+        } else {
+            self::assertEquals($options['description'], $instance->getDescription());
+        }
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetInvalidTypeDescription()
+    {
+        $instance = new Payment();
+        $instance->setDescription(true);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetInvalidLengthDescription()
+    {
+        $instance = new Payment();
+        $description = Random::str(Payment::MAX_LENGTH_DESCRIPTION + 1);
+        $instance->setDescription($description);
     }
 }

@@ -53,4 +53,10 @@ interface AmountInterface
      * @return string Код валюты
      */
     function getCurrency();
+
+    /**
+     * Устанавливает код валюты
+     * @param string $value Код валюты
+     */
+    function setCurrency($value);
 }

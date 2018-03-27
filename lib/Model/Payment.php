@@ -40,6 +40,7 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  * @property string $status Текущее состояние платежа
  * @property RecipientInterface $recipient  Получатель платежа
  * @property AmountInterface $amount Сумма заказа
+ * @property string $description Описание транзакци
  * @property AbstractPaymentMethod $paymentMethod Способ проведения платежа
  * @property AbstractPaymentMethod $payment_method Способ проведения платежа
  * @property \DateTime $createdAt Время создания заказа
@@ -58,6 +59,8 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  */
 class Payment extends AbstractObject implements PaymentInterface
 {
+    const MAX_LENGTH_DESCRIPTION = 128;
+
     /**
      * @var string Идентификатор платежа
      */
@@ -77,6 +80,11 @@ class Payment extends AbstractObject implements PaymentInterface
      * @var AmountInterface
      */
     private $_amount;
+
+    /**
+     * @var string
+     */
+    private $_description;
 
     /**
      * @var AbstractPaymentMethod Способ проведения платежа
@@ -220,6 +228,41 @@ class Payment extends AbstractObject implements PaymentInterface
     public function setAmount(AmountInterface $value)
     {
         $this->_amount = $value;
+    }
+
+    /**
+     * Возвращает описание транзакции
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->_description;
+    }
+
+    /**
+     * Устанавливает описание транзакции
+     * @param string $value
+     *
+     * @throws InvalidPropertyValueException Выбрасывается если переданное значение превышает допустимую длину
+     * @throws InvalidPropertyValueTypeException Выбрасывается если переданное значение не является строкой
+     */
+    public function setDescription($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_description = null;
+        } elseif (TypeCast::canCastToString($value)) {
+            $length = mb_strlen((string)$value, 'utf-8');
+            if ($length > self::MAX_LENGTH_DESCRIPTION) {
+                throw new InvalidPropertyValueException(
+                    'Invalid description value', 0, 'CreatePaymentRequest.description', $value
+                );
+            }
+            $this->_description = (string)$value;
+        } else {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid description value type', 0, 'CreatePaymentRequest.description', $value
+            );
+        }
     }
 
     /**

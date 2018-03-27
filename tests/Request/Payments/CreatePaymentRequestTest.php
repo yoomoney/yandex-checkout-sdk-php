@@ -739,7 +739,7 @@ class CreatePaymentRequestTest extends TestCase
             array(true),
             array(new \stdClass()),
             array(array()),
-            array(Random::str(10241)),
+            array(Random::str(CreatePaymentRequest::MAX_LENGTH_PAYMENT_TOKEN + 1)),
         );
     }
 

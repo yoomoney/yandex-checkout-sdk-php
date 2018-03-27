@@ -55,7 +55,6 @@ class RawHeadersParser
                 } elseif (!$key) {
                     $headers[0] = trim($headerArray[0]);
                 }
-                trim($headerArray[0]);
             }
         }
 

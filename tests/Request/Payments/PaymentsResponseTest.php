@@ -81,6 +81,7 @@ class PaymentsResponseTest extends TestCase
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
                             ),
+                            'description' => Random::str(20),
                             'created_at' => date(DATE_ATOM),
                             'payment_method' => array(
                                 'type' => PaymentMethodType::QIWI,
@@ -117,6 +118,7 @@ class PaymentsResponseTest extends TestCase
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
                             ),
+                            'description' => Random::str(20),
                             'created_at' => date(DATE_ATOM),
                             'payment_method' => array(
                                 'type' => PaymentMethodType::QIWI,
@@ -151,6 +153,7 @@ class PaymentsResponseTest extends TestCase
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
                             ),
+                            'description' => Random::str(20),
                             'created_at' => date(DATE_ATOM),
                             'payment_method' => array(
                                 'type' => PaymentMethodType::QIWI,

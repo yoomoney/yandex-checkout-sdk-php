@@ -81,10 +81,12 @@ use YandexCheckout\Request\Refunds\RefundsResponse;
  */
 class Client
 {
+    const PAYMENTS_PATH = '/payments';
+    const REFUNDS_PATH = '/refunds';
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.4';
+    const SDK_VERSION = '1.0.5';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
@@ -273,7 +275,7 @@ class Client
      */
     public function getPayments($filter = null)
     {
-        $path = '/payments';
+        $path = self::PAYMENTS_PATH;
 
         if ($filter === null) {
             $queryParams = array();
@@ -328,7 +330,7 @@ class Client
      */
     public function createPayment($payment, $idempotencyKey = null)
     {
-        $path = '/payments';
+        $path = self::PAYMENTS_PATH;
 
         $headers = array();
 
@@ -377,7 +379,7 @@ class Client
             throw new \InvalidArgumentException('Invalid paymentId value');
         }
 
-        $path = '/payments/'.$paymentId;
+        $path = self::PAYMENTS_PATH.'/'.$paymentId;
 
         $response = $this->execute($path, HttpVerb::GET, null);
 
@@ -472,7 +474,7 @@ class Client
             throw new \InvalidArgumentException('Invalid paymentId value');
         }
 
-        $path    = '/payments/'.$paymentId.'/cancel';
+        $path    = self::PAYMENTS_PATH.'/'.$paymentId.'/cancel';
         $headers = array();
         if ($idempotencyKey) {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
@@ -502,7 +504,7 @@ class Client
      */
     public function getRefunds($filter = null)
     {
-        $path = '/refunds';
+        $path = self::REFUNDS_PATH;
 
         if ($filter === null) {
             $queryParams = array();
@@ -541,7 +543,7 @@ class Client
      */
     public function createRefund($request, $idempotencyKey = null)
     {
-        $path = '/refunds';
+        $path = self::REFUNDS_PATH;
 
         $headers = array();
 
@@ -587,7 +589,7 @@ class Client
         } elseif (strlen($refundId) !== 36) {
             throw new \InvalidArgumentException('Invalid refundId value');
         }
-        $path = '/refunds/'.$refundId;
+        $path = self::REFUNDS_PATH.'/'.$refundId;
 
         $response = $this->execute($path, HttpVerb::GET, null);
 
