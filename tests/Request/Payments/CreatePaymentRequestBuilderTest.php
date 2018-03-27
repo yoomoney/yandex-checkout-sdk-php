@@ -9,6 +9,7 @@ use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesExternal;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\MonetaryAmount;
+use YandexCheckout\Model\Payment;
 use YandexCheckout\Model\PaymentData\PaymentDataQiwi;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptItem;
@@ -645,7 +646,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     public function testSetReceipt()
     {
         $receipt = array(
-            'tax_system_code' => Random::int(1,6),
+            'tax_system_code' => Random::int(1, 6),
             'email' => Random::str(10),
             'phone' => Random::str(4, 15, '0123456789'),
             'items' => array(
@@ -719,6 +720,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
                     'accountId' => Random::str(1, 32),
                     'gatewayId' => Random::str(1, 32),
                     'recipient' => null,
+                    'description' => null,
                     'amount' => new MonetaryAmount(Random::int(1, 1000)),
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                     'receiptItems' => array(),
@@ -740,6 +742,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
                     'accountId' => Random::str(1, 32),
                     'gatewayId' => Random::str(1, 32),
                     'recipient' => null,
+                    'description' => '',
                     'amount' => new MonetaryAmount(Random::int(1, 1000)),
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                     'receiptItems' => array(
@@ -785,6 +788,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
                 'accountId' => uniqid(),
                 'gatewayId' => uniqid(),
                 'recipient' => new Recipient(),
+                'description' => uniqid(),
                 'amount' => mt_rand(1, 100000),
                 'currency' => CurrencyCode::RUB,
                 'receiptItems' => array(),
@@ -853,5 +857,42 @@ class CreatePaymentRequestBuilderTest extends TestCase
             array(Random::int(-100, -1)),
             array(Random::int(7, 100)),
         );
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetDescription($options)
+    {
+        $builder = new CreatePaymentRequestBuilder();
+
+        $builder->setDescription($options['description']);
+        $instance = $builder->build($this->getRequiredData());
+
+        if (empty($options['description'])) {
+            self::assertNull($instance->getDescription());
+        } else {
+            self::assertEquals($options['description'], $instance->getDescription());
+        }
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetInvalidTypeDescription()
+    {
+        $builder = new CreatePaymentRequestBuilder();
+        $builder->setDescription(true);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetInvalidLengthDescription()
+    {
+        $builder = new CreatePaymentRequestBuilder();
+        $description = Random::str(Payment::MAX_LENGTH_DESCRIPTION + 1);
+        $builder->setDescription($description);
     }
 }

@@ -83,7 +83,7 @@ class PaymentMethodFactory
                 );
             }
         }
-        
+
         $paymentData = $this->factory($type);
         $this->fillModel($paymentData, $data);
 

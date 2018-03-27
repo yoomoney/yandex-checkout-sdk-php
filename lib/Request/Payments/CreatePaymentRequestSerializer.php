@@ -67,6 +67,9 @@ class CreatePaymentRequestSerializer
         $result = array(
             'amount' => $this->serializeAmount($request->getAmount()),
         );
+        if ($request->hasDescription()) {
+            $result['description'] = $request->getDescription();
+        }
         if ($request->hasReceipt()) {
             $receipt = $request->getReceipt();
             if ($receipt->notEmpty()) {

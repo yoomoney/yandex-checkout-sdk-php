@@ -1091,7 +1091,7 @@ class ClientTest extends TestCase
     {
         $instance = new TestClient();
 
-        if(version_compare(PHP_VERSION, '5.5') < 0) {
+        if(version_compare(PHP_VERSION, '5.5') >= 0) {
             $value = array('test' => 'test', 'val' => null);
             $value['val'] = &$value;
             try {

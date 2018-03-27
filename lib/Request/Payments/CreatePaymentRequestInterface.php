@@ -80,6 +80,18 @@ interface CreatePaymentRequestInterface
     function getAmount();
 
     /**
+     * Возвращает описание транзакции
+     * @return string Описание транзакции
+     */
+    function getDescription();
+
+    /**
+     * Проверяет наличие описания транзакции в создаваемом платеже
+     * @return bool True если описание транзакции установлено, false если нет
+     */
+    function hasDescription();
+
+    /**
      * Возвращает чек, если он есть
      * @return ReceiptInterface|null Данные фискального чека 54-ФЗ или null если чека нет
      */

@@ -69,6 +69,9 @@ class PaymentsResponse
                 $paymentInfo['amount']['value'],
                 $paymentInfo['amount']['currency']
             ));
+            if (!empty($paymentInfo['description'])) {
+                $payment->setDescription($paymentInfo['description']);
+            }
             $payment->setCreatedAt(strtotime($paymentInfo['created_at']));
             $payment->setPaymentMethod($this->factoryPaymentMethod($paymentInfo['payment_method']));
             $payment->setPaid($paymentInfo['paid']);

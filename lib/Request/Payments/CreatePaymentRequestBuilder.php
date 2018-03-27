@@ -334,7 +334,7 @@ class CreatePaymentRequestBuilder extends AbstractRequestBuilder
      * @param string $value Одноразовый токен для проведения оплаты
      * @return CreatePaymentRequestBuilder Инстанс текущего билдера
      *
-     * @throws InvalidPropertyValueException Выбрасывается если переданное значение длинее 200 символов
+     * @throws InvalidPropertyValueException Выбрасывается если переданное значение превышает допустимую длину
      * @throws InvalidPropertyValueTypeException Выбрасывается если переданное значение не является строкой
      */
     public function setPaymentToken($value)
@@ -454,6 +454,20 @@ class CreatePaymentRequestBuilder extends AbstractRequestBuilder
     public function setMetadata($value)
     {
         $this->currentObject->setMetadata($value);
+        return $this;
+    }
+
+    /**
+     * Устанавливает описание транзакции
+     * @param string $value Описание транзакции
+     * @return CreatePaymentRequestBuilder Инстанс текущего билдера
+     *
+     * @throws InvalidPropertyValueException Выбрасывается если переданное значение превышает допустимую длину
+     * @throws InvalidPropertyValueTypeException Выбрасывается если переданное значение не является строкой
+     */
+    public function setDescription($value)
+    {
+        $this->currentObject->setDescription($value);
         return $this;
     }
 
