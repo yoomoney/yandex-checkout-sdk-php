@@ -72,6 +72,8 @@ class PaymentMethodAlfaBankTest extends AbstractPaymentMethodTest
     public function validLoginDataProvider()
     {
         return array(
+            array(null),
+            array(''),
             array('123'),
             array(Random::str(256)),
             array(Random::str(1024)),
@@ -81,8 +83,6 @@ class PaymentMethodAlfaBankTest extends AbstractPaymentMethodTest
     public function invalidLoginDataProvider()
     {
         return array(
-            array(null),
-            array(''),
             array(true),
             array(false),
             array(array()),
