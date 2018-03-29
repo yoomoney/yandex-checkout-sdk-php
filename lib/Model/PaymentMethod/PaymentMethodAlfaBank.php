@@ -26,7 +26,6 @@
 
 namespace YandexCheckout\Model\PaymentMethod;
 
-use YandexCheckout\Common\Exceptions\EmptyPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Model\PaymentMethodType;
@@ -62,8 +61,8 @@ class PaymentMethodAlfaBank extends AbstractPaymentMethod
      */
     public function setLogin($value)
     {
-        if ($value === null || $value === '') {
-            throw new EmptyPropertyValueException('Empty login value', 0, 'PaymentMethodAlfaBank.login');
+        if ($value === null) {
+            $this->_login = '';
         } elseif (TypeCast::canCastToString($value)) {
             $this->_login = (string)$value;
         } else {
