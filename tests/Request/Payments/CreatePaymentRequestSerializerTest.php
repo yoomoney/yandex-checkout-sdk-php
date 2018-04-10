@@ -14,6 +14,7 @@ use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCard;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCardCard;
 use YandexCheckout\Model\PaymentData\PaymentDataMobileBalance;
+use YandexCheckout\Model\PaymentData\PaymentDataInstallments;
 use YandexCheckout\Model\PaymentData\PaymentDataQiwi;
 use YandexCheckout\Model\PaymentData\PaymentDataSberbank;
 use YandexCheckout\Model\PaymentData\PaymentDataWebmoney;
@@ -174,6 +175,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
             new PaymentDataSberbank(),
             new PaymentDataWebmoney(),
             new PaymentDataYandexWallet(),
+            new PaymentDataInstallments(),
         );
         $paymentData[0]->setLogin(Random::str(10));
 

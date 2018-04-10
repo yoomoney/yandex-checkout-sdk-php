@@ -215,6 +215,21 @@ class PaymentMethodFactoryTest extends TestCase
                     'title'          => Random::str(10, 20),
                 ),
             ),
+            array(
+                array(
+                    'type'           => PaymentMethodType::INSTALLMENTS,
+                    'id'             => Random::str(1, 64),
+                    'saved'          => true,
+                    'title'          => Random::str(10, 20),
+                ),
+            ),
+            array(
+                array(
+                    'type'           => PaymentMethodType::INSTALLMENTS,
+                    'id'             => Random::str(1, 64),
+                    'saved'          => false,
+                ),
+            ),
         );
         foreach (PaymentMethodType::getValidValues() as $value) {
             $result[] = array(array('type' => $value));
