@@ -152,6 +152,11 @@ class PaymentDataFactoryTest extends TestCase
                     'type' => PaymentMethodType::YANDEX_MONEY,
                 ),
             ),
+            array(
+                array(
+                    'type' => PaymentMethodType::INSTALLMENTS,
+                ),
+            ),
         );
         foreach (PaymentMethodType::getValidValues() as $value) {
             $result[] = array(array('type' => $value));

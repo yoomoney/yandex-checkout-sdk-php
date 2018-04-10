@@ -33,7 +33,7 @@ composer update
 
 ### Manually
 
-1. Download [the Yandex.Checkout API PHP Client Library archive](https://github.com/yandex-money/yandex-checkout-sdk-php/releases/download/v1.0.3/yandex-checkout-sdk-php-v1.0.3.zip), extract it and copy the lib catalog to the required place of your project.
+1. Download [the Yandex.Checkout API PHP Client Library archive](https://github.com/yandex-money/yandex-checkout-sdk-php/archive/master.zip), extract it and copy the lib catalog to the required place of your project.
 2. Adjust your project's code to activate automated uploading of files for our product:
 ```php
 require __DIR__ . '/lib/autoload.php'; 
@@ -47,11 +47,11 @@ require __DIR__ . '/vendor/autoload.php';
 ```
 2. Import required classes
 ```php
-use YaMoney\Client\YandexMoneyApi;
+use YandexCheckout\Client;
 ```
 3. Create a sample of a client object, then set the store's identifier and secret key (you can get them under your Yandex.Checkout's Merchant Profile). [Issuing a secret key](https://yandex.com/support/checkout/payments/keys.html)
 ```php
-$client = new YandexMoneyApi();
+$client = new Client();
 $client->setAuth('shopId', 'secretKey');
 ```
 4. Call the required API method. [More details in our documentation for the Yandex.Chechout API](https://checkout.yandex.com/docs/checkout-api/)
