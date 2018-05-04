@@ -200,6 +200,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
             $payment = array(
                 'id' => Random::str(36),
                 'status' => Random::value($statuses),
+                'description' => Random::str(128),
                 'recipient' => array(
                     'account_id' => Random::str(1, 64, '0123456789'),
                     'gateway_id' => Random::str(1, 256),

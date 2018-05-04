@@ -86,7 +86,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.9';
+    const SDK_VERSION = '1.0.10';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
