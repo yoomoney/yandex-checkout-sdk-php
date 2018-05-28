@@ -1,3 +1,7 @@
+### v1.0.11 от 28.05.2018
+* Добавлен возврат $this для методов setReceipt классов CreateCaptureRequestBuilder, CreatePaymentRequestBuilder и CreateRefundRequestBuilder 
+* Дополнены описания PHPDoc
+
 ### v1.0.10 от 04.05.2018
 * Исправлена передача description в объект Response.
 
