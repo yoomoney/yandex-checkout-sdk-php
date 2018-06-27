@@ -1,3 +1,6 @@
+### v1.0.12 от 27.06.2018
+* Добавлена поддержка валют: BYN, CNY, KZT, UAH
+
 ### v1.0.11 от 28.05.2018
 * Добавлен возврат $this для методов setReceipt классов CreateCaptureRequestBuilder, CreatePaymentRequestBuilder и CreateRefundRequestBuilder 
 * Дополнены описания PHPDoc

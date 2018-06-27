@@ -86,7 +86,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.0.11';
+    const SDK_VERSION = '1.0.12';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
@@ -835,6 +835,7 @@ class Client
      * @param array $headers
      *
      * @return ResponseObject
+     * @throws Common\Exceptions\AuthorizeException
      */
     private function execute($path, $method, $queryParams, $httpBody = null, $headers = array())
     {

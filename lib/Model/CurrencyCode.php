@@ -37,15 +37,17 @@ class CurrencyCode extends AbstractEnum
     const USD = 'USD';
     const EUR = 'EUR';
     const BYN = 'BYN';
-    const KZT = 'KZT';
     const CNY = 'CNY';
+    const KZT = 'KZT';
+    const UAH = 'UAH';
 
     protected static $validValues = array(
         self::RUB => true,
         self::USD => true,
         self::EUR => true,
         self::BYN => true,
-        self::KZT => true,
         self::CNY => true,
+        self::KZT => true,
+        self::UAH => true,
     );
 }
