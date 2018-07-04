@@ -231,4 +231,26 @@ abstract class AbstractPaymentResponseTest extends TestCase
         }
         return $result;
     }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetCancellationDetails($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['refunded_amount'])) {
+            self::assertNull($instance->getCancellationDetails());
+        } elseif (!empty($options['cancellation_details'])) {
+            self::assertEquals(
+                $options['cancellation_details']['party'],
+                $instance->getCancellationDetails()->getParty()
+            );
+            self::assertEquals(
+                $options['cancellation_details']['reason'],
+                $instance->getCancellationDetails()->getReason()
+            );
+        }
+    }
+
 }

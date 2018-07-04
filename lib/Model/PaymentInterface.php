@@ -131,4 +131,11 @@ interface PaymentInterface
      * @since 1.0.2
      */
     public function getExpiresAt();
+
+    /**
+     * Возвращает комментарий к статусу canceled: кто отменил платеж и по какой причине
+     * @return CancellationDetailsInterface|null Комментарий к статусу canceled
+     * @since 1.0.13
+     */
+    public function getCancellationDetails();
 }
