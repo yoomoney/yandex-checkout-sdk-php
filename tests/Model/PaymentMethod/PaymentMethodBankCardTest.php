@@ -58,6 +58,35 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     }
 
     /**
+     * @dataProvider validFirst6DataProvider
+     * @param string $value
+     */
+    public function testGetSetFirst6($value)
+    {
+        $this->getAndSetTest($value, 'first6');
+    }
+
+    /**
+     * @dataProvider invalidFirst6DataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetFirst6InvalidNumber($value)
+    {
+        $this->getTestInstance()->setFirst6($value);
+    }
+
+    /**
+     * @dataProvider invalidFirst6DataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterFirst6InvalidNumber($value)
+    {
+        $this->getTestInstance()->first6 = $value;
+    }
+
+    /**
      * @dataProvider validExpiryYearDataProvider
      * @param $value
      */
@@ -189,6 +218,18 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     /**
      * @return array
      */
+    public function validFirst6DataProvider()
+    {
+        $result = array();
+        for ($i = 0; $i < 10; $i++) {
+            $result[] = array(Random::str(6, '0123456789'));
+        }
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
     public function validExpiryYearDataProvider()
     {
         $result = array();
@@ -229,6 +270,21 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     }
 
     public function invalidLast4DataProvider()
+    {
+        return array(
+            array(''),
+            array(null),
+            array(0),
+            array(1),
+            array(-1),
+            array(array()),
+            array(new \stdClass()),
+            array(Random::str(3, '0123456789')),
+            array(Random::str(5, '0123456789')),
+        );
+    }
+
+    public function invalidFirst6DataProvider()
     {
         return array(
             array(''),
