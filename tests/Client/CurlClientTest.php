@@ -24,6 +24,13 @@ class CurlClientTest extends TestCase
         $this->assertEquals(10, $client->getTimeout());
     }
 
+    public function testProxy()
+    {
+        $client = new CurlClient();
+        $client->setProxy('proxy_url:8889');
+        $this->assertEquals('proxy_url:8889', $client->getProxy());
+    }
+
     /**
      * @dataProvider curlErrorCodeProvider
      * @expectedException \YandexCheckout\Common\Exceptions\ApiConnectionException
