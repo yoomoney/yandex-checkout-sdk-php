@@ -107,11 +107,19 @@ class PaymentMethodBankCard extends AbstractPaymentMethod
         }
     }
 
+    /**
+     * @return string
+     * @since 1.0.14
+     */
     public function getFirst6()
     {
         return $this->_first6;
     }
 
+    /**
+     * @param $value
+     * @since 1.0.14
+     */
     public function setFirst6($value)
     {
         if ($value === null || $value === '') {

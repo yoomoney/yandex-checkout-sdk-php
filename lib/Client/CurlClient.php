@@ -103,6 +103,15 @@ class CurlClient implements ApiClientInterface
 
     /**
      * @inheritdoc
+     * @param $path
+     * @param $method
+     * @param $queryParams
+     * @param null $httpBody
+     * @param array $headers
+     * @return ResponseObject
+     * @throws ApiConnectionException
+     * @throws ApiException
+     * @throws AuthorizeException
      */
     public function call($path, $method, $queryParams, $httpBody = null, $headers = array())
     {
@@ -325,6 +334,7 @@ class CurlClient implements ApiClientInterface
 
     /**
      * @return string
+     * @since 1.0.14
      */
     public function getProxy()
     {
@@ -333,6 +343,7 @@ class CurlClient implements ApiClientInterface
 
     /**
      * @param string $proxy
+     * @since 1.0.14
      */
     public function setProxy($proxy)
     {

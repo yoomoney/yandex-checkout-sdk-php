@@ -212,7 +212,7 @@ class CreatePaymentRequestBuilder extends AbstractRequestBuilder
         if (is_array($value)) {
             $this->airline->fromArray($value);
         } elseif ($value instanceof AirlineInterface) {
-            $this->receipt = clone $value;
+            $this->airline = clone $value;
         } else {
             throw new InvalidPropertyValueTypeException('Invalid receipt value type', 0, 'receipt', $value);
         }

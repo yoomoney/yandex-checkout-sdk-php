@@ -4,10 +4,13 @@ namespace Tests\YandexCheckout\Request\Payments;
 
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
+use YandexCheckout\Model\Airline;
 use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesExternal;
 use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesRedirect;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\Leg;
+use YandexCheckout\Model\Passenger;
 use YandexCheckout\Model\PaymentData\PaymentDataAlfabank;
 use YandexCheckout\Model\PaymentData\PaymentDataAndroidPay;
 use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
@@ -26,9 +29,9 @@ use YandexCheckout\Request\Payments\CreatePaymentRequestSerializer;
 class CreatePaymentRequestSerializerTest extends TestCase
 {
     private $fieldMap = array(
-        'payment_token'       => 'paymentToken',
-        'payment_method_id'   => 'paymentMethodId',
-        'client_ip'           => 'clientIp',
+        'payment_token'     => 'paymentToken',
+        'payment_method_id' => 'paymentMethodId',
+        'client_ip'         => 'clientIp',
     );
 
     /**
@@ -38,12 +41,12 @@ class CreatePaymentRequestSerializerTest extends TestCase
     public function testSerialize($options)
     {
         $serializer = new CreatePaymentRequestSerializer();
-        $instance = CreatePaymentRequest::builder()->build($options);
-        $data = $serializer->serialize($instance);
+        $instance   = CreatePaymentRequest::builder()->build($options);
+        $data       = $serializer->serialize($instance);
 
         $expected = array(
             'amount' => array(
-                'value' => $options['amount'],
+                'value'    => $options['amount'],
                 'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
             ),
         );
@@ -66,7 +69,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 'type' => $options['confirmation']->getType(),
             );
             if ($options['confirmation']->getType() === ConfirmationType::REDIRECT) {
-                $expected['confirmation']['enforce'] = $options['confirmation']->enforce;
+                $expected['confirmation']['enforce']    = $options['confirmation']->enforce;
                 $expected['confirmation']['return_url'] = $options['confirmation']->returnUrl;
             }
         }
@@ -110,12 +113,12 @@ class CreatePaymentRequestSerializerTest extends TestCase
             foreach ($options['receiptItems'] as $item) {
                 $expected['receipt']['items'][] = array(
                     'description' => $item['title'],
-                    'quantity' => empty($item['quantity']) ? 1 : $item['quantity'],
-                    'amount' => array(
-                        'value' => $item['price'],
+                    'quantity'    => empty($item['quantity']) ? 1 : $item['quantity'],
+                    'amount'      => array(
+                        'value'    => $item['price'],
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
-                    'vat_code' => empty($item['vatCode']) ? $options['taxSystemCode'] : $item['vatCode'],
+                    'vat_code'    => empty($item['vatCode']) ? $options['taxSystemCode'] : $item['vatCode'],
                 );
             }
         }
@@ -134,30 +137,84 @@ class CreatePaymentRequestSerializerTest extends TestCase
         if (array_key_exists('savePaymentMethod', $options)) {
             $expected['save_payment_method'] = (bool)$options['savePaymentMethod'];
         }
+        if (!empty($options['description'])) {
+            $expected['description'] = $options['description'];
+        }
+        if (!empty($options['airline'])) {
+            $expected['airline'] = array(
+                'booking_reference' => $options['airline']['booking_reference'],
+                'ticket_number'     => $options['airline']['ticket_number'],
+                'passengers'        => array_map(function ($passenger) {
+                    return array(
+                        'first_name' => $passenger['first_name'],
+                        'last_name'  => $passenger['last_name'],
+                    );
+                }, $options['airline']['passengers']),
+                'legs'              => array_map(function ($leg) {
+                    return array(
+                        'departure_airport'   => $leg['departure_airport'],
+                        'destination_airport' => $leg['destination_airport'],
+                        'departure_date'      => $leg['departure_date'],
+                    );
+                }, $options['airline']['legs']),
+            );
+        }
+
         self::assertEquals($expected, $data);
     }
 
     public function validDataProvider()
     {
+        $airline = new Airline();
+        $airline->setBookingReference(Random::str(10));
+        $airline->setTicketNumber(Random::int(10));
+        $leg = new Leg();
+        $leg->setDepartureAirport(Random::str(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+        $leg->setDestinationAirport(Random::str(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+        $leg->setDepartureDate("2018-12-31");
+        $airline->setLegs(array($leg));
+        $passenger = new Passenger();
+        $passenger->setFirstName(Random::str(10));
+        $passenger->setLastName(Random::str(10));
+        $airline->setPassengers(array($passenger));
+
         $result = array(
             array(
                 array(
-                    'amount' => mt_rand(10, 100000),
-                    'paymentToken' => Random::str(36),
-                    'receiptItems' => array(
+                    'amount'        => mt_rand(10, 100000),
+                    'paymentToken'  => Random::str(36),
+                    'receiptItems'  => array(
                         array(
-                            'title' => Random::str(10),
+                            'title'    => Random::str(10),
                             'quantity' => Random::int(1, 10),
-                            'price' => Random::int(100, 100),
-                            'vatCode' => Random::int(1, 6),
+                            'price'    => Random::int(100, 100),
+                            'vatCode'  => Random::int(1, 6),
                         ),
                         array(
                             'title' => Random::str(10),
                             'price' => Random::int(100, 100),
                         ),
                     ),
-                    'receiptEmail' => Random::str(10),
+                    'receiptEmail'  => Random::str(10),
                     'taxSystemCode' => Random::int(1, 6),
+                    'description'   => Random::str(10),
+                    'airline'       => array(
+                        'booking_reference' => Random::str(10),
+                        'ticket_number'     => Random::int(10),
+                        'passengers'        => array(
+                            array(
+                                'first_name' => Random::str(10, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                                'last_name'  => Random::str(10, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                            )
+                        ),
+                        'legs'              => array(
+                            array(
+                                'departure_airport'   => Random::str(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                                'destination_airport' => Random::str(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                                'departure_date'      => "2020-01-01",
+                            )
+                        ),
+                    ),
                 ),
             ),
         );
@@ -165,7 +222,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
             new ConfirmationAttributesExternal(),
             new ConfirmationAttributesRedirect(),
         );
-        $paymentData = array(
+        $paymentData   = array(
             new PaymentDataAlfabank(),
             new PaymentDataApplePay(),
             new PaymentDataAndroidPay(),
@@ -198,22 +255,23 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $confirmations[1]->setEnforce(true);
         $confirmations[1]->setReturnUrl(Random::str(10));
         for ($i = 0; $i < 10; $i++) {
-            $request = array(
-                'accountId' => uniqid(),
-                'gatewayId' => uniqid(),
-                'amount' => mt_rand(0, 100000),
-                'currency' => CurrencyCode::RUB,
-                'referenceId' => uniqid(),
+            $request  = array(
+                'accountId'         => uniqid(),
+                'gatewayId'         => uniqid(),
+                'amount'            => mt_rand(0, 100000),
+                'currency'          => CurrencyCode::RUB,
+                'referenceId'       => uniqid(),
                 'paymentMethodData' => $paymentData[$i],
-                'confirmation' => Random::value($confirmations),
+                'confirmation'      => Random::value($confirmations),
                 'savePaymentMethod' => Random::bool(),
-                'capture' => mt_rand(0, 1) ? true : false,
-                'clientIp' => long2ip(mt_rand(0, pow(2, 32))),
-                'metadata' => array('test' => uniqid()),
-                'receiptItems' => $this->getReceipt($i + 1),
-                'receiptEmail' => Random::str(10),
-                'receiptPhone' => Random::str(12, '0123456789'),
-                'taxSystemCode' => Random::int(1, 6),
+                'capture'           => mt_rand(0, 1) ? true : false,
+                'clientIp'          => long2ip(mt_rand(0, pow(2, 32))),
+                'metadata'          => array('test' => uniqid()),
+                'receiptItems'      => $this->getReceipt($i + 1),
+                'receiptEmail'      => Random::str(10),
+                'receiptPhone'      => Random::str(12, '0123456789'),
+                'taxSystemCode'     => Random::int(1, 6),
+                'airline'           => $airline,
             );
             $result[] = array($request);
         }
@@ -225,10 +283,10 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $result = array();
         for ($i = 0; $i < $count; $i++) {
             $result[] = array(
-                'title' => Random::str(10),
+                'title'    => Random::str(10),
                 'quantity' => Random::float(1, 100),
-                'price' => Random::int(1, 100),
-                'vatCode' => Random::int(1, 6),
+                'price'    => Random::int(1, 100),
+                'vatCode'  => Random::int(1, 6),
             );
         }
         return $result;
