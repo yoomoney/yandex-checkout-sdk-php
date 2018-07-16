@@ -15,6 +15,8 @@ class AutoloadTest extends TestCase
         self::assertEquals('yandexCheckoutLoadClass', $lastFunction);
 
         self::assertTrue(defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
+        self::assertFalse(!defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
+        self::assertTrue(defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
         self::assertFalse(!defined('YANDEX_CHECKOUT_PSR_LOG_PATH'));
 
         foreach ($functions as $function) {
@@ -22,9 +24,7 @@ class AutoloadTest extends TestCase
         }
 
         $this->walkDirectoriesAndTest(YANDEX_CHECKOUT_SDK_ROOT_PATH, 'YandexCheckout');
-        if (version_compare('5.4', PHP_VERSION, '<')) {
-            $this->walkDirectoriesAndTest(YANDEX_CHECKOUT_PSR_LOG_PATH, 'Psr\Log');
-        }
+        $this->walkDirectoriesAndTest(YANDEX_CHECKOUT_PSR_LOG_PATH, 'Psr\Log');
 
         self::assertFalse(class_exists('Unknown\\Class\\Name'));
 

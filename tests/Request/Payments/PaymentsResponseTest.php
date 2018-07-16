@@ -4,6 +4,8 @@ namespace Tests\YandexCheckout\Request\Payments;
 
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
+use YandexCheckout\Model\CancellationDetailsPartyCode;
+use YandexCheckout\Model\CancellationDetailsReasonCode;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\PaymentInterface;
@@ -134,6 +136,8 @@ class PaymentsResponseTest extends TestCase
                             'income' => array('value' => Random::int(1, 100000), 'currency' => CurrencyCode::USD),
                             'refunded' => array('value' => Random::int(1, 100000), 'currency' => CurrencyCode::EUR),
                             'metadata' => array('test_key' => 'test_value'),
+                            'cancellation_details' => array('party' => CancellationDetailsPartyCode::PAYMENT_NETWORK, 'reason' => CancellationDetailsReasonCode::INVALID_CSC),
+                            'refunded_amount' => array('value' => Random::int(1, 100000), 'currency' => CurrencyCode::RUB),
                             'confirmation' => array(
                                 'type' => ConfirmationType::EXTERNAL,
                             ),
