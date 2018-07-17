@@ -1113,6 +1113,34 @@ class ClientTest extends TestCase
         }
     }
 
+    public function testCreatePaymentErrors() {
+        $payment = CreatePaymentRequest::builder()
+            ->setAmount(123)
+            ->setPaymentToken(\YandexCheckout\Helpers\Random::str(36))
+            ->build();
+
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                $this->getFixtures('createPaymentErrorsGeneralFixtures.json'),
+                array('http_code' => 200)
+            ));
+
+        $apiClient = new Client();
+        $response = $apiClient
+            ->setApiClient($curlClientStub)
+            ->setAuth('shopId', 'shopPassword')
+            ->createPayment($payment);
+
+        self::assertSame($curlClientStub, $apiClient->getApiClient());
+        self::assertTrue($response instanceof CreatePaymentResponse);
+        self::assertEquals("canceled", $response->getStatus());
+        self::assertEquals("general_decline", $response->getCancellationDetails()->getReason());
+    }
+
     public function testSdkVersion()
     {
         $composerJsonFile = dirname(__FILE__) . '/../../composer.json';
