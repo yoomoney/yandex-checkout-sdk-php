@@ -895,4 +895,18 @@ class CreatePaymentRequestBuilderTest extends TestCase
         $description = Random::str(Payment::MAX_LENGTH_DESCRIPTION + 1);
         $builder->setDescription($description);
     }
+
+    /**
+     * @dataProvider invalidVatIdDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidAirline($value)
+    {
+        if (is_array($value)) {
+            throw new \InvalidArgumentException();
+        }
+        $builder = new CreatePaymentRequestBuilder();
+        $builder->setAirline($value);
+    }
 }
