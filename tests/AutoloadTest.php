@@ -16,7 +16,7 @@ class AutoloadTest extends TestCase
 
         self::assertTrue(defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
         self::assertFalse(!defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
-        self::assertTrue(defined('YANDEX_CHECKOUT_SDK_ROOT_PATH'));
+        self::assertTrue(defined('YANDEX_CHECKOUT_PSR_LOG_PATH'));
         self::assertFalse(!defined('YANDEX_CHECKOUT_PSR_LOG_PATH'));
 
         foreach ($functions as $function) {
