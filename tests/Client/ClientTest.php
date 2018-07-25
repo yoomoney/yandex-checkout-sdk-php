@@ -268,7 +268,7 @@ class ClientTest extends TestCase
     {
         return array(
             array(null),
-            array(PaymentsRequest::builder()->setAccountId(12)->build()),
+            array(PaymentsRequest::builder()->build()),
             array(array(
                 'account_id' => 12,
             ))
@@ -283,7 +283,7 @@ class ClientTest extends TestCase
      */
     public function testInvalidPaymentsList($httpCode, $errorResponse, $requiredException)
     {
-        $payments = PaymentsRequest::builder()->setAccountId(12)->build();
+        $payments = PaymentsRequest::builder()->build();
         $curlClientStub = $this->getCurlClientStub();
         $curlClientStub
             ->expects($this->any())

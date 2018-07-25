@@ -10,8 +10,8 @@ use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
+use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
-use YandexCheckout\Model\Status;
 use YandexCheckout\Request\Payments\PaymentsResponse;
 
 class PaymentsResponseTest extends TestCase
@@ -78,7 +78,7 @@ class PaymentsResponseTest extends TestCase
                     'items' => array(
                         array(
                             'id' => Random::str(36),
-                            'status' => Status::SUCCEEDED,
+                            'status' => PaymentStatus::SUCCEEDED,
                             'amount' => array(
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
@@ -99,7 +99,7 @@ class PaymentsResponseTest extends TestCase
                     'items' => array(
                         array(
                             'id' => Random::str(36),
-                            'status' => Status::SUCCEEDED,
+                            'status' => PaymentStatus::SUCCEEDED,
                             'amount' => array(
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
@@ -115,7 +115,7 @@ class PaymentsResponseTest extends TestCase
                         ),
                         array(
                             'id' => Random::str(36),
-                            'status' => Status::SUCCEEDED,
+                            'status' => PaymentStatus::SUCCEEDED,
                             'amount' => array(
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
@@ -152,7 +152,7 @@ class PaymentsResponseTest extends TestCase
                     'items' => array(
                         array(
                             'id' => Random::str(36),
-                            'status' => Status::SUCCEEDED,
+                            'status' => PaymentStatus::SUCCEEDED,
                             'amount' => array(
                                 'value' => Random::int(1, 100000),
                                 'currency' => CurrencyCode::EUR,
