@@ -124,6 +124,9 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
      */
     private $_clientIp;
 
+    /**
+     * @var AirlineInterface Объект с данными для продажи авиабилетов
+     */
     private $_airline;
 
     /**
