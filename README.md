@@ -30,6 +30,10 @@ composer require yandex-money/yandex-checkout-sdk-php
 ```bash
 composer update
 ```
+3. В коде вашего проекта подключите автозагрузку файлов нашего клиента:
+```php
+require __DIR__ . '/vendor/autoload.php';
+```
 
 ### Вручную
 
@@ -41,17 +45,13 @@ require __DIR__ . '/lib/autoload.php';
 
 ## Начало работы
 
-1. Подключите зависимости
-```php
-require __DIR__ . '/vendor/autoload.php';
-```
-2. Импортируйте нужные классы
+1. Импортируйте нужные классы
 ```php
 use YandexCheckout\Client;
 ```
-3. Создайте экземпляр объекта клиента и задайте идентификатор магазина и секретный ключ (их можно получить в личном кабинете Яндекс.Кассы). [Как выпустить секретный ключ](https://yandex.ru/support/checkout/payments/keys.html)
+2. Создайте экземпляр объекта клиента и задайте идентификатор магазина и секретный ключ (их можно получить в личном кабинете Яндекс.Кассы). [Как выпустить секретный ключ](https://yandex.ru/support/checkout/payments/keys.html)
 ```php
 $client = new Client();
 $client->setAuth('shopId', 'secretKey');
 ```
-4. Вызовите нужный метод API. [Подробнее в документации к API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
+3. Вызовите нужный метод API. [Подробнее в документации к API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
