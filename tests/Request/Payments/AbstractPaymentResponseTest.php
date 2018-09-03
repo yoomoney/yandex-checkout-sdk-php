@@ -7,8 +7,8 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\PaymentMethodType;
+use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
-use YandexCheckout\Model\Status;
 use YandexCheckout\Request\Payments\PaymentResponse;
 
 abstract class AbstractPaymentResponseTest extends TestCase
@@ -181,7 +181,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
     public function validDataProvider()
     {
         $result = array();
-        $statuses = Status::getValidValues();
+        $statuses = PaymentStatus::getValidValues();
         $receiptRegistrations = ReceiptRegistrationStatus::getValidValues();
 
         $confirmations = array(
@@ -226,6 +226,10 @@ abstract class AbstractPaymentResponseTest extends TestCase
                     'value' => Random::float(0.01, 1000000.0),
                     'currency' => Random::str(1, 256),
                 ),
+                'authorization_details' => array(
+                    'rrn'       => Random::str(10),
+                    'auth_code' => Random::str(10),
+                ),
             );
             $result[] = array($payment);
         }
@@ -239,9 +243,9 @@ abstract class AbstractPaymentResponseTest extends TestCase
     public function testGetCancellationDetails($options)
     {
         $instance = $this->getTestInstance($options);
-        if (empty($options['refunded_amount'])) {
+        if (empty($options['cancellation_details'])) {
             self::assertNull($instance->getCancellationDetails());
-        } elseif (!empty($options['cancellation_details'])) {
+        } else {
             self::assertEquals(
                 $options['cancellation_details']['party'],
                 $instance->getCancellationDetails()->getParty()
@@ -249,6 +253,27 @@ abstract class AbstractPaymentResponseTest extends TestCase
             self::assertEquals(
                 $options['cancellation_details']['reason'],
                 $instance->getCancellationDetails()->getReason()
+            );
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetAuthorizationDetails($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['authorization_details'])) {
+            self::assertNull($instance->getAuthorizationDetails());
+        } else {
+            self::assertEquals(
+                $options['authorization_details']['rrn'],
+                $instance->getAuthorizationDetails()->getRrn()
+            );
+            self::assertEquals(
+                $options['authorization_details']['auth_code'],
+                $instance->getAuthorizationDetails()->getAuthCode()
             );
         }
     }

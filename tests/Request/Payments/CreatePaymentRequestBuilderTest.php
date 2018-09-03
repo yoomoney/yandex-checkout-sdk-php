@@ -303,6 +303,15 @@ class CreatePaymentRequestBuilderTest extends TestCase
                     ),
                 )
             ),
+            array(
+                array(
+                    array(
+                        'title' => 'test',
+                        'price' => 1,
+                        'vatCode' => 7,
+                    ),
+                )
+            ),
         );
     }
 
@@ -480,6 +489,14 @@ class CreatePaymentRequestBuilderTest extends TestCase
                 self::assertEquals($options['paymentMethodData']['type'], $instance->getPaymentMethodData()->getType());
             }
         }
+
+        if (is_array($options['paymentMethodData'])) {
+            $builder = new CreatePaymentRequestBuilder();
+            $builder->build($this->getRequiredData());
+            $builder->setPaymentMethodData($options['paymentMethodData']['type'], $options['paymentMethodData']);
+            $instance = $builder->build($this->getRequiredData(empty($options['paymentMethodId']) ? null : 'paymentToken'));
+            self::assertEquals($options['paymentMethodData']['type'], $instance->getPaymentMethodData()->getType());
+        }
     }
 
     /**
@@ -506,6 +523,14 @@ class CreatePaymentRequestBuilderTest extends TestCase
             } else {
                 self::assertEquals($options['confirmation']['type'], $instance->getConfirmation()->getType());
             }
+        }
+
+        if (is_array($options['confirmation'])) {
+            $builder = new CreatePaymentRequestBuilder();
+            $builder->build($this->getRequiredData());
+            $builder->setConfirmation($options['confirmation']['type'], $options['confirmation']);
+            $instance = $builder->build($this->getRequiredData());
+            self::assertEquals($options['confirmation']['type'], $instance->getConfirmation()->getType());
         }
     }
 
@@ -813,7 +838,6 @@ class CreatePaymentRequestBuilderTest extends TestCase
     public function invalidAmountDataProvider()
     {
         return array(
-            array(null),
             array(-1),
             array(true),
             array(false),

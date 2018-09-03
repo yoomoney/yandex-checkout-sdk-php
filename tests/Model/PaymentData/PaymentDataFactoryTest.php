@@ -113,8 +113,9 @@ class PaymentDataFactoryTest extends TestCase
             ),
             array(
                 array(
-                    'type' => PaymentMethodType::ANDROID_PAY,
-                    'paymentData' => Random::str(10, 20),
+                    'type' => PaymentMethodType::GOOGLE_PAY,
+                    'paymentMethodToken' => Random::str(10, 20),
+                    'googleTransactionId' => Random::str(10, 20),
                 ),
             ),
             array(

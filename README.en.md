@@ -22,13 +22,17 @@ composer require yandex-money/yandex-checkout-sdk-php
 ```js
 ...
    "require": {
-        "php": ">=5.3.0",
-	"yandex-money/yandex-checkout-sdk-php": "*"
+        "php": ">=5.3.2",
+	    "yandex-money/yandex-checkout-sdk-php": "*"
 ...
 ```
 2. Refresh the project's dependencies. In the console, navigate to the catalog with composer.json and run the following command:
 ```bash
 composer update
+```
+3. Adjust your project's code to activate automated uploading of files for our product:
+```php
+require __DIR__ . '/vendor/autoload.php';
 ```
 
 ### Manually
@@ -41,17 +45,13 @@ require __DIR__ . '/lib/autoload.php';
 
 ## Commencing work
 
-1. Activate the dependency
-```php
-require __DIR__ . '/vendor/autoload.php';
-```
-2. Import required classes
+1. Import required classes
 ```php
 use YandexCheckout\Client;
 ```
-3. Create a sample of a client object, then set the store's identifier and secret key (you can get them under your Yandex.Checkout's Merchant Profile). [Issuing a secret key](https://yandex.com/support/checkout/payments/keys.html)
+2. Create a sample of a client object, then set the store's identifier and secret key (you can get them under your Yandex.Checkout's Merchant Profile). [Issuing a secret key](https://yandex.com/support/checkout/payments/keys.html)
 ```php
 $client = new Client();
 $client->setAuth('shopId', 'secretKey');
 ```
-4. Call the required API method. [More details in our documentation for the Yandex.Chechout API](https://checkout.yandex.com/docs/checkout-api/)
+3. Call the required API method. [More details in our documentation for the Yandex.Chechout API](https://checkout.yandex.com/docs/checkout-api/)

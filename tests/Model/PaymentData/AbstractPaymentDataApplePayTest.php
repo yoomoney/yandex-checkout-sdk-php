@@ -3,12 +3,11 @@
 namespace Tests\YandexCheckout\Model\PaymentData;
 
 use YandexCheckout\Helpers\Random;
-use YandexCheckout\Model\PaymentData\PaymentDataAndroidPay;
 use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
 
 require_once __DIR__ . '/AbstractPaymentDataTest.php';
 
-abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
+abstract class AbstractPaymentDataApplePayTest extends AbstractPaymentDataTest
 {
     /**
      * @dataProvider validPaymentDataDataProvider
@@ -16,7 +15,7 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
      */
     public function testGetSetPaymentData($value)
     {
-        /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
+        /** @var PaymentDataApplePay $instance */
         $instance = $this->getTestInstance();
 
         self::assertNull($instance->getPaymentData());
@@ -66,7 +65,7 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
      */
     public function testSetInvalidPaymentData($value)
     {
-        /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
+        /** @var PaymentDataApplePay $instance */
         $instance = $this->getTestInstance();
         $instance->setPaymentData($value);
     }
@@ -78,7 +77,7 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
      */
     public function testSetterInvalidPaymentData($value)
     {
-        /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
+        /** @var PaymentDataApplePay $instance */
         $instance = $this->getTestInstance();
         $instance->paymentData = $value;
     }
@@ -90,7 +89,7 @@ abstract class AbstractPaymentDataMobileTest extends AbstractPaymentDataTest
      */
     public function testSetterInvalidPayment_data($value)
     {
-        /** @var PaymentDataApplePay|PaymentDataAndroidPay $instance */
+        /** @var PaymentDataApplePay $instance */
         $instance = $this->getTestInstance();
         $instance->payment_data = $value;
     }

@@ -40,7 +40,7 @@ class PaymentOptionsResponseTest extends TestCase
                 ),
             ),
             array(
-                'payment_method_type' => PaymentMethodType::ANDROID_PAY,
+                'payment_method_type' => PaymentMethodType::GOOGLE_PAY,
                 'confirmation_types' => array(),
                 'charge' => array(
                     'value' => mt_rand(1, 100),

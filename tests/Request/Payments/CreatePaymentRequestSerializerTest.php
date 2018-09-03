@@ -12,7 +12,7 @@ use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\Leg;
 use YandexCheckout\Model\Passenger;
 use YandexCheckout\Model\PaymentData\PaymentDataAlfabank;
-use YandexCheckout\Model\PaymentData\PaymentDataAndroidPay;
+use YandexCheckout\Model\PaymentData\PaymentDataGooglePay;
 use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCard;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCardCard;
@@ -82,8 +82,11 @@ class CreatePaymentRequestSerializerTest extends TestCase
                     $expected['payment_method_data']['login'] = $options['paymentMethodData']->getLogin();
                     break;
                 case PaymentMethodType::APPLE_PAY:
-                case PaymentMethodType::ANDROID_PAY:
                     $expected['payment_method_data']['payment_data'] = $options['paymentMethodData']->getPaymentData();
+                    break;
+                case PaymentMethodType::GOOGLE_PAY:
+                    $expected['payment_method_data']['payment_method_token'] = $options['paymentMethodData']->getPaymentMethodToken();
+                    $expected['payment_method_data']['google_transaction_id'] = $options['paymentMethodData']->getGoogleTransactionId();
                     break;
                 case PaymentMethodType::BANK_CARD:
                     $expected['payment_method_data']['card'] = array(
@@ -118,7 +121,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
                         'value'    => $item['price'],
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
-                    'vat_code'    => empty($item['vatCode']) ? $options['taxSystemCode'] : $item['vatCode'],
+                    'vat_code'    => $item['vatCode'],
                 );
             }
         }
@@ -190,10 +193,6 @@ class CreatePaymentRequestSerializerTest extends TestCase
                             'price'    => Random::int(100, 100),
                             'vatCode'  => Random::int(1, 6),
                         ),
-                        array(
-                            'title' => Random::str(10),
-                            'price' => Random::int(100, 100),
-                        ),
                     ),
                     'receiptEmail'  => Random::str(10),
                     'taxSystemCode' => Random::int(1, 6),
@@ -225,7 +224,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $paymentData   = array(
             new PaymentDataAlfabank(),
             new PaymentDataApplePay(),
-            new PaymentDataAndroidPay(),
+            new PaymentDataGooglePay(),
             new PaymentDataBankCard(),
             new PaymentDataMobileBalance(),
             new PaymentDataQiwi(),
@@ -237,7 +236,8 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $paymentData[0]->setLogin(Random::str(10));
 
         $paymentData[1]->setPaymentData(Random::str(10));
-        $paymentData[2]->setPaymentData(Random::str(10));
+        $paymentData[2]->setPaymentMethodToken(Random::str(10));
+        $paymentData[2]->setGoogleTransactionId(Random::str(10));
 
         $card = new PaymentDataBankCardCard();
         $card->setNumber(Random::str(16, '0123456789'));

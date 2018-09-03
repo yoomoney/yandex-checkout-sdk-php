@@ -26,7 +26,7 @@
 
 namespace YandexCheckout\Request\Payments;
 
-use YandexCheckout\Common\AbstractRequest;
+use YandexCheckout\Common\AbstractPaymentRequest;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Helpers\TypeCast;
@@ -36,7 +36,6 @@ use YandexCheckout\Model\Payment;
 use YandexCheckout\Model\PaymentData\AbstractPaymentData;
 use YandexCheckout\Model\ConfirmationAttributes\AbstractConfirmationAttributes;
 use YandexCheckout\Model\Metadata;
-use YandexCheckout\Model\Receipt;
 use YandexCheckout\Model\ReceiptInterface;
 use YandexCheckout\Model\RecipientInterface;
 
@@ -65,7 +64,7 @@ use YandexCheckout\Model\RecipientInterface;
  * @property string $client_ip IPv4 или IPv6-адрес покупателя. Если не указан, используется IP-адрес TCP-подключения.
  * @property Metadata $metadata Метаданные привязанные к платежу
  */
-class CreatePaymentRequest extends AbstractRequest implements CreatePaymentRequestInterface
+class CreatePaymentRequest extends AbstractPaymentRequest implements CreatePaymentRequestInterface
 {
     const MAX_LENGTH_PAYMENT_TOKEN = 10240;
 
@@ -75,19 +74,9 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
     private $_recipient;
 
     /**
-     * @var AmountInterface Сумма платежа
-     */
-    private $_amount;
-
-    /**
      * @var string Описание транзакции
      */
     private $_description;
-
-    /**
-     * @var Receipt Данные фискального чека 54-ФЗ
-     */
-    private $_receipt;
 
     /**
      * @var string Одноразовый токен для проведения оплаты, сформированный Yandex.Checkout JS widget
@@ -153,24 +142,6 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
     }
 
     /**
-     * Возвращает сумму заказа
-     * @return AmountInterface Сумма заказа
-     */
-    public function getAmount()
-    {
-        return $this->_amount;
-    }
-
-    /**
-     * Устанавливает сумму платежа
-     * @param AmountInterface $value Сумма платежа
-     */
-    public function setAmount(AmountInterface $value)
-    {
-        $this->_amount = $value;
-    }
-
-    /**
      * Возвращает описание транзакции
      * @return string
      */
@@ -212,41 +183,6 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
     public function hasDescription()
     {
         return $this->_description !== null;
-    }
-
-    /**
-     * Возвращает чек, если он есть
-     * @return ReceiptInterface|null Данные фискального чека 54-ФЗ или null если чека нет
-     */
-    public function getReceipt()
-    {
-        return $this->_receipt;
-    }
-
-    /**
-     * Устанавливает чек
-     * @param ReceiptInterface $value Данные фискального чека 54-ФЗ
-     */
-    public function setReceipt(ReceiptInterface $value)
-    {
-        $this->_receipt = $value;
-    }
-
-    /**
-     * Проверяет наличие чека в создаваемом платеже
-     * @return bool True если чек есть, false если нет
-     */
-    public function hasReceipt()
-    {
-        return $this->_receipt !== null;
-    }
-
-    /**
-     * Удаляет чек из запроса
-     */
-    public function removeReceipt()
-    {
-        $this->_receipt = null;
     }
 
     /**
@@ -618,13 +554,7 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
      */
     public function validate()
     {
-        $amount = $this->_amount;
-        if ($amount === null) {
-            $this->setValidationError('Payment amount not specified');
-            return false;
-        }
-        if ($amount->getValue() <= 0.0) {
-            $this->setValidationError('Invalid payment amount value: ' . $amount->getValue());
+        if (!parent::validate()) {
             return false;
         }
         if ($this->_receipt !== null && $this->_receipt->notEmpty()) {
@@ -633,14 +563,6 @@ class CreatePaymentRequest extends AbstractRequest implements CreatePaymentReque
             if (empty($email) && empty($phone)) {
                 $this->setValidationError('Both email and phone values are empty in receipt');
                 return false;
-            }
-            if ($this->_receipt->getTaxSystemCode() === null) {
-                foreach ($this->_receipt->getItems() as $item) {
-                    if ($item->getVatCode() === null) {
-                        $this->setValidationError('Item vat_id and receipt tax_system_id not specified');
-                        return false;
-                    }
-                }
             }
         }
         if ($this->hasPaymentToken()) {

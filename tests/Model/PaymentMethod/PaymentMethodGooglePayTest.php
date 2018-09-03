@@ -2,19 +2,19 @@
 
 namespace Tests\YandexCheckout\Model\PaymentMethod;
 
-use YandexCheckout\Model\PaymentMethod\PaymentMethodAndroidPay;
+use YandexCheckout\Model\PaymentMethod\PaymentMethodGooglePay;
 use YandexCheckout\Model\PaymentMethodType;
 
 require_once __DIR__ . '/AbstractPaymentMethodTest.php';
 
-class PaymentMethodAndroidPayTest extends AbstractPaymentMethodTest
+class PaymentMethodGooglePayTest extends AbstractPaymentMethodTest
 {
     /**
-     * @return PaymentMethodAndroidPay
+     * @return PaymentMethodGooglePay
      */
     protected function getTestInstance()
     {
-        return new PaymentMethodAndroidPay();
+        return new PaymentMethodGooglePay();
     }
 
     /**
@@ -22,6 +22,6 @@ class PaymentMethodAndroidPayTest extends AbstractPaymentMethodTest
      */
     protected function getExpectedType()
     {
-        return PaymentMethodType::ANDROID_PAY;
+        return PaymentMethodType::GOOGLE_PAY;
     }
 }

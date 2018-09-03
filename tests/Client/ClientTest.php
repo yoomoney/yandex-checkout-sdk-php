@@ -1101,15 +1101,24 @@ class ClientTest extends TestCase
                 self::assertEquals(JSON_ERROR_RECURSION, $e->getCode());
                 self::assertEquals('Failed serialize json. Unknown error', $e->getMessage());
             }
-        }
 
-        $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
-        try {
-            $instance->encode($value);
-            self::fail('Exception not thrown');
-        } catch (JsonException $e) {
-            self::assertEquals(JSON_ERROR_UTF8, $e->getCode());
-            self::assertEquals('Failed serialize json. Malformed UTF-8 characters, possibly incorrectly encoded', $e->getMessage());
+            $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
+            try {
+                $instance->encode($value);
+                self::fail('Exception not thrown');
+            } catch (JsonException $e) {
+                self::assertEquals(JSON_ERROR_UTF8, $e->getCode());
+                self::assertEquals('Failed serialize json. Malformed UTF-8 characters, possibly incorrectly encoded',
+                    $e->getMessage());
+            }
+        } else {
+            $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
+            try {
+                $instance->encode($value);
+                self::fail('Exception not thrown');
+            } catch (\Exception $e) {
+                self::assertEquals('json_encode(): Invalid UTF-8 sequence in argument', $e->getMessage());
+            }
         }
     }
 
