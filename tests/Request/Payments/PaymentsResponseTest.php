@@ -137,6 +137,7 @@ class PaymentsResponseTest extends TestCase
                             'refunded' => array('value' => Random::int(1, 100000), 'currency' => CurrencyCode::EUR),
                             'metadata' => array('test_key' => 'test_value'),
                             'cancellation_details' => array('party' => CancellationDetailsPartyCode::PAYMENT_NETWORK, 'reason' => CancellationDetailsReasonCode::INVALID_CSC),
+                            'authorization_details' => array('rrn' => Random::str(20), 'auth_code' => Random::str(20)),
                             'refunded_amount' => array('value' => Random::int(1, 100000), 'currency' => CurrencyCode::RUB),
                             'confirmation' => array(
                                 'type' => ConfirmationType::EXTERNAL,

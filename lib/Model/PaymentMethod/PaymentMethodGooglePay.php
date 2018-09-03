@@ -29,14 +29,14 @@ namespace YandexCheckout\Model\PaymentMethod;
 use YandexCheckout\Model\PaymentMethodType;
 
 /**
- * PaymentMethodAndroidPay
- * Объект, описывающий метод оплаты, при оплате через Android Pay
+ * PaymentMethodGooglePay
+ * Объект, описывающий метод оплаты, при оплате через Google Pay
  * @property string $type Тип объекта
  */
-class PaymentMethodAndroidPay extends AbstractPaymentMethod
+class PaymentMethodGooglePay extends AbstractPaymentMethod
 {
     public function __construct()
     {
-        $this->_setType(PaymentMethodType::ANDROID_PAY);
+        $this->_setType(PaymentMethodType::GOOGLE_PAY);
     }
 }

@@ -133,7 +133,7 @@ class PaymentMethodFactoryTest extends TestCase
             ),
             array(
                 array(
-                    'type'     => PaymentMethodType::ANDROID_PAY,
+                    'type'     => PaymentMethodType::GOOGLE_PAY,
                     'id'       => Random::str(1, 64),
                     'saved'    => Random::int() % 2 ? true : false,
                     'title'    => Random::str(10, 20),

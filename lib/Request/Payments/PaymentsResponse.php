@@ -26,6 +26,7 @@
 
 namespace YandexCheckout\Request\Payments;
 
+use YandexCheckout\Model\AuthorizationDetails;
 use YandexCheckout\Model\CancellationDetails;
 use YandexCheckout\Model\Confirmation\ConfirmationRedirect;
 use YandexCheckout\Model\Confirmation\ConfirmationExternal;
@@ -115,6 +116,11 @@ class PaymentsResponse
             if (!empty($paymentInfo['cancellation_details'])) {
                 $payment->setCancellationDetails(new CancellationDetails(
                     $paymentInfo['cancellation_details']['party'], $paymentInfo['cancellation_details']['reason']
+                ));
+            }
+            if (!empty($paymentInfo['authorization_details'])) {
+                $payment->setAuthorizationDetails(new AuthorizationDetails(
+                    $paymentInfo['authorization_details']['rrn'], $paymentInfo['authorization_details']['auth_code']
                 ));
             }
             $this->items[] = $payment;

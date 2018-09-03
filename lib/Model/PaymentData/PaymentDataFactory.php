@@ -37,7 +37,7 @@ class PaymentDataFactory
         PaymentMethodType::CASH           => 'PaymentDataCash',
         PaymentMethodType::MOBILE_BALANCE => 'PaymentDataMobileBalance',
         PaymentMethodType::APPLE_PAY      => 'PaymentDataApplePay',
-        PaymentMethodType::ANDROID_PAY    => 'PaymentDataAndroidPay',
+        PaymentMethodType::GOOGLE_PAY     => 'PaymentDataGooglePay',
         PaymentMethodType::QIWI           => 'PaymentDataQiwi',
         PaymentMethodType::WEBMONEY       => 'PaymentDataWebmoney',
         PaymentMethodType::ALFABANK       => 'PaymentDataAlfabank',

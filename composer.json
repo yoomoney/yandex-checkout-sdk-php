@@ -1,6 +1,6 @@
 {
   "name": "yandex-money/yandex-checkout-sdk-php",
-  "version":"1.0.17",
+  "version":"1.0.18",
   "license": "MIT",
   "require": {
     "php": ">=5.3.0",

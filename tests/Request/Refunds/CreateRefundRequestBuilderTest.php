@@ -342,6 +342,15 @@ class CreateRefundRequestBuilderTest extends TestCase
                     ),
                 )
             ),
+            array(
+                array(
+                    array(
+                        'title' => 'test',
+                        'price' => 1,
+                        'vatCode' => 7,
+                    ),
+                )
+            ),
         );
     }
 

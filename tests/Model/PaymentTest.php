@@ -862,7 +862,7 @@ class PaymentTest extends TestCase
         $instance = new Payment();
         $instance->setDescription($options['description']);
 
-        if (empty($options['description'])) {
+        if (empty($options['description']) && ($options['description'] !== '0')) {
             self::assertNull($instance->getDescription());
         } else {
             self::assertEquals($options['description'], $instance->getDescription());

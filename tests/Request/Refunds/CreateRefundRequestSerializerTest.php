@@ -39,7 +39,7 @@ class CreateRefundRequestSerializerTest extends TestCase
                         'value' => $item['price'],
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
-                    'vat_code' => empty($item['vatCode']) ? $options['taxSystemCode'] : $item['vatCode'],
+                    'vat_code' => $item['vatCode'],
                 );
             }
         }
@@ -81,10 +81,6 @@ class CreateRefundRequestSerializerTest extends TestCase
                             'quantity' => Random::int(1, 10),
                             'price' => Random::int(100, 100),
                             'vatCode' => Random::int(1, 6),
-                        ),
-                        array(
-                            'title' => Random::str(10),
-                            'price' => Random::int(100, 100),
                         ),
                     ),
                     'receiptEmail' => Random::str(10),

@@ -1,3 +1,8 @@
+### v1.0.18 от 03.09.2018
+* Добавлены данные об авторизации платежа (authorization_details) в объект платежа (Payment)  
+* Добавлен способ оплаты google_pay
+* В методе addReceiptItem параметры quantity и vatCode теперь обязательные 
+
 ### v1.0.17 от 24.08.2018
 * Класс Status отмечен deprecated  
 
