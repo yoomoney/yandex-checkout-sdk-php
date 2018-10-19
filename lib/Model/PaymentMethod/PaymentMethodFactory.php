@@ -42,6 +42,7 @@ class PaymentMethodFactory
         PaymentMethodType::WEBMONEY       => 'PaymentMethodWebmoney',
         PaymentMethodType::ALFABANK       => 'PaymentMethodAlfaBank',
         PaymentMethodType::INSTALLMENTS   => 'PaymentMethodInstallments',
+        PaymentMethodType::B2B_SBERBANK   => 'PaymentMethodB2bSberbank',
     );
 
     private $optionsMap = array(

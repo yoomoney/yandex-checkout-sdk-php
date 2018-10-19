@@ -32,6 +32,7 @@ use YandexCheckout\Model\LegInterface;
 use YandexCheckout\Model\PassengerInterface;
 use YandexCheckout\Model\PaymentData\AbstractPaymentData;
 use YandexCheckout\Model\PaymentData\PaymentDataAlfabank;
+use YandexCheckout\Model\PaymentData\PaymentDataB2bSberbank;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCard;
 use YandexCheckout\Model\PaymentData\PaymentDataGooglePay;
 use YandexCheckout\Model\PaymentData\PaymentDataSberbank;
@@ -64,6 +65,7 @@ class CreatePaymentRequestSerializer
         PaymentMethodType::CASH           => 'serializePaymentDataMobilePhone',
         PaymentMethodType::MOBILE_BALANCE => 'serializePaymentDataMobilePhone',
         PaymentMethodType::INSTALLMENTS   => 'serializePaymentData',
+        PaymentMethodType::B2B_SBERBANK   => 'serializePaymentDataB2BSberbank',
     );
 
     public function serialize(CreatePaymentRequestInterface $request)
@@ -271,6 +273,39 @@ class CreatePaymentRequestSerializer
             'payment_method_token'  => $paymentData->getPaymentMethodToken(),
             'google_transaction_id' => $paymentData->getGoogleTransactionId(),
         );
+
+        return $result;
+    }
+
+    /**
+     * @param PaymentDataB2bSberbank $paymentData
+     * @return array
+     */
+    private function serializePaymentDataB2BSberbank(PaymentDataB2bSberbank $paymentData)
+    {
+        $result = array(
+            'type' => $paymentData->getType(),
+        );
+
+        if ($paymentData->getPaymentPurpose() !== null) {
+            $result['payment_purpose'] = $paymentData->getPaymentPurpose();
+        }
+
+        if ($paymentData->getVatData() !== null) {
+            $vatData = array(
+                'type' => $paymentData->getVatData()->getType(),
+            );
+
+            if ($paymentData->getVatData()->getRate() !== null) {
+                $vatData['rate'] = $paymentData->getVatData()->getRate();
+            }
+
+            if ($paymentData->getVatData()->getAmount() !== null) {
+                $vatData['amount'] = $this->serializeAmount($paymentData->getVatData()->getAmount());
+            }
+
+            $result['vat_data'] = $vatData;
+        }
 
         return $result;
     }

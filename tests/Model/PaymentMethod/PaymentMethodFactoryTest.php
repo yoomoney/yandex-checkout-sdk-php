@@ -227,7 +227,7 @@ class PaymentMethodFactoryTest extends TestCase
             ),
             array(
                 array(
-                    'type'           => PaymentMethodType::INSTALLMENTS,
+                    'type'           => PaymentMethodType::B2B_SBERBANK,
                     'id'             => Random::str(1, 64),
                     'saved'          => false,
                 ),

@@ -42,6 +42,7 @@ class PaymentDataFactory
         PaymentMethodType::WEBMONEY       => 'PaymentDataWebmoney',
         PaymentMethodType::ALFABANK       => 'PaymentDataAlfabank',
         PaymentMethodType::INSTALLMENTS   => 'PaymentDataInstallments',
+        PaymentMethodType::B2B_SBERBANK   => 'PaymentDataB2bSberbank',
     );
 
     /**

@@ -557,14 +557,6 @@ class CreatePaymentRequest extends AbstractPaymentRequest implements CreatePayme
         if (!parent::validate()) {
             return false;
         }
-        if ($this->_receipt !== null && $this->_receipt->notEmpty()) {
-            $email = $this->_receipt->getEmail();
-            $phone = $this->_receipt->getPhone();
-            if (empty($email) && empty($phone)) {
-                $this->setValidationError('Both email and phone values are empty in receipt');
-                return false;
-            }
-        }
         if ($this->hasPaymentToken()) {
             if ($this->hasPaymentMethodId()) {
                 $this->setValidationError('Both paymentToken and paymentMethodID values are specified');

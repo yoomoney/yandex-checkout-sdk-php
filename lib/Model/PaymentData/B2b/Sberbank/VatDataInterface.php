@@ -24,21 +24,37 @@
  * THE SOFTWARE.
  */
 
-namespace YandexCheckout\Model;
+namespace YandexCheckout\Model\PaymentData\B2b\Sberbank;
 
-use YandexCheckout\Common\AbstractEnum;
+use YandexCheckout\Model\AmountInterface;
 
-class NotificationEventType extends AbstractEnum
+/**
+ * Interface VatDataInterface
+ *
+ * @package YandexCheckout\Model
+ *
+ * @property-read string $type Способ расчёта НДС
+ * @property-read string $rate Данные об НДС в случае, если сумма НДС включена в сумму платежа
+ * @property-read AmountInterface $amount Сумма НДС
+ */
+interface VatDataInterface
 {
-    const PAYMENT_WAITING_FOR_CAPTURE = 'payment.waiting_for_capture';
-    const PAYMENT_SUCCEEDED = 'payment.succeeded';
-    const PAYMENT_CANCELED = 'payment.canceled';
-    const REFUND_SUCCEEDED = 'refund.succeeded';
+    /**
+     * Возвращает способ расчёта НДС
+     * @return string Способ расчёта НДС
+     */
+    function getType();
 
-    protected static $validValues = array(
-        self::PAYMENT_WAITING_FOR_CAPTURE => true,
-        self::PAYMENT_SUCCEEDED           => true,
-        self::PAYMENT_CANCELED            => true,
-        self::REFUND_SUCCEEDED            => true,
-    );
+    /**
+     * Возвращает данные об НДС
+     * @return string Данные об НДС
+     */
+    function getRate();
+
+    /**
+     * Возвращает сумму НДС
+     * @return AmountInterface Сумма НДС
+     */
+    function getAmount();
 }
+
