@@ -24,21 +24,28 @@
  * THE SOFTWARE.
  */
 
-namespace YandexCheckout\Model;
+namespace YandexCheckout\Model\PaymentData\B2b\Sberbank;
 
 use YandexCheckout\Common\AbstractEnum;
 
-class NotificationEventType extends AbstractEnum
+/**
+ * PaymentDataB2bSberbankVatDataRate - Налоговая ставка НДС
+ * |Код|Описание|
+ * --- | ---
+ * |7|7%|
+ * |10|10%|
+ * |18|18%|
+ */
+class VatDataRate extends AbstractEnum
 {
-    const PAYMENT_WAITING_FOR_CAPTURE = 'payment.waiting_for_capture';
-    const PAYMENT_SUCCEEDED = 'payment.succeeded';
-    const PAYMENT_CANCELED = 'payment.canceled';
-    const REFUND_SUCCEEDED = 'refund.succeeded';
+    const RATE_7  = '7';
+    const RATE_10 = '10';
+    const RATE_18 = '18';
 
     protected static $validValues = array(
-        self::PAYMENT_WAITING_FOR_CAPTURE => true,
-        self::PAYMENT_SUCCEEDED           => true,
-        self::PAYMENT_CANCELED            => true,
-        self::REFUND_SUCCEEDED            => true,
+        self::RATE_7  => true,
+        self::RATE_10 => true,
+        self::RATE_18 => true,
     );
+
 }

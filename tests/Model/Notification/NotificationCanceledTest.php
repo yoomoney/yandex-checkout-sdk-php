@@ -1,30 +1,29 @@
 <?php
 
-namespace Model\Notification;
 
-use Tests\Model\Notification\AbstractNotificationTest;
+namespace Tests\Model\Notification;
+
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
-use YandexCheckout\Model\Notification\NotificationSucceeded;
+use YandexCheckout\Model\Notification\NotificationCanceled;
 use YandexCheckout\Model\NotificationEventType;
 use YandexCheckout\Model\NotificationType;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
+use YandexCheckout\Model\Status;
 
-require_once __DIR__ . '/AbstractNotificationTest.php';
-
-class NotificationSucceededTest extends AbstractNotificationTest
+class NotificationCanceledTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param array $source
-     * @return NotificationSucceeded
+     * @return NotificationCanceled
      */
     protected function getTestInstance(array $source)
     {
-        return new NotificationSucceeded($source);
+        return new NotificationCanceled($source);
     }
 
     /**
@@ -40,7 +39,7 @@ class NotificationSucceededTest extends AbstractNotificationTest
      */
     protected function getExpectedEvent()
     {
-        return NotificationEventType::PAYMENT_SUCCEEDED;
+        return NotificationEventType::PAYMENT_CANCELED;
     }
 
     /**

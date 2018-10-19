@@ -156,11 +156,11 @@ class CreateRefundRequestTest extends TestCase
         $instance = new CreateRefundRequest();
 
         self::assertFalse($instance->validate());
-        $instance->setPaymentId(Random::str(36));
-        self::assertFalse($instance->validate());
         $instance->setAmount(new MonetaryAmount());
         self::assertFalse($instance->validate());
         $instance->setAmount(new MonetaryAmount(Random::int(1, 100000)));
+        self::assertFalse($instance->validate());
+        $instance->setPaymentId(Random::str(36));
         self::assertTrue($instance->validate());
 
         $receipt = new Receipt();

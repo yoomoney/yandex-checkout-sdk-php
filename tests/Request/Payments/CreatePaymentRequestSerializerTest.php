@@ -11,7 +11,10 @@ use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\Leg;
 use YandexCheckout\Model\Passenger;
+use YandexCheckout\Model\PaymentData\B2b\Sberbank\VatDataRate;
+use YandexCheckout\Model\PaymentData\B2b\Sberbank\VatDataType;
 use YandexCheckout\Model\PaymentData\PaymentDataAlfabank;
+use YandexCheckout\Model\PaymentData\PaymentDataB2bSberbank;
 use YandexCheckout\Model\PaymentData\PaymentDataGooglePay;
 use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
 use YandexCheckout\Model\PaymentData\PaymentDataBankCard;
@@ -103,6 +106,19 @@ class CreatePaymentRequestSerializerTest extends TestCase
                     break;
                 case PaymentMethodType::SBERBANK:
                     $expected['payment_method_data']['phone'] = $options['paymentMethodData']->getPhone();
+                    break;
+                case PaymentMethodType::B2B_SBERBANK:
+                    /** @var PaymentDataB2bSberbank $paymentMethodData */
+                    $paymentMethodData                                  = $options['paymentMethodData'];
+                    $expected['payment_method_data']['payment_purpose'] = $paymentMethodData->getPaymentPurpose();
+                    $expected['payment_method_data']['vat_data']        = array(
+                        'type'   => $paymentMethodData->getVatData()->getType(),
+                        'rate'   => $paymentMethodData->getVatData()->getRate(),
+                        'amount' => array(
+                            'value'    => $paymentMethodData->getVatData()->getAmount()->getValue(),
+                            'currency' => $paymentMethodData->getVatData()->getAmount()->getCurrency(),
+                        ),
+                    );
                     break;
             }
         }
@@ -232,6 +248,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
             new PaymentDataWebmoney(),
             new PaymentDataYandexWallet(),
             new PaymentDataInstallments(),
+            new PaymentDataB2bSberbank(),
         );
         $paymentData[0]->setLogin(Random::str(10));
 
@@ -250,11 +267,22 @@ class CreatePaymentRequestSerializerTest extends TestCase
 
         $paymentData[6]->setPhone(Random::str(14, '0123456789'));
 
-        $paymentData[9] = Random::value($paymentData);
+        /** @var PaymentDataB2bSberbank $paymentData[10] */
+        $paymentDataB2bSberbank = new PaymentDataB2bSberbank();
+        $paymentDataB2bSberbank->setPaymentPurpose(Random::str(10));
+        $paymentDataB2bSberbank->setVatData(array(
+            'type'   => VatDataType::CALCULATED,
+            'rate'   => VatDataRate::RATE_10,
+            'amount' => array(
+                'value'    => Random::int(1, 10000),
+                'currency' => CurrencyCode::USD,
+            ),
+        ));
+        $paymentData[10] = $paymentDataB2bSberbank;
 
         $confirmations[1]->setEnforce(true);
         $confirmations[1]->setReturnUrl(Random::str(10));
-        for ($i = 0; $i < 10; $i++) {
+        foreach($paymentData as $i => $paymentMethodData) {
             $request  = array(
                 'accountId'         => uniqid(),
                 'gatewayId'         => uniqid(),

@@ -247,10 +247,10 @@ class ReceiptTest extends TestCase
                 ),
             ),
         );
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 6; $i++) {
             $receipt = array(
                 'items'           => array(),
-                'tax_system_code' => mt_rand(1, 6),
+                'tax_system_code' => $i,
                 'phone'           => mt_rand(1000, 999999999999999),
                 'email'           => uniqid() . '@' . uniqid(),
             );
