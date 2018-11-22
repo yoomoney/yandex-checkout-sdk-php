@@ -1150,13 +1150,6 @@ class ClientTest extends TestCase
         self::assertEquals("general_decline", $response->getCancellationDetails()->getReason());
     }
 
-    public function testSdkVersion()
-    {
-        $composerJsonFile = dirname(__FILE__) . '/../../composer.json';
-        $data = json_decode(file_get_contents($composerJsonFile));
-        self::assertEquals($data->version, Client::SDK_VERSION);
-    }
-
     /**
      * @return PHPUnit_Framework_MockObject_MockObject
      */
