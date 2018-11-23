@@ -26,6 +26,8 @@ use YandexCheckout\Model\PaymentData\PaymentDataSberbank;
 use YandexCheckout\Model\PaymentData\PaymentDataWebmoney;
 use YandexCheckout\Model\PaymentData\PaymentDataYandexWallet;
 use YandexCheckout\Model\PaymentMethodType;
+use YandexCheckout\Model\Receipt\PaymentMode;
+use YandexCheckout\Model\Receipt\PaymentSubject;
 use YandexCheckout\Request\Payments\CreatePaymentRequest;
 use YandexCheckout\Request\Payments\CreatePaymentRequestSerializer;
 
@@ -138,6 +140,8 @@ class CreatePaymentRequestSerializerTest extends TestCase
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
                     'vat_code'    => $item['vatCode'],
+                    'payment_subject' => PaymentSubject::COMMODITY,
+                    'payment_mode' => PaymentMode::PARTIAL_PREPAYMENT
                 );
             }
         }

@@ -12,6 +12,8 @@ use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Payment;
 use YandexCheckout\Model\PaymentData\PaymentDataQiwi;
 use YandexCheckout\Model\PaymentMethodType;
+use YandexCheckout\Model\Receipt\PaymentMode;
+use YandexCheckout\Model\Receipt\PaymentSubject;
 use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Model\Recipient;
 use YandexCheckout\Request\Payments\CreatePaymentRequestBuilder;
@@ -39,11 +41,13 @@ class CreatePaymentRequestBuilderTest extends TestCase
                 $result['paymentToken'] = Random::str(36);
             }
         }
+
         return $result;
     }
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetAccountId($options)
@@ -66,6 +70,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetProductGroupId($options)
@@ -88,6 +93,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetAmount($options)
@@ -117,7 +123,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
         if (!($options['amount'] instanceof AmountInterface)) {
             $builder->setAmount(array(
-                'value' => $options['amount'],
+                'value'    => $options['amount'],
                 'currency' => 'EUR',
             ));
             $instance = $builder->build($this->getRequiredData('amount'));
@@ -128,6 +134,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider invalidAmountDataProvider
+     *
      * @param $value
      */
     public function testSetInvalidAmount($value)
@@ -138,6 +145,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetCurrency($options)
@@ -163,6 +171,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetReceiptItems($options)
@@ -183,6 +192,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testAddReceiptItems($options)
@@ -214,6 +224,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testAddReceiptShipping($options)
@@ -246,6 +257,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidItemsDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param $items
      */
     public function testSetInvalidReceiptItems($items)
@@ -260,63 +272,64 @@ class CreatePaymentRequestBuilderTest extends TestCase
             array(
                 array(
                     array(
-                        'price' => 1,
+                        'price'    => 1,
                         'quantity' => 1.4,
-                        'vatCode' => 3,
+                        'vatCode'  => 3,
                     ),
-                )
+                ),
             ),
             array(
                 array(
                     array(
-                        'title' => 'test',
+                        'title'    => 'test',
                         'quantity' => 1.4,
-                        'vatCode' => 3,
+                        'vatCode'  => 3,
                     ),
-                )
+                ),
             ),
             array(
                 array(
                     array(
                         'description' => 'test',
-                        'quantity' => 1.4,
-                        'vatCode' => 3,
+                        'quantity'    => 1.4,
+                        'vatCode'     => 3,
                     ),
-                )
+                ),
             ),
             array(
                 array(
                     array(
-                        'title' => 'test',
-                        'price' => 123,
+                        'title'    => 'test',
+                        'price'    => 123,
                         'quantity' => 1.4,
-                        'vatCode' => 7,
+                        'vatCode'  => 7,
                     ),
-                )
+                ),
             ),
             array(
                 array(
                     array(
                         'description' => 'test',
-                        'price' => 123,
-                        'quantity' => -1.4,
+                        'price'       => 123,
+                        'quantity'    => -1.4,
                     ),
-                )
+                ),
             ),
             array(
                 array(
                     array(
-                        'title' => 'test',
-                        'price' => 1,
+                        'title'   => 'test',
+                        'price'   => 1,
                         'vatCode' => 7,
                     ),
-                )
+                ),
             ),
         );
     }
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetReceiptEmail($options)
@@ -338,6 +351,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidEmailDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidEmail($value)
@@ -348,6 +362,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetReceiptPhone($options)
@@ -370,6 +385,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidPhoneDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidPhone($value)
@@ -380,6 +396,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetReceiptTaxSystemCode($options)
@@ -402,6 +419,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidVatIdDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidTaxSystemId($value)
@@ -412,6 +430,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetPaymentToken($options)
@@ -445,6 +464,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetPaymentMethodId($options)
@@ -466,6 +486,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetPaymentData($options)
@@ -501,6 +522,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetConfirmationAttributes($options)
@@ -536,6 +558,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetCreateRecurring($options)
@@ -557,6 +580,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetCapture($options)
@@ -578,6 +602,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetClientIp($options)
@@ -599,6 +624,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetMetadata($options)
@@ -620,6 +646,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetRecipient($options)
@@ -647,6 +674,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidRecipientDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param mixed $value
      */
     public function testSetInvalidRecipient($value)
@@ -672,17 +700,19 @@ class CreatePaymentRequestBuilderTest extends TestCase
     {
         $receipt = array(
             'tax_system_code' => Random::int(1, 6),
-            'email' => Random::str(10),
-            'phone' => Random::str(4, 15, '0123456789'),
-            'items' => array(
+            'email'           => Random::str(10),
+            'phone'           => Random::str(4, 15, '0123456789'),
+            'items'           => array(
                 array(
-                    'description' => 'test',
-                    'quantity' => 123,
-                    'amount' => array(
-                        'value' => 321,
+                    'description'     => 'test',
+                    'quantity'        => 123,
+                    'amount'          => array(
+                        'value'    => 321,
                         'currency' => 'USD',
                     ),
-                    'vat_code' => Random::int(1, 6),
+                    'vat_code'        => Random::int(1, 6),
+                    'payment_subject' => PaymentSubject::COMMODITY,
+                    'payment_mode'    => PaymentMode::PARTIAL_PREPAYMENT,
                 ),
             ),
         );
@@ -711,6 +741,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidReceiptDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param mixed $value
      */
     public function testSetInvalidReceipt($value)
@@ -739,62 +770,62 @@ class CreatePaymentRequestBuilderTest extends TestCase
         $receiptItem->setQuantity(1);
         $receiptItem->setDescription('test');
         $receiptItem->setVatCode(3);
-        $result = array(
+        $result               = array(
             array(
                 array(
-                    'accountId' => Random::str(1, 32),
-                    'gatewayId' => Random::str(1, 32),
-                    'recipient' => null,
-                    'description' => null,
-                    'amount' => new MonetaryAmount(Random::int(1, 1000)),
-                    'currency' => Random::value(CurrencyCode::getValidValues()),
-                    'receiptItems' => array(),
-                    'paymentToken' => null,
-                    'paymentMethodId' => null,
+                    'accountId'         => Random::str(1, 32),
+                    'gatewayId'         => Random::str(1, 32),
+                    'recipient'         => null,
+                    'description'       => null,
+                    'amount'            => new MonetaryAmount(Random::int(1, 1000)),
+                    'currency'          => Random::value(CurrencyCode::getValidValues()),
+                    'receiptItems'      => array(),
+                    'paymentToken'      => null,
+                    'paymentMethodId'   => null,
                     'paymentMethodData' => null,
-                    'confirmation' => null,
+                    'confirmation'      => null,
                     'savePaymentMethod' => null,
-                    'capture' => null,
-                    'clientIp' => null,
-                    'metadata' => null,
-                    'receiptEmail' => null,
-                    'receiptPhone' => null,
-                    'taxSystemCode' => null,
+                    'capture'           => null,
+                    'clientIp'          => null,
+                    'metadata'          => null,
+                    'receiptEmail'      => null,
+                    'receiptPhone'      => null,
+                    'taxSystemCode'     => null,
                 ),
             ),
             array(
                 array(
-                    'accountId' => Random::str(1, 32),
-                    'gatewayId' => Random::str(1, 32),
-                    'recipient' => null,
-                    'description' => '',
-                    'amount' => new MonetaryAmount(Random::int(1, 1000)),
-                    'currency' => Random::value(CurrencyCode::getValidValues()),
-                    'receiptItems' => array(
+                    'accountId'         => Random::str(1, 32),
+                    'gatewayId'         => Random::str(1, 32),
+                    'recipient'         => null,
+                    'description'       => '',
+                    'amount'            => new MonetaryAmount(Random::int(1, 1000)),
+                    'currency'          => Random::value(CurrencyCode::getValidValues()),
+                    'receiptItems'      => array(
                         array(
-                            'title' => 'test',
+                            'title'    => 'test',
                             'quantity' => mt_rand(1, 100),
-                            'price' => mt_rand(1,100),
-                            'vatCode' => mt_rand(1, 6)
+                            'price'    => mt_rand(1, 100),
+                            'vatCode'  => mt_rand(1, 6),
                         ),
                         $receiptItem,
                     ),
-                    'referenceId' => '',
-                    'paymentToken' => '',
-                    'paymentMethodId' => '',
+                    'referenceId'       => '',
+                    'paymentToken'      => '',
+                    'paymentMethodId'   => '',
                     'paymentMethodData' => '',
-                    'confirmation' => '',
+                    'confirmation'      => '',
                     'savePaymentMethod' => '',
-                    'capture' => '',
-                    'clientIp' => '',
-                    'metadata' => array(),
-                    'receiptEmail' => Random::str(10, 32),
-                    'receiptPhone' => '',
-                    'taxSystemCode' => '',
+                    'capture'           => '',
+                    'clientIp'          => '',
+                    'metadata'          => array(),
+                    'receiptEmail'      => Random::str(10, 32),
+                    'receiptPhone'      => '',
+                    'taxSystemCode'     => '',
                 ),
             ),
         );
-        $paymentMethodData = array(
+        $paymentMethodData    = array(
             new PaymentDataQiwi(),
             PaymentMethodType::BANK_CARD,
             array(
@@ -809,29 +840,30 @@ class CreatePaymentRequestBuilderTest extends TestCase
             ),
         );
         for ($i = 0; $i < 10; $i++) {
-            $request = array(
-                'accountId' => uniqid(),
-                'gatewayId' => uniqid(),
-                'recipient' => new Recipient(),
-                'description' => uniqid(),
-                'amount' => mt_rand(1, 100000),
-                'currency' => CurrencyCode::RUB,
-                'receiptItems' => array(),
-                'referenceId' => uniqid(),
-                'paymentToken' => uniqid(),
-                'paymentMethodId' => uniqid(),
+            $request  = array(
+                'accountId'         => uniqid(),
+                'gatewayId'         => uniqid(),
+                'recipient'         => new Recipient(),
+                'description'       => uniqid(),
+                'amount'            => mt_rand(1, 100000),
+                'currency'          => CurrencyCode::RUB,
+                'receiptItems'      => array(),
+                'referenceId'       => uniqid(),
+                'paymentToken'      => uniqid(),
+                'paymentMethodId'   => uniqid(),
                 'paymentMethodData' => isset($paymentMethodData[$i]) ? $paymentMethodData[$i] : null,
-                'confirmation' => isset($confirmationStatuses[$i]) ? $confirmationStatuses[$i] : null,
+                'confirmation'      => isset($confirmationStatuses[$i]) ? $confirmationStatuses[$i] : null,
                 'savePaymentMethod' => mt_rand(0, 1) ? true : false,
-                'capture' => mt_rand(0, 1) ? true : false,
-                'clientIp' => long2ip(mt_rand(0, pow(2, 32))),
-                'metadata' => array('test' => 'test'),
-                'receiptEmail' => Random::str(10),
-                'receiptPhone' => Random::str(10, '0123456789'),
-                'taxSystemCode' => Random::int(1, 6),
+                'capture'           => mt_rand(0, 1) ? true : false,
+                'clientIp'          => long2ip(mt_rand(0, pow(2, 32))),
+                'metadata'          => array('test' => 'test'),
+                'receiptEmail'      => Random::str(10),
+                'receiptPhone'      => Random::str(10, '0123456789'),
+                'taxSystemCode'     => Random::int(1, 6),
             );
             $result[] = array($request);
         }
+
         return $result;
     }
 
@@ -885,6 +917,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param $options
      */
     public function testSetDescription($options)
@@ -915,7 +948,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      */
     public function testSetInvalidLengthDescription()
     {
-        $builder = new CreatePaymentRequestBuilder();
+        $builder     = new CreatePaymentRequestBuilder();
         $description = Random::str(Payment::MAX_LENGTH_DESCRIPTION + 1);
         $builder->setDescription($description);
     }
@@ -923,6 +956,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     /**
      * @dataProvider invalidVatIdDataProvider
      * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidAirline($value)

@@ -5,6 +5,8 @@ namespace Tests\YandexCheckout\Request\Payments\Payment;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\Receipt\PaymentMode;
+use YandexCheckout\Model\Receipt\PaymentSubject;
 use YandexCheckout\Request\Payments\Payment\CreateCaptureRequest;
 use YandexCheckout\Request\Payments\Payment\CreateCaptureRequestSerializer;
 
@@ -35,6 +37,8 @@ class CreateCaptureRequestSerializerTest extends TestCase
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
                     'vat_code' => $item['vatCode'],
+                    'payment_subject' => PaymentSubject::COMMODITY,
+                    'payment_mode' => PaymentMode::PARTIAL_PREPAYMENT
                 );
             }
             if (!empty($options['receiptEmail'])) {
