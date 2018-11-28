@@ -202,10 +202,12 @@ class CreatePaymentRequestBuilderTest extends TestCase
         foreach ($options['receiptItems'] as $item) {
             if ($item instanceof ReceiptItem) {
                 $builder->addReceiptItem(
-                    $item->getDescription(), $item->getPrice()->getValue(), $item->getQuantity(), $item->getVatCode()
+                    $item->getDescription(), $item->getPrice()->getValue(), $item->getQuantity(), $item->getVatCode(),
+                    $item->getPaymentMode(), $item->getPaymentSubject()
                 );
             } else {
-                $builder->addReceiptItem($item['title'], $item['price'], $item['quantity'], $item['vatCode']);
+                $builder->addReceiptItem($item['title'], $item['price'], $item['quantity'], $item['vatCode'],
+                    $item['paymentMode'], $item['paymentSubject']);
             }
         }
         $builder->setReceiptEmail($options['receiptEmail']);
@@ -803,10 +805,12 @@ class CreatePaymentRequestBuilderTest extends TestCase
                     'currency'          => Random::value(CurrencyCode::getValidValues()),
                     'receiptItems'      => array(
                         array(
-                            'title'    => 'test',
-                            'quantity' => mt_rand(1, 100),
-                            'price'    => mt_rand(1, 100),
-                            'vatCode'  => mt_rand(1, 6),
+                            'title'          => 'test',
+                            'quantity'       => mt_rand(1, 100),
+                            'price'          => mt_rand(1, 100),
+                            'vatCode'        => mt_rand(1, 6),
+                            'paymentMode'    => PaymentMode::CREDIT_PAYMENT,
+                            'paymentSubject' => PaymentSubject::ANOTHER,
                         ),
                         $receiptItem,
                     ),
