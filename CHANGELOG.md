@@ -1,3 +1,6 @@
+### v1.1.2 от 28.11.2018
+* Добавлены аргументы ФФД 1.05 в AbstractPaymentRequestBuilder::addReceiptItem() и AbstractPaymentRequestBuilder::addReceiptShipping()
+
 ### v1.1.1 от 23.11.2018
 * Добавлены поля для ФФД 1.05
 
