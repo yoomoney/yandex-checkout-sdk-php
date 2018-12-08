@@ -1,3 +1,6 @@
+### v1.1.3 от 08.12.2018
+* Исправлен Notice при необязательном auth_code, Добавлен DinersClub для банковских карт
+
 ### v1.1.2 от 28.11.2018
 * Добавлены аргументы ФФД 1.05 в AbstractPaymentRequestBuilder::addReceiptItem() и AbstractPaymentRequestBuilder::addReceiptShipping()
 
