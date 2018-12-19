@@ -1,3 +1,6 @@
+### v1.1.4 от 19.12.2018
+* Исправлен Notice при необязательном auth_code в AbstractPaymentResponse
+
 ### v1.1.3 от 08.12.2018
 * Исправлен Notice при необязательном auth_code, Добавлен DinersClub для банковских карт
 
