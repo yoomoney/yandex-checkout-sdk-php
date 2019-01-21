@@ -59,6 +59,9 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
         $this->setAmount($this->factoryAmount($paymentInfo['amount']));
         $this->setCreatedAt($paymentInfo['created_at']);
         $this->setPaid($paymentInfo['paid']);
+        if(!empty($paymentInfo['test'])) {
+            $this->setTest($paymentInfo['test']);
+        }
         if (!empty($paymentInfo['payment_method'])) {
             $this->setPaymentMethod($this->factoryPaymentMethod($paymentInfo['payment_method']));
         }
@@ -110,14 +113,16 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
             $this->setMetadata($metadata);
         }
         if (!empty($paymentInfo['cancellation_details'])) {
-            $this->setCancellationDetails(new CancellationDetails(
-                $paymentInfo['cancellation_details']['party'], $paymentInfo['cancellation_details']['reason']
-            ));
+            $cancellationDetails = $paymentInfo['cancellation_details'];
+            $party               = isset($cancellationDetails['party']) ? $cancellationDetails['party'] : null;
+            $reason              = isset($cancellationDetails['reason']) ? $cancellationDetails['reason'] : null;
+            $this->setCancellationDetails(new CancellationDetails($party, $reason));
         }
         if (!empty($paymentInfo['authorization_details'])) {
-            $this->setAuthorizationDetails(new AuthorizationDetails(
-                $paymentInfo['authorization_details']['rrn'], $paymentInfo['authorization_details']['auth_code']
-            ));
+            $authorizationDetails = $paymentInfo['authorization_details'];
+            $rrn                  = isset($authorizationDetails['rrn']) ? $authorizationDetails['rrn'] : null;
+            $authCode             = isset($authorizationDetails['auth_code']) ? $authorizationDetails['auth_code'] : null;
+            $this->setAuthorizationDetails(new AuthorizationDetails($rrn, $authCode));
         }
     }
 
