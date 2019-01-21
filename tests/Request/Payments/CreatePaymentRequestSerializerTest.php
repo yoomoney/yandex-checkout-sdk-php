@@ -163,6 +163,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
         if (!empty($options['description'])) {
             $expected['description'] = $options['description'];
         }
+
         if (!empty($options['airline'])) {
             $expected['airline'] = array(
                 'booking_reference' => $options['airline']['booking_reference'],
@@ -212,6 +213,8 @@ class CreatePaymentRequestSerializerTest extends TestCase
                             'quantity' => Random::int(1, 10),
                             'price'    => Random::int(100, 100),
                             'vatCode'  => Random::int(1, 6),
+                            'payment_subject' => PaymentSubject::COMMODITY,
+                            'payment_mode' => PaymentMode::PARTIAL_PREPAYMENT
                         ),
                     ),
                     'receiptEmail'  => Random::str(10),
@@ -319,6 +322,8 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 'quantity' => Random::float(1, 100),
                 'price'    => Random::int(1, 100),
                 'vatCode'  => Random::int(1, 6),
+                'payment_subject' => PaymentSubject::COMMODITY,
+                'payment_mode' => PaymentMode::PARTIAL_PREPAYMENT
             );
         }
         return $result;

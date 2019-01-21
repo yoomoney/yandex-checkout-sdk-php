@@ -154,6 +154,20 @@ abstract class AbstractPaymentResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
+    public function testGetTest($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['test'])) {
+            self::assertNull($instance->getTest());
+        } else {
+            self::assertEquals($options['test'], $instance->getTest());
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
     public function testGetReceiptRegistration($options)
     {
         $instance = $this->getTestInstance($options);
@@ -221,6 +235,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                 ),
                 'paid' => $i % 2 ? true : false,
+                'test' => $i % 2 ? true : false,
                 'receipt_registration' => Random::value($receiptRegistrations),
                 'metadata' => array(
                     'value' => Random::float(0.01, 1000000.0),

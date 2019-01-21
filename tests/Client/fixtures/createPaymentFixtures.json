@@ -31,6 +31,7 @@
     "currency": "RUB"
   },
   "paid": true,
+  "test": true,
   "receipt_registration": "succeeded",
   "metadata": {}
 }
