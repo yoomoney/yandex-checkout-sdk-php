@@ -57,6 +57,7 @@ class PaymentMethodType extends AbstractEnum
     const ALFABANK       = 'alfabank';
     const INSTALLMENTS   = 'installments';
     const B2B_SBERBANK   = 'b2b_sberbank';
+    const TINKOFF_BANK   = 'tinkoff_bank';
 
     protected static $validValues = array(
         self::YANDEX_MONEY   => true,
@@ -71,5 +72,6 @@ class PaymentMethodType extends AbstractEnum
         self::ALFABANK       => true,
         self::INSTALLMENTS   => true,
         self::B2B_SBERBANK   => true,
+        self::TINKOFF_BANK   => true,
     );
 }

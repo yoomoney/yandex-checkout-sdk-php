@@ -232,6 +232,13 @@ class PaymentMethodFactoryTest extends TestCase
                     'saved'          => false,
                 ),
             ),
+            array(
+                array(
+                    'type'           => PaymentMethodType::TINKOFF_BANK,
+                    'id'             => Random::str(1, 64),
+                    'saved'          => false,
+                ),
+            ),
         );
         foreach (PaymentMethodType::getValidValues() as $value) {
             $result[] = array(array('type' => $value));
