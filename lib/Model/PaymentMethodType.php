@@ -76,5 +76,6 @@ class PaymentMethodType extends AbstractEnum
         self::TINKOFF_BANK   => true,
         self::INSTALLMENTS   => true,
         self::B2B_SBERBANK   => true,
+        self::PSB            => false,
     );
 }
