@@ -86,7 +86,7 @@ class Client
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.1.8';
+    const SDK_VERSION = '1.1.9';
 
     /**
      * Имя HTTP заголовка, используемого для передачи idempotence key
@@ -166,10 +166,14 @@ class Client
 
         if ($configLoader === null) {
             $configLoader = new ConfigurationLoader();
-            $config       = $configLoader->load()->getConfig();
-            $this->setConfig($config);
-            $apiClient->setConfig($config);
+            $configLoader = $configLoader->load();
         }
+
+        $config = $configLoader->getConfig();
+        $this->setConfig($config);
+
+        $apiClient->setConfig($config);
+
         $this->attempts  = self::DEFAULT_ATTEMPTS_COUNT;
         $this->apiClient = $apiClient;
     }
