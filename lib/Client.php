@@ -26,24 +26,21 @@
 
 namespace YandexCheckout;
 
-use Psr\Log\LoggerInterface;
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
+use YandexCheckout\Client\BaseClient;
 use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
 use YandexCheckout\Common\Exceptions\ForbiddenException;
-use YandexCheckout\Common\Exceptions\JsonException;
 use YandexCheckout\Common\Exceptions\InternalServerError;
 use YandexCheckout\Common\Exceptions\NotFoundException;
 use YandexCheckout\Common\Exceptions\ResponseProcessingException;
 use YandexCheckout\Common\Exceptions\TooManyRequestsException;
 use YandexCheckout\Common\Exceptions\UnauthorizedException;
 use YandexCheckout\Common\HttpVerb;
-use YandexCheckout\Common\LoggerWrapper;
-use YandexCheckout\Common\ResponseObject;
-use YandexCheckout\Helpers\Config\ConfigurationLoader;
-use YandexCheckout\Helpers\Config\ConfigurationLoaderInterface;
 use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Helpers\UUID;
 use YandexCheckout\Model\PaymentInterface;
+use YandexCheckout\Model\Webhook\Webhook;
 use YandexCheckout\Request\PaymentOptionsRequest;
 use YandexCheckout\Request\PaymentOptionsRequestInterface;
 use YandexCheckout\Request\PaymentOptionsRequestSerializer;
@@ -71,6 +68,7 @@ use YandexCheckout\Request\Refunds\RefundsRequest;
 use YandexCheckout\Request\Refunds\RefundsRequestInterface;
 use YandexCheckout\Request\Refunds\RefundsRequestSerializer;
 use YandexCheckout\Request\Refunds\RefundsResponse;
+use YandexCheckout\Request\Webhook\WebhookListResponse;
 
 /**
  * Класс клиента API
@@ -79,161 +77,12 @@ use YandexCheckout\Request\Refunds\RefundsResponse;
  *
  * @since 1.0.1
  */
-class Client
+class Client extends BaseClient
 {
-    const PAYMENTS_PATH = '/payments';
-    const REFUNDS_PATH = '/refunds';
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.1.9';
-
-    /**
-     * Имя HTTP заголовка, используемого для передачи idempotence key
-     */
-    const IDEMPOTENCY_KEY_HEADER = 'Idempotence-Key';
-
-    /**
-     * Значение по умолчанию времени ожидания между запросами при отправке повторного запроса в случае получения
-     * ответа с HTTP статусом 202
-     */
-    const DEFAULT_DELAY = 1800;
-
-    /**
-     * Значение по умолчанию количества попыток получения информации от API если пришёл ответ с HTTP статусом 202
-     */
-    const DEFAULT_TRIES_COUNT = 3;
-
-    /**
-     * Значение по умолчанию количества попыток получения информации от API если пришёл ответ с HTTP статусом 202
-     */
-    const DEFAULT_ATTEMPTS_COUNT = 3;
-
-    /**
-     * @var null|Client\ApiClientInterface
-     */
-    protected $apiClient;
-
-    /**
-     * @var string
-     */
-    private $login;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * Время через которое будут осуществляться повторные запросы
-     * Значение по умолчанию - 1800 миллисекунд.
-     * @link https://kassa.yandex.ru/docs/checkout-api/?php#asinhronnost
-     * @var int значение в миллисекундах
-     */
-    private $timeout;
-
-    /**
-     * Количество повторных запросов при ответе API статусом 202
-     * Значение по умолчанию 3
-     * @link https://kassa.yandex.ru/docs/checkout-api/?php#asinhronnost
-     * @var int
-     */
-    private $attempts;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
-
-    /**
-     * Constructor
-     *
-     * @param Client\ApiClientInterface|null $apiClient
-     * @param ConfigurationLoaderInterface|null $configLoader
-     */
-    public function __construct(
-        Client\ApiClientInterface $apiClient = null,
-        ConfigurationLoaderInterface $configLoader = null
-    ) {
-        if ($apiClient === null) {
-            $apiClient = new Client\CurlClient();
-        }
-
-        if ($configLoader === null) {
-            $configLoader = new ConfigurationLoader();
-            $configLoader = $configLoader->load();
-        }
-
-        $config = $configLoader->getConfig();
-        $this->setConfig($config);
-
-        $apiClient->setConfig($config);
-
-        $this->attempts  = self::DEFAULT_ATTEMPTS_COUNT;
-        $this->apiClient = $apiClient;
-    }
-
-    /**
-     * @param $login
-     * @param $password
-     *
-     * @return Client $this
-     */
-    public function setAuth($login, $password)
-    {
-        $this->login    = $login;
-        $this->password = $password;
-
-        $this->apiClient
-            ->setShopId($this->login)
-            ->setShopPassword($this->password);
-
-        return $this;
-    }
-
-    /**
-     * @return Client\ApiClientInterface
-     */
-    public function getApiClient()
-    {
-        return $this->apiClient;
-    }
-
-    /**
-     * @param Client\ApiClientInterface $apiClient
-     *
-     * @return Client
-     */
-    public function setApiClient(Client\ApiClientInterface $apiClient)
-    {
-        $this->apiClient = $apiClient;
-        $this->apiClient->setConfig($this->config);
-        $this->apiClient->setLogger($this->logger);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает логгер приложения
-     *
-     * @param null|callable|object|LoggerInterface $value Инстанс логгера
-     */
-    public function setLogger($value)
-    {
-        if ($value === null || $value instanceof LoggerInterface) {
-            $this->logger = $value;
-        } else {
-            $this->logger = new LoggerWrapper($value);
-        }
-        if ($this->apiClient !== null) {
-            $this->apiClient->setLogger($this->logger);
-        }
-    }
+    const SDK_VERSION = '1.2.0';
 
     /**
      * Доступные способы оплаты.
@@ -685,173 +534,125 @@ class Client
     }
 
     /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param array $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * Установка значение задержки между повторными запросами
+     * Создание Webhook
+     * Запрос позволяет подписаться на уведомления о событии (например, на переход платежа в статус successed).
      *
-     * @param int $timeout
+     * @param $request
+     * @param null $idempotencyKey
      *
-     * @return Client
+     * @return null|Webhook
      */
-    public function setRetryTimeout($timeout)
+    public function addWebhook($request, $idempotencyKey = null)
     {
-        $this->timeout = $timeout;
+        $path = self::WEBHOOKS_PATH;
 
-        return $this;
-    }
+        $headers = array();
 
-    /**
-     * Установка значения количества попыток повторных запросов при статусе 202
-     *
-     * @param int $attempts
-     *
-     * @return Client
-     */
-    public function setMaxRequestAttempts($attempts)
-    {
-        $this->attempts = $attempts;
+        if ($idempotencyKey) {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
+        }
+        if (is_array($request)) {
+            $webhook = new Webhook($request);
+        } else {
+            $webhook = $request;
+        }
 
-        return $this;
-    }
+        if (!($webhook instanceof Webhook)) {
+            throw new InvalidArgumentException();
+        }
 
-    /**
-     * @param $serializedData
-     *
-     * @return string
-     * @throws \Exception
-     */
-    private function encodeData($serializedData)
-    {
-        $result = json_encode($serializedData);
-        if ($result === false) {
-            $errorCode = json_last_error();
-            throw new JsonException("Failed serialize json.", $errorCode);
+        $httpBody = $this->encodeData($webhook->jsonSerialize());
+
+        $response = $this->execute($path, HttpVerb::POST, null, $httpBody, $headers);
+
+        $result = null;
+        if ($response->getCode() == 200) {
+            $resultArray = $this->decodeData($response);
+            $result      = new Webhook($resultArray);
+        } else {
+            $this->handleError($response);
         }
 
         return $result;
     }
 
     /**
-     * @param ResponseObject $response
+     * Удаление Webhook
+     * Запрос позволяет отписаться от уведомлений о событии для переданного OAuth-токена. Чтобы удалить webhook, вам нужно передать в запросе его идентификатор.
      *
-     * @return array
-     */
-    private function decodeData(ResponseObject $response)
-    {
-        $resultArray = json_decode($response->getBody(), true);
-        if ($resultArray === null) {
-            throw new JsonException('Failed to decode response', json_last_error());
-        }
-
-        return $resultArray;
-    }
-
-    /**
-     * @param ResponseObject $response
+     * @param $webhookId
+     * @param null $idempotencyKey
      *
-     * @throws ApiException
-     * @throws BadApiRequestException
-     * @throws ForbiddenException
-     * @throws InternalServerError
-     * @throws NotFoundException
-     * @throws ResponseProcessingException
-     * @throws TooManyRequestsException
-     * @throws UnauthorizedException
+     * @return null|Webhook
      */
-    private function handleError(ResponseObject $response)
+    public function removeWebhook($webhookId, $idempotencyKey = null)
     {
-        switch ($response->getCode()) {
-            case BadApiRequestException::HTTP_CODE:
-                throw new BadApiRequestException($response->getHeaders(), $response->getBody());
-                break;
-            case ForbiddenException::HTTP_CODE:
-                throw new ForbiddenException($response->getHeaders(), $response->getBody());
-                break;
-            case UnauthorizedException::HTTP_CODE:
-                throw new UnauthorizedException($response->getHeaders(), $response->getBody());
-                break;
-            case InternalServerError::HTTP_CODE:
-                throw new InternalServerError($response->getHeaders(), $response->getBody());
-                break;
-            case NotFoundException::HTTP_CODE:
-                throw new NotFoundException($response->getHeaders(), $response->getBody());
-                break;
-            case TooManyRequestsException::HTTP_CODE:
-                throw new TooManyRequestsException($response->getHeaders(), $response->getBody());
-                break;
-            case ResponseProcessingException::HTTP_CODE:
-                throw new ResponseProcessingException($response->getHeaders(), $response->getBody());
-                break;
-            default:
-                if ($response->getCode() > 399) {
-                    throw new ApiException(
-                        'Unexpected response error code',
-                        $response->getCode(),
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-        }
-    }
+        $headers = array();
 
-    /**
-     * Задержка между повторными запросами
-     *
-     * @param $response
-     */
-    protected function delay($response)
-    {
-        $timeout      = $this->timeout;
-        $responseData = $this->decodeData($response);
-        if ($timeout) {
-            $delay = $timeout;
+        if ($idempotencyKey) {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
         } else {
-            if (isset($responseData['retry_after'])) {
-                $delay = $responseData['retry_after'];
-            } else {
-                $delay = self::DEFAULT_DELAY;
-            }
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
-        usleep($delay * 1000);
+        $path    = self::WEBHOOKS_PATH.'/'.$webhookId;
+
+        $response = $this->execute($path, HttpVerb::DELETE, null, null, $headers);
+
+        $result = null;
+        if ($response->getCode() == 200) {
+            $resultArray = $this->decodeData($response);
+            $result      = new Webhook($resultArray);
+        } else {
+            $this->handleError($response);
+        }
+
+        return $result;
     }
 
     /**
-     * Выполнение запроса и обработка 202 статуса
-     *
-     * @param $path
-     * @param $method
-     * @param $queryParams
-     * @param null $httpBody
-     * @param array $headers
-     *
-     * @return ResponseObject
-     * @throws Common\Exceptions\AuthorizeException
+     * Список созданных Webhook
+     * Запрос позволяет узнать, какие webhook есть для переданного OAuth-токена.
+     * @return null|WebhookListResponse
      */
-    private function execute($path, $method, $queryParams, $httpBody = null, $headers = array())
+    public function getWebhooks()
     {
-        $attempts = $this->attempts;
-        $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
+        $path = self::WEBHOOKS_PATH;
 
-        while ($response->getCode() == 202 && $attempts > 0) {
-            $this->delay($response);
-            $attempts--;
-            $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
+        $response = $this->execute($path, HttpVerb::GET, null);
+
+        $result = null;
+        if ($response->getCode() == 200) {
+            $responseArray = $this->decodeData($response);
+            $result        = new WebhookListResponse($responseArray);
+        } else {
+            $this->handleError($response);
         }
 
-        return $response;
+        return $result;
+    }
+
+    /**
+     * Информация о магазине
+     * Запрос позволяет получить информацию о магазине для переданного OAuth-токена.
+     *
+     * @return array|null
+     */
+    public function me()
+    {
+        $path = self::ME_PATH;
+
+        $response = $this->execute($path, HttpVerb::GET, null);
+
+        $result = null;
+        if ($response->getCode() == 200) {
+            $responseArray = $this->decodeData($response);
+            $result        = $responseArray;
+        } else {
+            $this->handleError($response);
+        }
+
+        return $result;
     }
 }
