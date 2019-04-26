@@ -40,10 +40,12 @@ class ConfirmationAttributesFactory
         ConfirmationType::DEEPLINK          => 'ConfirmationAttributesDeepLink',
         ConfirmationType::EXTERNAL          => 'ConfirmationAttributesExternal',
         ConfirmationType::REDIRECT          => 'ConfirmationAttributesRedirect',
+        ConfirmationType::EMBEDDED          => 'ConfirmationAttributesEmbedded',
     );
 
     /**
      * @param string $type
+     *
      * @return AbstractConfirmationAttributes
      */
     public function factory($type)
@@ -54,13 +56,15 @@ class ConfirmationAttributesFactory
         if (!array_key_exists($type, $this->typeClassMap)) {
             throw new \InvalidArgumentException('Invalid confirmation attributes value type "'.$type.'"');
         }
-        $className = __NAMESPACE__ . '\\' . $this->typeClassMap[$type];
+        $className = __NAMESPACE__.'\\'.$this->typeClassMap[$type];
+
         return new $className();
     }
 
     /**
      * @param array $data
      * @param string|null $type
+     *
      * @return AbstractConfirmationAttributes
      */
     public function factoryFromArray(array $data, $type = null)
@@ -81,6 +85,7 @@ class ConfirmationAttributesFactory
                 $confirmation->offsetSet($key, $value);
             }
         }
+
         return $confirmation;
     }
 }
