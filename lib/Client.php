@@ -26,7 +26,7 @@
 
 namespace YandexCheckout;
 
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use YandexCheckout\Client\BaseClient;
 use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
@@ -82,7 +82,7 @@ class Client extends BaseClient
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.2.1';
+    const SDK_VERSION = '1.2.2';
 
     /**
      * Доступные способы оплаты.
