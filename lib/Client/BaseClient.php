@@ -125,10 +125,11 @@ class BaseClient
 
         if ($configLoader === null) {
             $configLoader = new ConfigurationLoader();
-            $config       = $configLoader->load()->getConfig();
-            $this->setConfig($config);
-            $apiClient->setConfig($config);
         }
+        $config       = $configLoader->load()->getConfig();
+        $this->setConfig($config);
+        $apiClient->setConfig($config);
+
         $this->attempts  = self::DEFAULT_ATTEMPTS_COUNT;
         $this->apiClient = $apiClient;
     }
