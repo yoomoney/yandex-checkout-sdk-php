@@ -31,6 +31,7 @@ use YandexCheckout\Common\Exceptions\EmptyPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Helpers\TypeCast;
+use YandexCheckout\Model\Receipt\ReceiptItemAmount;
 
 /**
  * Информация о товарной позиции в заказе, позиция фискального чека
@@ -60,7 +61,7 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     private $_quantity;
 
     /**
-     * @var MonetaryAmount Цена товара
+     * @var ReceiptItemAmount Цена товара
      */
     private $_amount;
 
@@ -341,7 +342,7 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
         $result->_description = $this->_description;
         $result->_quantity    = $count;
         $result->_vatCode     = $this->_vatCode;
-        $result->_amount      = new MonetaryAmount(
+        $result->_amount      = new ReceiptItemAmount(
             $this->_amount->getValue(),
             $this->_amount->getCurrency()
         );

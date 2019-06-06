@@ -31,6 +31,7 @@ use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Receipt;
+use YandexCheckout\Model\Receipt\ReceiptItemAmount;
 use YandexCheckout\Model\ReceiptInterface;
 use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Model\ReceiptItemInterface;
@@ -197,7 +198,7 @@ abstract class AbstractPaymentRequestBuilder extends AbstractRequestBuilder
         $item->setDescription($title);
         $item->setQuantity($quantity);
         $item->setVatCode($vatCode);
-        $item->setPrice(new MonetaryAmount($price, $this->amount->getCurrency()));
+        $item->setPrice(new ReceiptItemAmount($price, $this->amount->getCurrency()));
         $item->setPaymentSubject($paymentSubject);
         $item->setPaymentMode($paymentMode);
         $this->receipt->addItem($item);
@@ -227,7 +228,7 @@ abstract class AbstractPaymentRequestBuilder extends AbstractRequestBuilder
         $item->setQuantity(1);
         $item->setVatCode($vatCode);
         $item->setIsShipping(true);
-        $item->setPrice(new MonetaryAmount($price, $this->amount->getCurrency()));
+        $item->setPrice(new ReceiptItemAmount($price, $this->amount->getCurrency()));
         $item->setPaymentMode($paymentMode);
         $item->setPaymentSubject($paymentSubject);
         $this->receipt->addItem($item);
