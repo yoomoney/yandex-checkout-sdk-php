@@ -81,7 +81,7 @@ class PaymentDataFactoryTest extends TestCase
     public function validTypeDataProvider()
     {
         $result = array();
-        foreach (PaymentMethodType::getValidValues() as $value) {
+        foreach (PaymentMethodType::getEnabledValues() as $value) {
             $result[] = array($value);
         }
         return $result;
@@ -163,13 +163,8 @@ class PaymentDataFactoryTest extends TestCase
                     'type' => PaymentMethodType::TINKOFF_BANK,
                 ),
             ),
-            array(
-                array(
-                    'type' => PaymentMethodType::PSB,
-                ),
-            ),
         );
-        foreach (PaymentMethodType::getValidValues() as $value) {
+        foreach (PaymentMethodType::getEnabledValues() as $value) {
             $result[] = array(array('type' => $value));
         }
         return $result;
