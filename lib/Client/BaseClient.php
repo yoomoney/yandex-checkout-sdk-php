@@ -369,7 +369,7 @@ class BaseClient
         $attempts = $this->attempts;
         $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
 
-        while ($response->getCode() == 202 && $attempts > 0) {
+        while (in_array($response->getCode(), [202, 500]) && $attempts > 0) {
             $this->delay($response);
             $attempts--;
             $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
