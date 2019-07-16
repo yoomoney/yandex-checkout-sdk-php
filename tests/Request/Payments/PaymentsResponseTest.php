@@ -34,6 +34,7 @@ class PaymentsResponseTest extends TestCase
             self::assertEquals($options['items'][$index]['created_at'], $item->getCreatedAt()->format(DATE_ATOM));
             self::assertEquals($options['items'][$index]['payment_method']['type'], $item->getPaymentMethod()->getType());
             self::assertEquals($options['items'][$index]['paid'], $item->getPaid());
+            self::assertEquals($options['items'][$index]['refundable'], $item->getRefundable());
         }
     }
 
@@ -89,6 +90,7 @@ class PaymentsResponseTest extends TestCase
                                 'type' => PaymentMethodType::QIWI,
                             ),
                             'paid' => false,
+                            'refundable' => false,
                         )
                     ),
                     'next_page' => uniqid(),
@@ -109,6 +111,7 @@ class PaymentsResponseTest extends TestCase
                                 'type' => PaymentMethodType::QIWI,
                             ),
                             'paid' => true,
+                            'refundable' => true,
                             'confirmation' => array(
                                 'type' => ConfirmationType::EXTERNAL,
                             ),
@@ -126,6 +129,7 @@ class PaymentsResponseTest extends TestCase
                                 'type' => PaymentMethodType::QIWI,
                             ),
                             'paid' => false,
+                            'refundable' => false,
                             'recipient' => array(
                                 'account_id' => uniqid(),
                                 'gateway_id' => uniqid(),
@@ -164,6 +168,7 @@ class PaymentsResponseTest extends TestCase
                                 'type' => PaymentMethodType::QIWI,
                             ),
                             'paid' => true,
+                            'refundable' => true,
                             'confirmation' => array(
                                 'type' => ConfirmationType::REDIRECT,
                                 'confirmation_url' => Random::str(10),

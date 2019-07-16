@@ -47,6 +47,7 @@ class BaseClient
     const PAYMENTS_PATH = '/payments';
     const REFUNDS_PATH = '/refunds';
     const WEBHOOKS_PATH = '/webhooks';
+    const RECEIPTS_PATH = '/receipts';
     const ME_PATH = '/me';
 
     /**

@@ -30,12 +30,12 @@ use YandexCheckout\Common\AbstractObject;
 use YandexCheckout\Common\Exceptions\EmptyPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueException;
 use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
-use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Model\Receipt\ReceiptItemAmount;
 
 /**
  * Класс данных для формирования чека в онлайн-кассе (для соблюдения 54-ФЗ)
  *
+ * @property-read ReceiptCustomer $customer Информация о плательщике
  * @property ReceiptItemInterface[] $items Список товаров в заказе
  * @property int $taxSystemCode Код системы налогообложения. Число 1-6.
  * @property int $tax_system_code Код системы налогообложения. Число 1-6.
@@ -44,6 +44,11 @@ use YandexCheckout\Model\Receipt\ReceiptItemAmount;
  */
 class Receipt extends AbstractObject implements ReceiptInterface
 {
+    /**
+     * @var ReceiptCustomer Информация о плательщике
+     */
+    private $_customer;
+
     /**
      * @var ReceiptItem[] Список товаров в заказе
      */
@@ -60,17 +65,25 @@ class Receipt extends AbstractObject implements ReceiptInterface
     private $_taxSystemCode;
 
     /**
-     * @var string Номер телефона плательщика в формате ITU-T E.164 на который будет выслан чек.
+     * Возвращает информацию о плательщике
+     *
+     * @return ReceiptCustomer  Информация о плательщике
      */
-    private $_phone;
+    public function getCustomer()
+    {
+        return $this->_customer;
+    }
 
     /**
-     * @var string E-mail адрес плательщика на который будет выслан чек.
+     * @param ReceiptCustomer $customer
      */
-    private $_email;
+    public function setCustomer($customer)
+    {
+        $this->_customer = $customer;
+    }
 
     /**
-     * Возврвщает список позиций в текущем чеке
+     * Возвращает список позиций в текущем чеке
      *
      * @return ReceiptItemInterface[] Список товаров в заказе
      */
@@ -90,7 +103,7 @@ class Receipt extends AbstractObject implements ReceiptInterface
      *
      * @throws EmptyPropertyValueException Выбрасывается если передали пустой массив значений
      * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве значения был передан не массив и не
-     * итератор, лабо если одно из переданных значений не реализует интерфейс ReceiptItemInterface
+     * итератор, либо если одно из переданных значений не реализует интерфейс ReceiptItemInterface
      */
     public function setItems($value)
     {
@@ -166,16 +179,18 @@ class Receipt extends AbstractObject implements ReceiptInterface
     }
 
     /**
+     * @deprecated 1.3.0 Устарел — данные рекомендуется брать в параметре receipt.customer.phone.
      * Возвращает номер телефона плательщика в формате ITU-T E.164 на который будет выслан чек
      *
      * @return string Номер телефона плательщика
      */
     public function getPhone()
     {
-        return $this->_phone;
+        return $this->getCustomer() ? $this->getCustomer()->getPhone() : null;
     }
 
     /**
+     * @deprecated 1.3.0 Устарел — данные рекомендуется передавать в параметре receipt.customer.phone.
      * Устанавливливает номер телефона плательщика в формате ITU-T E.164 на который будет выслан чек
      *
      * @param string $value Номер телефона плательщика в формате ITU-T E.164
@@ -185,28 +200,25 @@ class Receipt extends AbstractObject implements ReceiptInterface
      */
     public function setPhone($value)
     {
-        if ($value === null || $value === '') {
-            $this->_phone = null;
-        } elseif (!TypeCast::canCastToString($value)) {
-            throw new InvalidPropertyValueTypeException('Invalid phone value type', 0, 'receipt.phone');
-        } elseif (!preg_match('/^[0-9]{4,15}$/', (string)$value)) {
-            throw new InvalidPropertyValueException('Invalid phone value: "'.$value.'"', 0, 'receipt.phone');
-        } else {
-            $this->_phone = (string)$value;
+        if (!$this->getCustomer()) {
+            $this->setCustomer(new ReceiptCustomer());
         }
+        $this->getCustomer()->setPhone($value);
     }
 
     /**
+     * @deprecated 1.3.0 Устарел — данные рекомендуется брать в параметре receipt.customer.email.
      * Возвращает адрес электронной почты на который будет выслан чек
      *
      * @return string E-mail адрес плательщика
      */
     public function getEmail()
     {
-        return $this->_email;
+        return $this->getCustomer() ? $this->getCustomer()->getEmail() : null;
     }
 
     /**
+     * @deprecated 1.3.0 Устарел — данные рекомендуется передавать в параметре receipt.customer.email.
      * Устанавливает адрес электронной почты на который будет выслан чек
      *
      * @param string $value E-mail адрес плательщика
@@ -215,13 +227,10 @@ class Receipt extends AbstractObject implements ReceiptInterface
      */
     public function setEmail($value)
     {
-        if ($value === null || $value === '') {
-            $this->_email = null;
-        } elseif (!TypeCast::canCastToString($value)) {
-            throw new InvalidPropertyValueTypeException('Invalid email value type', 0, 'receipt.email');
-        } else {
-            $this->_email = (string)$value;
+        if (!$this->getCustomer()) {
+            $this->setCustomer(new ReceiptCustomer());
         }
+        $this->getCustomer()->setEmail($value);
     }
 
     /**
@@ -358,8 +367,18 @@ class Receipt extends AbstractObject implements ReceiptInterface
         }
     }
 
+    /**
+     * Устанавливает значения свойств текущего объекта из массива
+     * @param array|\Traversable $sourceArray Ассоциативный массив с найтройками
+     */
     public function fromArray($sourceArray)
     {
+        if (!empty($sourceArray['customer'])) {
+            $customer = new ReceiptCustomer();
+            $customer->fromArray($sourceArray['customer']);
+            $sourceArray['customer'] = $customer;
+        }
+
         if (!empty($sourceArray['items'])) {
             for ($i = 0; $i < count($sourceArray['items']); $i++) {
                 if (is_array($sourceArray['items'][$i])) {
@@ -373,6 +392,7 @@ class Receipt extends AbstractObject implements ReceiptInterface
                 }
             }
         }
+
         parent::fromArray($sourceArray);
     }
 }

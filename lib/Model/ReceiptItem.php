@@ -37,15 +37,22 @@ use YandexCheckout\Model\Receipt\ReceiptItemAmount;
  * Информация о товарной позиции в заказе, позиция фискального чека
  *
  * @property string $description Наименование товара
- * @property int $quantity Количество
- * @property-read int $amount Суммарная стоимость покупаемого товара в копейках/центах
+ * @property float $quantity Количество
+ * @property-read float $amount Суммарная стоимость покупаемого товара в копейках/центах
  * @property AmountInterface $price Цена товара
  * @property int $vatCode Ставка НДС, число 1-6
  * @property int $vat_code Ставка НДС, число 1-6
- * @property string paymentSubject
- * @property string payment_subject
- * @property string paymentMode
- * @property string payment_mode
+ * @property string $paymentSubject Признак предмета расчета
+ * @property string $payment_subject Признак предмета расчета
+ * @property string $paymentMode Признак способа расчета
+ * @property string $payment_mode Признак способа расчета
+ * @property string $productCode Код товара
+ * @property string $product_code Код товара
+ * @property string $countryOfOriginCode Код страны происхождения товара
+ * @property string $country_of_origin_code Код страны происхождения товара
+ * @property string $customsDeclarationNumber Номер таможенной декларации (от 1 до 32 символов)
+ * @property string $customs_declaration_number Номер таможенной декларации (от 1 до 32 символов)
+ * @property float $excise Сумма акциза товара с учетом копеек
  * @property-write bool $isShipping Флаг доставки
  */
 class ReceiptItem extends AbstractObject implements ReceiptItemInterface
@@ -56,7 +63,7 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     private $_description;
 
     /**
-     * @var int Количество
+     * @var float Количество
      */
     private $_quantity;
 
@@ -79,6 +86,26 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
      * @var string Признак способа расчета.
      */
     private $_paymentMode;
+
+    /**
+     * @var string Код товара.
+     */
+    private $_productCode;
+
+    /**
+     * @var string Код страны происхождения товара
+     */
+    private $_countryOfOriginCode;
+
+    /**
+     * @var string Номер таможенной декларации (от 1 до 32 символов).
+     */
+    private $_customsDeclarationNumber;
+
+    /**
+     * @var float Сумма акциза товара с учетом копеек. Десятичное число с точностью до 2 символов после точки.
+     */
+    private $_excise;
 
     /**
      * @var bool True если текущий айтем доставка, false если нет
@@ -223,7 +250,8 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     }
 
     /**
-     * @return string
+     * Возвращает признак предмета расчета
+     * @return string|null Признак предмета расчета
      */
     public function getPaymentSubject()
     {
@@ -231,19 +259,26 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     }
 
     /**
-     * @param string $paymentSubject
+     * Устанавливает признак предмета расчета
+     *
+     * @param string $value Признак предмета расчета
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента была передана не строка
      */
-    public function setPaymentSubject($paymentSubject)
+    public function setPaymentSubject($value)
     {
-        if ($paymentSubject === null || $paymentSubject === '') {
+        if ($value === null || $value === '') {
             $this->_paymentSubject = null;
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException('Invalid paymentSubject value type', 0, 'ReceiptItem.paymentSubject');
         } else {
-            $this->_paymentSubject = $paymentSubject;
+            $this->_paymentSubject = $value;
         }
     }
 
     /**
-     * @return string
+     * Возвращает признак способа расчета
+     * @return string|null Признак способа расчета
      */
     public function getPaymentMode()
     {
@@ -251,14 +286,162 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     }
 
     /**
-     * @param string $paymentMode
+     * Устанавливает признак способа расчета
+     *
+     * @param string $value Признак способа расчета
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента была передана не строка
      */
-    public function setPaymentMode($paymentMode)
+    public function setPaymentMode($value)
     {
-        if ($paymentMode === null || $paymentMode === '') {
+        if ($value === null || $value === '') {
             $this->_paymentMode = null;
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid paymentMode value type', 0, 'ReceiptItem.paymentMode', $value
+            );
         } else {
-            $this->_paymentMode = $paymentMode;
+            $this->_paymentMode = $value;
+        }
+    }
+
+    /**
+     * Возвращает код товара — уникальный номер, который присваивается экземпляру товара при маркировке
+     * @return string|null Код товара
+     */
+    public function getProductCode()
+    {
+        return $this->_productCode;
+    }
+
+    /**
+     * Устанавливает код товара — уникальный номер, который присваивается экземпляру товара при маркировке
+     *
+     * @param string $value Код товара
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента была передана не строка
+     */
+    public function setProductCode($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_productCode = null;
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid productCode value type', 0, 'ReceiptItem.productCode', $value
+            );
+        } elseif (strlen((string)$value) > 96) {
+            throw new InvalidPropertyValueException(
+                'Invalid productCode value: "'.$value.'"', 0, 'ReceiptItem.productCode', $value
+            );
+        } elseif (!preg_match('/^[0-9A-F ]{2,96}$/', (string)$value)) {
+            throw new InvalidPropertyValueException(
+                'Invalid productCode value: "'.$value.'"', 0, 'ReceiptItem.productCode', $value
+            );
+        } else {
+            $this->_productCode = $value;
+        }
+    }
+
+    /**
+     * Возвращает код страны происхождения товара по общероссийскому классификатору стран мира
+     * @return string|null Код страны происхождения товара
+     */
+    public function getCountryOfOriginCode()
+    {
+        return $this->_countryOfOriginCode;
+    }
+
+    /**
+     * Устанавливает код страны происхождения товара по общероссийскому классификатору стран мира
+     *
+     * @param string $value Код страны происхождения товара
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента была передана не строка
+     */
+    public function setCountryOfOriginCode($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_countryOfOriginCode = null;
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid countryOfOriginCode value type', 0, 'ReceiptItem.countryOfOriginCode', $value
+            );
+        } elseif (strlen((string)$value) != 2) {
+            throw new InvalidPropertyValueException(
+                'Invalid countryOfOriginCode value: "'.$value.'"', 0, 'ReceiptItem.countryOfOriginCode', $value
+            );
+        } elseif (!preg_match('/^[A-Z]{2}$/', (string)$value)) {
+            throw new InvalidPropertyValueException(
+                'Invalid countryOfOriginCode value: "'.$value.'"', 0, 'ReceiptItem.countryOfOriginCode', $value
+            );
+        } else {
+            $this->_countryOfOriginCode = $value;
+        }
+    }
+
+    /**
+     * Возвращает номер таможенной декларации
+     * @return string|null Номер таможенной декларации (от 1 до 32 символов)
+     */
+    public function getCustomsDeclarationNumber()
+    {
+        return $this->_customsDeclarationNumber;
+    }
+
+    /**
+     * Устанавливает номер таможенной декларации (от 1 до 32 символов)
+     *
+     * @param string $value Номер таможенной декларации
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента была передана не строка
+     */
+    public function setCustomsDeclarationNumber($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_customsDeclarationNumber = null;
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid customsDeclarationNumber value type', 0, 'ReceiptItem.customsDeclarationNumber', $value
+            );
+        } elseif (strlen((string)$value) > 32) {
+            throw new InvalidPropertyValueException(
+                'Invalid customsDeclarationNumber value: "'.$value.'"', 0, 'ReceiptItem.customsDeclarationNumber', $value
+            );
+        } else {
+            $this->_customsDeclarationNumber = $value;
+        }
+    }
+
+    /**
+     * Возвращает сумму акциза товара с учетом копеек
+     * @return float|null Сумма акциза товара с учетом копеек
+     */
+    public function getExcise()
+    {
+        return $this->_excise;
+    }
+
+    /**
+     * Устанавливает сумму акциза товара с учетом копеек
+     *
+     * @param float $value Сумма акциза товара с учетом копеек
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента было передано не число
+     */
+    public function setExcise($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_excise = null;
+        } elseif (!is_numeric($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid excise value type', 0, 'ReceiptItem.excise', $value
+            );
+        } elseif ($value <= 0.0) {
+            throw new InvalidPropertyValueException(
+                'Invalid excise value in ReceiptItem', 0, 'ReceiptItem.excise', $value
+            );
+        } else {
+            $this->_excise = $value;
         }
     }
 
@@ -347,6 +530,44 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
             $this->_amount->getCurrency()
         );
         $this->_quantity      -= $count;
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $result = array(
+            'description'     => $this->getDescription(),
+            'amount'          => array(
+                'value'    => $this->getPrice()->getValue(),
+                'currency' => $this->getPrice()->getCurrency(),
+            ),
+            'quantity'        => $this->getQuantity(),
+            'vat_code'        => $this->getVatCode(),
+        );
+
+        if ($this->getPaymentSubject()) {
+            $result['payment_subject'] = $this->getPaymentSubject();
+        }
+
+        if ($this->getPaymentMode()) {
+            $result['payment_mode'] = $this->getPaymentMode();
+        }
+
+        if ($this->getCountryOfOriginCode()) {
+            $result['country_of_origin_code'] = $this->getCountryOfOriginCode();
+        }
+
+        if ($this->getCustomsDeclarationNumber()) {
+            $result['customs_declaration_number'] = $this->getCustomsDeclarationNumber();
+        }
+
+        if ($this->getExcise()) {
+            $result['excise'] = $this->getExcise();
+        }
 
         return $result;
     }

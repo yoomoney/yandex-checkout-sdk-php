@@ -29,7 +29,7 @@ class CreateCaptureRequestSerializerTest extends TestCase
         }
         if (!empty($options['receiptItems'])) {
             foreach ($options['receiptItems'] as $item) {
-                $expected['receipt']['items'][] = array(
+                $itemArray = array(
                     'description' => $item['title'],
                     'quantity' => $item['quantity'],
                     'amount' => array(
@@ -37,21 +37,35 @@ class CreateCaptureRequestSerializerTest extends TestCase
                         'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
                     ),
                     'vat_code' => $item['vatCode'],
-                    'payment_subject' => PaymentSubject::COMMODITY,
-                    'payment_mode' => PaymentMode::PARTIAL_PREPAYMENT
                 );
+
+                if (!empty($item['payment_subject'])) {
+                    $itemArray['payment_subject'] = $options['payment_subject'];
+                }
+                if (!empty($item['payment_mode'])) {
+                    $itemArray['payment_mode'] = $options['payment_mode'];
+                }
+                $expected['receipt']['items'][] = $itemArray;
             }
             if (!empty($options['receiptEmail'])) {
-                $expected['receipt']['email'] = $options['receiptEmail'];
+                $expected['receipt']['customer']['email'] = $options['receiptEmail'];
             }
-            if (!empty($options['receiptPhone'])) {
-                $expected['receipt']['phone'] = $options['receiptPhone'];
+            if (!empty($options['receiptEmail'])) {
+                $expected['receipt']['customer']['email'] = $options['receiptEmail'];
             }
             if (!empty($options['taxSystemCode'])) {
                 $expected['receipt']['tax_system_code'] = $options['taxSystemCode'];
             }
         } elseif (!empty($options['receipt'])) {
             $expected['receipt'] = $options['receipt'];
+            if (!empty($expected['receipt']['phone'])) {
+                $expected['receipt']['customer']['phone'] = $expected['receipt']['phone'];
+                unset($expected['receipt']['phone']);
+            }
+            if (!empty($expected['receipt']['email'])) {
+                $expected['receipt']['customer']['email'] = $expected['receipt']['email'];
+                unset($expected['receipt']['email']);
+            }
         }
         self::assertEquals($expected, $data);
     }
@@ -69,8 +83,8 @@ class CreateCaptureRequestSerializerTest extends TestCase
                     'receiptItems' => array(
                         array(
                             'title' => Random::str(10),
-                            'quantity' => Random::int(1, 10),
-                            'price' => Random::int(100, 100),
+                            'quantity' => round(Random::float(0.01, 10.00), 2),
+                            'price' => round(Random::float(10.00, 100.00), 2),
                             'vatCode' => Random::int(1, 6),
                         ),
                     ),
@@ -84,9 +98,9 @@ class CreateCaptureRequestSerializerTest extends TestCase
                         'items' => array(
                             array(
                                 'description' => Random::str(10),
-                                'quantity' => Random::int(1, 10),
+                                'quantity' => round(Random::float(0.01, 10.00), 2),
                                 'amount' => array(
-                                    'value' => Random::int(100, 100),
+                                    'value' => round(Random::float(10.00, 100.00), 2),
                                     'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
                                 ),
                                 'vat_code' => Random::int(1, 6),
@@ -94,14 +108,15 @@ class CreateCaptureRequestSerializerTest extends TestCase
                             array(
                                 'description' => Random::str(10),
                                 'amount' => array(
-                                    'value' => Random::int(100, 100),
+                                    'value' => round(Random::float(10.00, 100.00), 2),
                                     'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
                                 ),
-                                'quantity' => Random::int(1, 10),
+                                'quantity' => round(Random::float(0.01, 10.00), 2),
                                 'vat_code' => Random::int(1, 6),
                             ),
                         ),
                         'phone' => Random::str(12, '0123456789'),
+                        'email' => Random::str(10 ),
                         'tax_system_code' => Random::int(1, 6),
                     ),
                 ),
@@ -110,7 +125,7 @@ class CreateCaptureRequestSerializerTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $request = array(
                 'amount'   => array(
-                    'value' => mt_rand(1, 1000000),
+                    'value' => (float)mt_rand(1, 1000000),
                     'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
                 ),
             );

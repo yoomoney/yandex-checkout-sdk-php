@@ -38,6 +38,7 @@ use YandexCheckout\Model\PaymentData\PaymentDataGooglePay;
 use YandexCheckout\Model\PaymentData\PaymentDataSberbank;
 use YandexCheckout\Model\PaymentData\PaymentDataYandexWallet;
 use YandexCheckout\Model\PaymentMethodType;
+use YandexCheckout\Model\ReceiptInterface;
 use YandexCheckout\Model\ReceiptItem;
 
 /**
@@ -81,41 +82,7 @@ class CreatePaymentRequestSerializer
         if ($request->hasReceipt()) {
             $receipt = $request->getReceipt();
             if ($receipt->notEmpty()) {
-                $result['receipt'] = array();
-                /** @var ReceiptItem $item */
-                foreach ($receipt->getItems() as $item) {
-                    $itemArray = array(
-                        'description'     => $item->getDescription(),
-                        'amount'          => array(
-                            'value'    => $item->getPrice()->getValue(),
-                            'currency' => $item->getPrice()->getCurrency(),
-                        ),
-                        'quantity'        => $item->getQuantity(),
-                        'vat_code'        => $item->getVatCode(),
-                    );
-
-                    if ($item->getPaymentSubject()) {
-                        $itemArray['payment_subject'] = $item->getPaymentSubject();
-                    }
-
-                    if ($item->getPaymentMode()) {
-                        $itemArray['payment_mode'] = $item->getPaymentMode();
-                    }
-
-                    $result['receipt']['items'][] = $itemArray;
-                }
-                $value = $receipt->getEmail();
-                if (!empty($value)) {
-                    $result['receipt']['email'] = $value;
-                }
-                $value = $receipt->getPhone();
-                if (!empty($value)) {
-                    $result['receipt']['phone'] = $value;
-                }
-                $value = $receipt->getTaxSystemCode();
-                if (!empty($value)) {
-                    $result['receipt']['tax_system_code'] = $value;
-                }
+                $result['receipt'] = $this->serializeReceipt($receipt);
             }
         }
         if ($request->hasRecipient()) {
@@ -183,6 +150,28 @@ class CreatePaymentRequestSerializer
             if (!empty($value)) {
                 $result[$name] = $value;
             }
+        }
+
+        return $result;
+    }
+
+    private function serializeReceipt(ReceiptInterface $receipt)
+    {
+        $result = array();
+
+        /** @var ReceiptItem $item */
+        foreach ($receipt->getItems() as $item) {
+            $result['items'][] = $item->jsonSerialize();
+        }
+
+        $customer = $receipt->getCustomer();
+        if (!empty($customer)) {
+            $result['customer'] = $customer->jsonSerialize();
+        }
+
+        $value = $receipt->getTaxSystemCode();
+        if (!empty($value)) {
+            $result['tax_system_code'] = $value;
         }
 
         return $result;

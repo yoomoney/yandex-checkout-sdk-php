@@ -154,6 +154,20 @@ abstract class AbstractPaymentResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
+    public function testGetRefundable($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['refundable'])) {
+            self::assertFalse($instance->getRefundable());
+        } else {
+            self::assertEquals($options['refundable'], $instance->getRefundable());
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
     public function testGetTest($options)
     {
         $instance = $this->getTestInstance($options);
@@ -235,6 +249,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                 ),
                 'paid' => $i % 2 ? true : false,
+                'refundable' => $i % 2 ? true : false,
                 'test' => $i % 2 ? true : false,
                 'receipt_registration' => Random::value($receiptRegistrations),
                 'metadata' => array(
