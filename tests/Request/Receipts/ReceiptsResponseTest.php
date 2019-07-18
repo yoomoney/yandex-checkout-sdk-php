@@ -36,7 +36,8 @@ class ReceiptsResponseTest extends TestCase
             self::assertEquals($options['items'][$index]['id'], $item->getId());
             self::assertEquals($options['items'][$index]['type'], $item->getType());
             self::assertEquals($options['items'][$index]['tax_system_code'], $item->getTaxSystemCode());
-            self::assertEquals($options['items'][$index]['receipt_registration'], $item->getReceiptRegistration());
+            self::assertEquals($options['items'][$index]['status'], $item->getStatus());
+            self::assertEquals($options['items'][$index]['status'], $item->getReceiptRegistration());
 
             self::assertEquals(count($options['items'][$index]['items']), count($item->getItems()));
         }
@@ -69,9 +70,9 @@ class ReceiptsResponseTest extends TestCase
     private function generateReceipt()
     {
         return array(
-            'id' => Random::str(40),
+            'id' => Random::str(39),
             'type' => Random::value(ReceiptType::getEnabledValues()),
-            'receipt_registration' => Random::value(array('pending', 'succeeded', 'canceled')),
+            'status' => Random::value(array('pending', 'succeeded', 'canceled')),
             'items' => $this->generateItems(),
             'tax_system_code' => Random::int(1 ,6),
         );

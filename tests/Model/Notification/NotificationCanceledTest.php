@@ -98,6 +98,7 @@ class NotificationCanceledTest extends \PHPUnit_Framework_TestCase
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                 ),
                 'paid' => $i % 2 ? true : false,
+                'refundable' => $i % 2 ? true : false,
                 'receipt_registration' => Random::value($receiptRegistrations),
                 'metadata' => array(
                     'value' => Random::float(0.01, 1000000.0),

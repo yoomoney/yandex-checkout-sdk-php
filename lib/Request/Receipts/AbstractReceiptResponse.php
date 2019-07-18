@@ -44,6 +44,7 @@ use YandexCheckout\Model\ReceiptType;
  * @property string $type Тип чека в онлайн-кассе: приход "payment" или возврат "refund".
  * @property string $receiptRegistration Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
  * @property string $receipt_registration Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
+ * @property string $status Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
  * @property string $fiscalAttribute Фискальный признак чека. Формируется фискальным накопителем на основе данных, переданных для регистрации чека.
  * @property string $fiscal_attribute Фискальный признак чека. Формируется фискальным накопителем на основе данных, переданных для регистрации чека.
  * @property string $fiscalDocumentNumber Номер фискального документа.
@@ -71,7 +72,7 @@ abstract class AbstractReceiptResponse extends AbstractObject implements Receipt
     private $_type;
 
     /** @var string Статус доставки данных для чека в онлайн-кассу "pending", "succeeded" или "canceled". */
-    private $_receiptRegistration;
+    private $_status;
 
     /** @var string Номер фискального документа. */
     private $_fiscalDocumentNumber;
@@ -109,7 +110,7 @@ abstract class AbstractReceiptResponse extends AbstractObject implements Receipt
     {
         $this->setId($receiptData['id']);
         $this->setType($receiptData['type']);
-        $this->setReceiptRegistration($receiptData['receipt_registration']);
+        $this->setStatus($receiptData['status']);
 
         if (!empty($receiptData['tax_system_code'])) {
             $this->setTaxSystemCode($receiptData['tax_system_code']);
@@ -205,9 +206,9 @@ abstract class AbstractReceiptResponse extends AbstractObject implements Receipt
     /**
      * @return string
      */
-    public function getReceiptRegistration()
+    public function getStatus()
     {
-        return $this->_receiptRegistration;
+        return $this->_status;
     }
 
     /**
@@ -217,23 +218,45 @@ abstract class AbstractReceiptResponse extends AbstractObject implements Receipt
      * @throws InvalidPropertyValueException Выбрасывается если переданное состояние регистрации не существует
      * @throws InvalidPropertyValueTypeException Выбрасывается если переданный аргумент не строка
      */
-    public function setReceiptRegistration($value)
+    public function setStatus($value)
     {
         if ($value === null || $value === '') {
-            $this->_receiptRegistration = null;
+            $this->_status = null;
         } elseif (TypeCast::canCastToEnumString($value)) {
             if (ReceiptRegistrationStatus::valueExists($value)) {
-                $this->_receiptRegistration = (string)$value;
+                $this->_status = (string)$value;
             } else {
                 throw new InvalidPropertyValueException(
-                    'Invalid receipt_registration value', 0, 'Receipt.receiptRegistration', $value
+                    'Invalid status value', 0, 'Receipt.status', $value
                 );
             }
         } else {
             throw new InvalidPropertyValueTypeException(
-                'Invalid receipt_registration value type', 0, 'Receipt.receiptRegistration', $value
+                'Invalid status value type', 0, 'Receipt.status', $value
             );
         }
+    }
+
+    /**
+     * @deprecated since 1.2.6
+     * @return string
+     */
+    public function getReceiptRegistration()
+    {
+        return $this->getStatus();
+    }
+
+    /**
+     * @deprecated since 1.2.6
+     * Устанавливает состояние регистрации фискального чека
+     * @param string $value Состояние регистрации фискального чека
+     *
+     * @throws InvalidPropertyValueException Выбрасывается если переданное состояние регистрации не существует
+     * @throws InvalidPropertyValueTypeException Выбрасывается если переданный аргумент не строка
+     */
+    public function setReceiptRegistration($value)
+    {
+        $this->setStatus($value);
     }
 
     /**

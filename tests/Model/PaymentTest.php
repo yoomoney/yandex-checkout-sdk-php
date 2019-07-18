@@ -574,6 +574,49 @@ class PaymentTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
+    public function testGetSetRefundable($options)
+    {
+        $instance = new Payment();
+
+        self::assertNull($instance->getRefundable());
+        self::assertNull($instance->refundable);
+
+        $instance->setRefundable($options['refundable']);
+        self::assertSame($options['refundable'], $instance->getRefundable());
+        self::assertSame($options['refundable'], $instance->refundable);
+
+        $instance = new Payment();
+        $instance->refundable = $options['refundable'];
+        self::assertSame($options['refundable'], $instance->getRefundable());
+        self::assertSame($options['refundable'], $instance->refundable);
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetInvalidRefundable($value)
+    {
+        $instance = new Payment();
+        $instance->setRefundable($value['refundable']);
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param $value
+     */
+    public function testSetterInvalidRefundable($value)
+    {
+        $instance = new Payment();
+        $instance->refundable = $value['refundable'];
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
     public function testGetSetReceiptRegistration($options)
     {
         $instance = new Payment();
@@ -698,6 +741,7 @@ class PaymentTest extends TestCase
                 'income' => new MonetaryAmount(),
                 'refunded_amount' => new MonetaryAmount(),
                 'paid' => $i % 2 ? true : false,
+                'refundable' => $i % 2 ? true : false,
                 'receipt_registration' => $i == 0 ? null : ($i == 1 ? '' : Random::value(ReceiptRegistrationStatus::getValidValues())),
                 'metadata' => new Metadata(),
                 'cancellation_details' => new CancellationDetails(

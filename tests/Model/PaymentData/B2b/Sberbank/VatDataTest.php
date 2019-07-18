@@ -190,15 +190,14 @@ class VatDataTest extends TestCase
 
     /**
      * @dataProvider invalidDataProvider
+     * @expectedException \InvalidArgumentException
      * @param $value
      */
     public function testSetInvalidAmount($value)
     {
-        if (class_exists('TypeError')) {
-            self::setExpectedException('TypeError');
-            $instance = $this->getTestInstance();
-            $instance->setAmount($value);
-        }
+        self::setExpectedException('InvalidArgumentException');
+        $instance = $this->getTestInstance();
+        $instance->setAmount($value);
     }
 
     /**
@@ -232,7 +231,7 @@ class VatDataTest extends TestCase
             array(0),
             array(1),
             array(-1),
-            array(array()),
+            //array(array()),
             array(new \stdClass()),
             array(Random::str(20)),
         );
