@@ -53,13 +53,15 @@ abstract class AbstractReceiptResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
-    public function testGetReceiptRegistration($options)
+    public function testGetStatus($options)
     {
         $instance = $this->getTestInstance($options);
-        if (empty($options['receipt_registration'])) {
+        if (empty($options['status'])) {
+            self::assertFalse($instance->getStatus());
             self::assertFalse($instance->getReceiptRegistration());
         } else {
-            self::assertEquals($options['receipt_registration'], $instance->getReceiptRegistration());
+            self::assertEquals($options['status'], $instance->getStatus());
+            self::assertEquals($options['status'], $instance->getReceiptRegistration());
         }
     }
 
@@ -118,9 +120,9 @@ abstract class AbstractReceiptResponseTest extends TestCase
     private function generateReceipt($type)
     {
         $receipt = array(
-            'id' => Random::str(40),
+            'id' => Random::str(39),
             'type' => $type,
-            'receipt_registration' => Random::value(array('pending', 'succeeded', 'canceled')),
+            'status' => Random::value(array('pending', 'succeeded', 'canceled')),
             'items' => $this->generateItems(),
             'tax_system_code' => Random::int(1 ,6),
         );

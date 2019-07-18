@@ -29,6 +29,7 @@
     "currency": "RUB"
   },
   "paid": true,
+  "refundable": true,
   "receipt_registration": "succeeded",
   "metadata": {}
 }

@@ -202,8 +202,6 @@ class CurlClient implements ApiClientInterface
     /**
      * @param $method
      * @param $httpBody
-     *
-     * @throws ApiException
      */
     public function setBody($method, $httpBody)
     {
@@ -399,8 +397,6 @@ class CurlClient implements ApiClientInterface
      * @param $queryParams
      * @param $httpBody
      * @param $headers
-     *
-     * @return string
      */
     private function logRequestParams($path, $method, $queryParams, $httpBody, $headers)
     {

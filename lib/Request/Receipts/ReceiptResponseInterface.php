@@ -35,6 +35,7 @@ namespace YandexCheckout\Request\Receipts;
  * @property-read string $type Тип чека в онлайн-кассе: приход "payment" или возврат "refund".
  * @property-read string $receiptRegistration Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
  * @property-read string $receipt_registration Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
+ * @property-read string $status Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
  * @property-read int $taxSystemCode Код системы налогообложения. Число 1-6.
  * @property-read int $tax_system_code Код системы налогообложения. Число 1-6.
  * @property-read ReceiptResponseItemInterface[] $items Список товаров в заказе
@@ -56,6 +57,14 @@ interface ReceiptResponseInterface
     public function getType();
 
     /**
+     * Возвращает статус доставки данных для чека в онлайн-кассу
+     *
+     *  @return string Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
+     */
+    public function getStatus();
+
+    /**
+     * @deprecated since 1.2.6
      * Возвращает статус доставки данных для чека в онлайн-кассу
      *
      *  @return string Статус доставки данных для чека в онлайн-кассу ("pending", "succeeded" или "canceled").
