@@ -131,30 +131,26 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 $expected['metadata'][$key] = $value;
             }
         }
-        if (!empty($options['receiptItems'])) {
-            foreach ($options['receiptItems'] as $item) {
-                $expected['receipt']['items'][] = array(
-                    'description'     => $item['title'],
-                    'quantity'        => empty($item['quantity']) ? 1 : $item['quantity'],
-                    'amount'          => array(
-                        'value'    => $item['price'],
-                        'currency' => isset($options['currency']) ? $options['currency'] : CurrencyCode::RUB,
-                    ),
-                    'vat_code'        => $item['vatCode'],
-                    'payment_subject' => PaymentSubject::COMMODITY,
-                    'payment_mode'    => PaymentMode::PARTIAL_PREPAYMENT,
-                );
+        if (!empty($options['receipt']['items'])) {
+            foreach ($options['receipt']['items'] as $item) {
+                $itemArray = $item;
+
+                if (!empty($item['payment_subject'])) {
+                    $itemArray['payment_subject'] = $item['payment_subject'];
+                }
+                if (!empty($item['payment_mode'])) {
+                    $itemArray['payment_mode'] = $item['payment_mode'];
+                }
+                $expected['receipt']['items'][] = $itemArray;
+            }
+            if (!empty($options['receipt']['customer'])) {
+                $expected['receipt']['customer'] = $options['receipt']['customer'];
+            }
+            if (!empty($options['receipt']['tax_system_code'])) {
+                $expected['receipt']['tax_system_code'] = $options['receipt']['tax_system_code'];
             }
         }
-        if (!empty($options['receiptEmail'])) {
-            $expected['receipt']['email'] = $options['receiptEmail'];
-        }
-        if (!empty($options['receiptPhone'])) {
-            $expected['receipt']['phone'] = $options['receiptPhone'];
-        }
-        if (!empty($options['taxSystemCode'])) {
-            $expected['receipt']['tax_system_code'] = $options['taxSystemCode'];
-        }
+
         if (array_key_exists('capture', $options)) {
             $expected['capture'] = (bool)$options['capture'];
         }
@@ -208,18 +204,25 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 array(
                     'amount'        => mt_rand(10, 100000),
                     'paymentToken'  => Random::str(36),
-                    'receiptItems'  => array(
-                        array(
-                            'title'           => Random::str(10),
-                            'quantity'        => Random::int(1, 10),
-                            'price'           => Random::int(100, 100),
-                            'vatCode'         => Random::int(1, 6),
-                            'payment_subject' => PaymentSubject::COMMODITY,
-                            'payment_mode'    => PaymentMode::PARTIAL_PREPAYMENT,
+                    'receipt' => array(
+                        'items'  => array(
+                            array(
+                                'description'           => Random::str(10),
+                                'quantity'        => (float)Random::int(1, 10),
+                                'amount'          => array(
+                                    'value'    => (float)Random::int(100, 100),
+                                    'currency' => CurrencyCode::RUB,
+                                ),
+                                'vat_code'         => Random::int(1, 6),
+                                'payment_subject' => PaymentSubject::COMMODITY,
+                                'payment_mode'    => PaymentMode::PARTIAL_PREPAYMENT,
+                            )
                         ),
+                        'customer' => array(
+                            'email'  => Random::str(10),
+                        ),
+                        'tax_system_code' => Random::int(1, 6),
                     ),
-                    'receiptEmail'  => Random::str(10),
-                    'taxSystemCode' => Random::int(1, 6),
                     'description'   => Random::str(10),
                     'airline'       => array(
                         'booking_reference' => Random::str(10),
@@ -303,10 +306,14 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 'capture'           => mt_rand(0, 1) ? true : false,
                 'clientIp'          => long2ip(mt_rand(0, pow(2, 32))),
                 'metadata'          => array('test' => uniqid()),
-                'receiptItems'      => $this->getReceipt($i + 1),
-                'receiptEmail'      => Random::str(10),
-                'receiptPhone'      => Random::str(12, '0123456789'),
-                'taxSystemCode'     => Random::int(1, 6),
+                'receipt' => array(
+                    'items' => $this->getReceipt($i + 1),
+                    'customer' => array(
+                        'email' => Random::str(10),
+                        'phone' => Random::str(12, '0123456789'),
+                    ),
+                    'tax_system_code' => Random::int(1, 6),
+                ),
                 'airline'           => $airline,
             );
             $result[] = array($request);
@@ -320,10 +327,13 @@ class CreatePaymentRequestSerializerTest extends TestCase
         $result = array();
         for ($i = 0; $i < $count; $i++) {
             $result[] = array(
-                'title'           => Random::str(10),
-                'quantity'        => Random::float(1, 100),
-                'price'           => Random::int(1, 100),
-                'vatCode'         => Random::int(1, 6),
+                'description'     => Random::str(10),
+                'quantity'        => (float)Random::float(1, 100),
+                'amount'          => array(
+                    'value'    => (float)Random::int(1, 100),
+                    'currency' => CurrencyCode::RUB,
+                ),
+                'vat_code'         => Random::int(1, 6),
                 'payment_subject' => PaymentSubject::COMMODITY,
                 'payment_mode'    => PaymentMode::PARTIAL_PREPAYMENT,
             );

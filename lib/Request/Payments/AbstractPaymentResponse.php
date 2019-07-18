@@ -64,6 +64,7 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
         $this->setAmount($this->factoryAmount($paymentInfo['amount']));
         $this->setCreatedAt($paymentInfo['created_at']);
         $this->setPaid($paymentInfo['paid']);
+        $this->setRefundable($paymentInfo['refundable']);
         if (!empty($paymentInfo['test'])) {
             $this->setTest($paymentInfo['test']);
         }

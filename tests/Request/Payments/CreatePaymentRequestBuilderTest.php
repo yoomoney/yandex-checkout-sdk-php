@@ -724,8 +724,8 @@ class CreatePaymentRequestBuilderTest extends TestCase
         $instance = $builder->build($this->getRequiredData());
 
         self::assertEquals($receipt['tax_system_code'], $instance->getReceipt()->getTaxSystemCode());
-        self::assertEquals($receipt['email'], $instance->getReceipt()->getEmail());
-        self::assertEquals($receipt['phone'], $instance->getReceipt()->getPhone());
+        self::assertEquals($receipt['email'], $instance->getReceipt()->getCustomer()->getEmail());
+        self::assertEquals($receipt['phone'], $instance->getReceipt()->getCustomer()->getPhone());
         self::assertEquals(1, count($instance->getReceipt()->getItems()));
 
         $receipt = $instance->getReceipt();
@@ -735,8 +735,8 @@ class CreatePaymentRequestBuilderTest extends TestCase
         $instance = $builder->build($this->getRequiredData());
 
         self::assertEquals($receipt['tax_system_code'], $instance->getReceipt()->getTaxSystemCode());
-        self::assertEquals($receipt['email'], $instance->getReceipt()->getEmail());
-        self::assertEquals($receipt['phone'], $instance->getReceipt()->getPhone());
+        self::assertEquals($receipt['email'], $instance->getReceipt()->getCustomer()->getEmail());
+        self::assertEquals($receipt['phone'], $instance->getReceipt()->getCustomer()->getPhone());
         self::assertEquals(1, count($instance->getReceipt()->getItems()));
     }
 
