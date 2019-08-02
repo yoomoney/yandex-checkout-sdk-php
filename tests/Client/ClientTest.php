@@ -1091,7 +1091,7 @@ class ClientTest extends TestCase
     {
         $instance = new TestClient();
 
-        if(version_compare(PHP_VERSION, '5.5') >= 0) {
+        if (version_compare(PHP_VERSION, '5.5') >= 0) {
             $value = array('test' => 'test', 'val' => null);
             $value['val'] = &$value;
             try {
@@ -1113,12 +1113,8 @@ class ClientTest extends TestCase
             }
         } else {
             $value = array('test' => iconv('utf-8', 'windows-1251', 'абвгдеёжз'));
-            try {
-                $instance->encode($value);
-                self::fail('Exception not thrown');
-            } catch (\Exception $e) {
-                self::assertEquals('json_encode(): Invalid UTF-8 sequence in argument', $e->getMessage());
-            }
+            $decoded = json_decode(json_encode($value), true);
+            self::assertNotSame($decoded, $value);
         }
     }
 

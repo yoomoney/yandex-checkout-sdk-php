@@ -39,14 +39,30 @@ namespace YandexCheckout\Model;
 interface ReceiptInterface
 {
     /**
-     * Возврвщает информацию о плательщике
+     * Возвращает информацию о плательщике
      *
      * @return ReceiptCustomerInterface Информация о плательщике
      */
     function getCustomer();
 
     /**
-     * Возврвщает список позиций в текущем чеке
+     * Возвращает телефон плательщика
+     *
+     * @deprecated
+     * @return string Телефон плательщика
+     */
+    function getPhone();
+
+    /**
+     * Возвращает email плательщика
+     *
+     * @deprecated
+     * @return string Email плательщика
+     */
+    function getEmail();
+
+    /**
+     * Возвращает список позиций в текущем чеке
      *
      * @return ReceiptItemInterface[] Список товаров в заказе
      */
