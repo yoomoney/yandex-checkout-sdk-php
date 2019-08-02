@@ -64,6 +64,7 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
         $this->setAmount($this->factoryAmount($paymentInfo['amount']));
         $this->setCreatedAt($paymentInfo['created_at']);
         $this->setPaid($paymentInfo['paid']);
+        $this->setRefundable($paymentInfo['refundable']);
         if (!empty($paymentInfo['test'])) {
             $this->setTest($paymentInfo['test']);
         }
@@ -77,8 +78,12 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
 
         if (!empty($paymentInfo['recipient'])) {
             $recipient = new Recipient();
-            $recipient->setAccountId($paymentInfo['recipient']['account_id']);
-            $recipient->setGatewayId($paymentInfo['recipient']['gateway_id']);
+            if (!empty($paymentInfo['recipient']['account_id'])) {
+                $recipient->setAccountId($paymentInfo['recipient']['account_id']);
+            }
+            if (!empty($paymentInfo['recipient']['gateway_id'])) {
+                $recipient->setGatewayId($paymentInfo['recipient']['gateway_id']);
+            }
             $this->setRecipient($recipient);
         }
         if (!empty($paymentInfo['captured_at'])) {
@@ -92,7 +97,9 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
             switch ($confirmationType) {
                 case ConfirmationType::REDIRECT:
                     $confirmation = new ConfirmationRedirect();
-                    $confirmation->setConfirmationUrl($paymentInfo['confirmation']['confirmation_url']);
+                    if (!empty($paymentInfo['confirmation']['confirmation_url'])) {
+                        $confirmation->setConfirmationUrl($paymentInfo['confirmation']['confirmation_url']);
+                    }
                     if (empty($paymentInfo['confirmation']['enforce'])) {
                         $confirmation->setEnforce(false);
                     } else {

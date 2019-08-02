@@ -49,8 +49,12 @@ abstract class AbstractPaymentResponseTest extends TestCase
         if (empty($options['recipient'])) {
             self::assertNull($instance->getRecipient());
         } else {
-            self::assertEquals($options['recipient']['account_id'], $instance->getRecipient()->getAccountId());
-            self::assertEquals($options['recipient']['gateway_id'], $instance->getRecipient()->getGatewayId());
+            if (!empty($options['recipient']['account_id'])) {
+                self::assertEquals($options['recipient']['account_id'], $instance->getRecipient()->getAccountId());
+            }
+            if (!empty($options['recipient']['gateway_id'])) {
+                self::assertEquals($options['recipient']['gateway_id'], $instance->getRecipient()->getGatewayId());
+            }
         }
     }
 
@@ -154,6 +158,20 @@ abstract class AbstractPaymentResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
+    public function testGetRefundable($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['refundable'])) {
+            self::assertFalse($instance->getRefundable());
+        } else {
+            self::assertEquals($options['refundable'], $instance->getRefundable());
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
     public function testGetTest($options)
     {
         $instance = $this->getTestInstance($options);
@@ -235,6 +253,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                 ),
                 'paid' => $i % 2 ? true : false,
+                'refundable' => $i % 2 ? true : false,
                 'test' => $i % 2 ? true : false,
                 'receipt_registration' => Random::value($receiptRegistrations),
                 'metadata' => array(
@@ -248,6 +267,7 @@ abstract class AbstractPaymentResponseTest extends TestCase
             );
             $result[] = array($payment);
         }
+
         return $result;
     }
 

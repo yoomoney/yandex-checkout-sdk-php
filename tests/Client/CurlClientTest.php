@@ -81,19 +81,6 @@ class CurlClientTest extends TestCase
             array('testHeader' => 'testValue'));
     }
 
-    public function testHttpVerbException()
-    {
-        $curlClientMock = $this->getMockBuilder('YandexCheckout\Client\CurlClient')
-                               ->setMethods(array('setCurlOption'))
-                               ->getMock();
-        $curlClientMock->setBody(HttpVerb::OPTIONS, array());
-        $curlClientMock->setBody(HttpVerb::DELETE, array());
-        $curlClientMock->setBody(HttpVerb::PATCH, array());
-        $curlClientMock->setBody(HttpVerb::PUT, array());
-        $this->setExpectedException('YandexCheckout\Common\Exceptions\ApiException');
-        $curlClientMock->setBody('invalid verb', array());
-    }
-
     public function curlErrorCodeProvider()
     {
         return array(

@@ -27,6 +27,7 @@ namespace YandexCheckout\Client;
 
 
 use Psr\Log\LoggerInterface;
+use YandexCheckout\Common\Exceptions\ApiConnectionException;
 use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Common\Exceptions\AuthorizeException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
@@ -47,6 +48,7 @@ class BaseClient
     const PAYMENTS_PATH = '/payments';
     const REFUNDS_PATH = '/refunds';
     const WEBHOOKS_PATH = '/webhooks';
+    const RECEIPTS_PATH = '/receipts';
     const ME_PATH = '/me';
 
     /**
@@ -125,10 +127,11 @@ class BaseClient
 
         if ($configLoader === null) {
             $configLoader = new ConfigurationLoader();
-            $config       = $configLoader->load()->getConfig();
-            $this->setConfig($config);
-            $apiClient->setConfig($config);
         }
+        $config       = $configLoader->load()->getConfig();
+        $this->setConfig($config);
+        $apiClient->setConfig($config);
+
         $this->attempts  = self::DEFAULT_ATTEMPTS_COUNT;
         $this->apiClient = $apiClient;
     }
@@ -360,15 +363,17 @@ class BaseClient
      * @param null $httpBody
      * @param array $headers
      *
-     * @return ResponseObject
+     * @return mixed|ResponseObject
+     * @throws ApiException
      * @throws AuthorizeException
+     * @throws ApiConnectionException
      */
     protected function execute($path, $method, $queryParams, $httpBody = null, $headers = array())
     {
         $attempts = $this->attempts;
         $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);
 
-        while ($response->getCode() == 202 && $attempts > 0) {
+        while (in_array($response->getCode(), array(202, 500)) && $attempts > 0) {
             $this->delay($response);
             $attempts--;
             $response = $this->apiClient->call($path, $method, $queryParams, $httpBody, $headers);

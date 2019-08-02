@@ -40,6 +40,7 @@ use YandexCheckout\Common\HttpVerb;
 use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Helpers\UUID;
 use YandexCheckout\Model\PaymentInterface;
+use YandexCheckout\Model\RefundInterface;
 use YandexCheckout\Model\Webhook\Webhook;
 use YandexCheckout\Request\PaymentOptionsRequest;
 use YandexCheckout\Request\PaymentOptionsRequestInterface;
@@ -59,6 +60,7 @@ use YandexCheckout\Request\Payments\PaymentsRequest;
 use YandexCheckout\Request\Payments\PaymentsRequestInterface;
 use YandexCheckout\Request\Payments\PaymentsRequestSerializer;
 use YandexCheckout\Request\Payments\PaymentsResponse;
+use YandexCheckout\Request\Receipts\ReceiptsResponse;
 use YandexCheckout\Request\Refunds\CreateRefundRequest;
 use YandexCheckout\Request\Refunds\CreateRefundRequestInterface;
 use YandexCheckout\Request\Refunds\CreateRefundRequestSerializer;
@@ -82,7 +84,7 @@ class Client extends BaseClient
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.2.2';
+    const SDK_VERSION = '1.3.0';
 
     /**
      * Доступные способы оплаты.
@@ -539,8 +541,18 @@ class Client extends BaseClient
      *
      * @param $request
      * @param null $idempotencyKey
+     * @return Webhook|null
      *
-     * @return null|Webhook
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws Common\Exceptions\AuthorizeException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     * @throws \Exception
      */
     public function addWebhook($request, $idempotencyKey = null)
     {
@@ -584,8 +596,19 @@ class Client extends BaseClient
      *
      * @param $webhookId
      * @param null $idempotencyKey
+
+     * @return Webhook|null
      *
-     * @return null|Webhook
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws Common\Exceptions\AuthorizeException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     * @throws \Exception
      */
     public function removeWebhook($webhookId, $idempotencyKey = null)
     {
@@ -614,7 +637,18 @@ class Client extends BaseClient
     /**
      * Список созданных Webhook
      * Запрос позволяет узнать, какие webhook есть для переданного OAuth-токена.
-     * @return null|WebhookListResponse
+     *
+     * @return WebhookListResponse|null
+     *
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws Common\Exceptions\AuthorizeException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
      */
     public function getWebhooks()
     {
@@ -634,10 +668,69 @@ class Client extends BaseClient
     }
 
     /**
+     * Получить список платежей магазина.
+     *
+     * @param PaymentInterface|RefundInterface|array|null $filter
+     *
+     * @return ReceiptsResponse
+     *
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     */
+    public function getReceipts($filter = null)
+    {
+        $path = self::RECEIPTS_PATH;
+
+        if ($filter === null) {
+            $queryParams = array();
+        } else {
+            if (is_array($filter)) {
+                $queryParams = $filter;
+            } elseif ($filter instanceof PaymentInterface) {
+                $queryParams = array(
+                    'payment_id' => $filter->getId()
+                );
+            } elseif ($filter instanceof RefundInterface) {
+                $queryParams = array(
+                    'refund_id' => $filter->getId()
+                );
+            }
+        }
+
+        $response = $this->execute($path, HttpVerb::GET, $queryParams);
+
+        $receiptsResponse = null;
+        if ($response->getCode() == 200) {
+            $responseArray    = $this->decodeData($response);
+            $receiptsResponse = new ReceiptsResponse($responseArray);
+        } else {
+            $this->handleError($response);
+        }
+
+        return $receiptsResponse;
+    }
+
+    /**
      * Информация о магазине
      * Запрос позволяет получить информацию о магазине для переданного OAuth-токена.
      *
      * @return array|null
+     *
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws Common\Exceptions\AuthorizeException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
      */
     public function me()
     {

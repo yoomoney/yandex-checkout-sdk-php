@@ -44,10 +44,10 @@ class CreateRefundRequestSerializerTest extends TestCase
             }
         }
         if (!empty($options['receiptEmail'])) {
-            $expected['receipt']['email'] = $options['receiptEmail'];
+            $expected['receipt']['customer']['email'] = $options['receiptEmail'];
         }
         if (!empty($options['receiptPhone'])) {
-            $expected['receipt']['phone'] = $options['receiptPhone'];
+            $expected['receipt']['customer']['phone'] = $options['receiptPhone'];
         }
         if (!empty($options['taxSystemCode'])) {
             $expected['receipt']['tax_system_code'] = $options['taxSystemCode'];

@@ -1,5 +1,7 @@
 # The Yandex.Checkout API PHP Client Library
 
+[![Build Status](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php.svg?branch=master)](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php)
+
 [Russian](https://github.com/yandex-money/yandex-checkout-sdk-php/blob/master/README.md) | English
 
 This product is used for managing payments under [The Yandex.Checkout API](https://kassa.yandex.ru/docs/checkout-api/)
@@ -23,7 +25,7 @@ composer require yandex-money/yandex-checkout-sdk-php
 ...
    "require": {
         "php": ">=5.3.2",
-	    "yandex-money/yandex-checkout-sdk-php": "*"
+        "yandex-money/yandex-checkout-sdk-php": "*"
 ...
 ```
 2. Refresh the project's dependencies. In the console, navigate to the catalog with composer.json and run the following command:

@@ -31,16 +31,38 @@ namespace YandexCheckout\Model;
  * 
  * @package YandexCheckout\Model
  * 
+ * @property-read ReceiptCustomerInterface $customer Информация о плательщике
  * @property-read ReceiptItemInterface[] $items Список товаров в заказе
  * @property-read int $taxSystemCode Код системы налогообложения. Число 1-6.
  * @property-read int $tax_system_code Код системы налогообложения. Число 1-6.
- * @property-read string $phone Номер телефона плательщика в формате ITU-T E.164 на который будет выслан чек.
- * @property-read string $email E-mail адрес плательщика на который будет выслан чек.
  */
 interface ReceiptInterface
 {
     /**
-     * Возврвщает список позиций в текущем чеке
+     * Возвращает информацию о плательщике
+     *
+     * @return ReceiptCustomerInterface Информация о плательщике
+     */
+    function getCustomer();
+
+    /**
+     * Возвращает телефон плательщика
+     *
+     * @deprecated
+     * @return string Телефон плательщика
+     */
+    function getPhone();
+
+    /**
+     * Возвращает email плательщика
+     *
+     * @deprecated
+     * @return string Email плательщика
+     */
+    function getEmail();
+
+    /**
+     * Возвращает список позиций в текущем чеке
      *
      * @return ReceiptItemInterface[] Список товаров в заказе
      */
@@ -54,21 +76,8 @@ interface ReceiptInterface
     function getTaxSystemCode();
 
     /**
-     * Возвращает номер телефона плательщика в формате ITU-T E.164 на который будет выслан чек
-     *
-     * @return string Номер телефона плательщика
-     */
-    function getPhone();
-
-    /**
-     * Возвращает адрес электронной почты на который будет выслан чек
-     *
-     * @return string E-mail адрес плательщика
-     */
-    function getEmail();
-
-    /**
      * Проверяет есть ли в чеке хотя бы одна позиция
+     *
      * @return bool True если чек не пуст, false если в чеке нет ни одной позиции
      */
     function notEmpty();

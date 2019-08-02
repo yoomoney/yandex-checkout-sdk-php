@@ -2,6 +2,7 @@
   "id": "1da5c87d-0984-50e8-a7f3-8de646dd9ec9",
   "status": "canceled",
   "paid": false,
+  "refundable": false,
   "amount": {
     "value": "20.00",
     "currency": "RUB"

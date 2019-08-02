@@ -139,7 +139,7 @@ class PaymentsRequestBuilderTest extends TestCase
         $instance = $builder->build(array());
         self::assertNull($instance->getRecipientGatewayId());
 
-        $builder->setRecipientGatewayId($options['recipientGatewayId']);
+        $builder->setRecipientGatewayId(!empty($options['recipientGatewayId']) ? $options['recipientGatewayId'] : null);
         $instance = $builder->build();
         if (empty($options['recipientGatewayId'])) {
             self::assertNull($instance->getRecipientGatewayId());
