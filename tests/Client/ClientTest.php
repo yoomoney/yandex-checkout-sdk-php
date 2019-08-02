@@ -1164,7 +1164,6 @@ class ClientTest extends TestCase
             array(\YandexCheckout\Common\Exceptions\BadApiRequestException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\BadApiRequestException'),
             array(\YandexCheckout\Common\Exceptions\ForbiddenException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\ForbiddenException'),
             array(\YandexCheckout\Common\Exceptions\UnauthorizedException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\UnauthorizedException'),
-            array(\YandexCheckout\Common\Exceptions\InternalServerError::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\InternalServerError'),
         );
     }
 
