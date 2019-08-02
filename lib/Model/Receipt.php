@@ -369,7 +369,7 @@ class Receipt extends AbstractObject implements ReceiptInterface
 
     /**
      * Устанавливает значения свойств текущего объекта из массива
-     * @param array|\Traversable $sourceArray Ассоциативный массив с найтройками
+     * @param array|\Traversable $sourceArray Ассоциативный массив с настройками
      */
     public function fromArray($sourceArray)
     {
@@ -380,14 +380,14 @@ class Receipt extends AbstractObject implements ReceiptInterface
         }
 
         if (!empty($sourceArray['items'])) {
-            for ($i = 0; $i < count($sourceArray['items']); $i++) {
-                if (is_array($sourceArray['items'][$i])) {
+            foreach ($sourceArray['items'] as $i => $itemArray) {
+                if (is_array($itemArray)) {
                     $item   = new ReceiptItem();
                     $amount = new ReceiptItemAmount();
-                    $amount->fromArray($sourceArray['items'][$i]['amount']);
-                    $sourceArray['items'][$i]['price'] = $amount;
-                    unset($sourceArray['items'][$i]['amount']);
-                    $item->fromArray($sourceArray['items'][$i]);
+                    $amount->fromArray($itemArray['amount']);
+                    $itemArray['price'] = $amount;
+                    unset($itemArray['amount']);
+                    $item->fromArray($itemArray);
                     $sourceArray['items'][$i] = $item;
                 }
             }

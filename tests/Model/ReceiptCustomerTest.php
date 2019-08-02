@@ -20,9 +20,9 @@ class ReceiptCustomerTest extends TestCase
         self::assertNull($instance->getPhone());
         self::assertNull($instance->phone);
 
-        $value = $options['customer']['phone']
+        $value = !empty($options['customer']['phone'])
                ? $options['customer']['phone']
-               : ($options['phone'] ? $options['phone'] : null);
+               : (!empty($options['phone']) ? $options['phone'] : null);
 
         $instance->setPhone($value);
         if ($value === null || $value === '') {
@@ -45,9 +45,9 @@ class ReceiptCustomerTest extends TestCase
         self::assertNull($instance->getPhone());
         self::assertNull($instance->phone);
 
-        $value = $options['customer']['phone']
+        $value = !empty($options['customer']['phone'])
                ? $options['customer']['phone']
-               : ($options['phone'] ? $options['phone'] : null);
+               : (!empty($options['phone']) ? $options['phone'] : null);
 
         $instance->phone = $value;
         if ($value === null || $value === '') {
@@ -95,9 +95,9 @@ class ReceiptCustomerTest extends TestCase
         self::assertNull($instance->getEmail());
         self::assertNull($instance->email);
 
-        $value = $options['customer']['email']
+        $value = !empty($options['customer']['email'])
                ? $options['customer']['email']
-               : ($options['email'] ? $options['email'] : null);
+               : (!empty($options['email']) ? $options['email'] : null);
 
         $instance->setEmail($value);
         if ($value === null || $value === '') {
@@ -120,9 +120,9 @@ class ReceiptCustomerTest extends TestCase
         self::assertNull($instance->getEmail());
         self::assertNull($instance->email);
 
-        $value = $options['customer']['email']
+        $value = !empty($options['customer']['email'])
                ? $options['customer']['email']
-               : ($options['email'] ? $options['email'] : null);
+               : (!empty($options['email']) ? $options['email'] : null);
 
         $instance->email = $value;
         if ($value === null || $value === '') {

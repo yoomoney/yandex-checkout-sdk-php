@@ -50,7 +50,7 @@ class PaymentReceiptResponse extends AbstractReceiptResponse
      */
     public function setSpecificProperties($receiptData)
     {
-        $this->setPaymentId($receiptData['payment_id']);
+        $this->setPaymentId(!empty($receiptData['payment_id']) ? $receiptData['payment_id'] : null);
     }
 
     /**

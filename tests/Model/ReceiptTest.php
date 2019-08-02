@@ -131,8 +131,8 @@ class ReceiptTest extends TestCase
         self::assertNull($instance->getPhone());
         self::assertNull($instance->phone);
 
-        $instance->setPhone($options['phone']);
-        if ($options['phone'] === null || $options['phone'] === '') {
+        $instance->setPhone(!empty($options['phone']) ? $options['phone'] : null);
+        if (empty($options['phone'])) {
             self::assertNull($instance->getPhone());
             self::assertNull($instance->phone);
         } else {
@@ -152,8 +152,8 @@ class ReceiptTest extends TestCase
         self::assertNull($instance->getPhone());
         self::assertNull($instance->phone);
 
-        $instance->phone = $options['phone'];
-        if ($options['phone'] === null || $options['phone'] === '') {
+        $instance->phone = !empty($options['phone']) ? $options['phone'] : null;
+        if (empty($options['phone'])) {
             self::assertNull($instance->getPhone());
             self::assertNull($instance->phone);
         } else {
@@ -184,8 +184,8 @@ class ReceiptTest extends TestCase
         self::assertNull($instance->getEmail());
         self::assertNull($instance->email);
 
-        $instance->setEmail($options['email']);
-        if ($options['email'] === null || $options['email'] === '') {
+        $instance->setEmail(!empty($options['email']) ? $options['email'] : null);
+        if (empty($options['email'])) {
             self::assertNull($instance->getEmail());
             self::assertNull($instance->email);
         } else {
@@ -205,8 +205,8 @@ class ReceiptTest extends TestCase
         self::assertNull($instance->getEmail());
         self::assertNull($instance->email);
 
-        $instance->email = $options['email'];
-        if ($options['email'] === null || $options['email'] === '') {
+        $instance->email = !empty($options['email']) ? $options['email'] : null;
+        if (empty($options['email'])) {
             self::assertNull($instance->getEmail());
             self::assertNull($instance->email);
         } else {
