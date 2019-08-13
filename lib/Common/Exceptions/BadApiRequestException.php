@@ -40,7 +40,7 @@ class BadApiRequestException extends ApiException
         $message   = '';
 
         if (isset($errorData['description'])) {
-            $message .= $errorData['description'].'. ';
+            $message .= $errorData['description'] . '. ';
         }
 
         if (isset($errorData['code'])) {

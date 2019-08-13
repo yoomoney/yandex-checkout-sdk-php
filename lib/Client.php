@@ -84,7 +84,7 @@ class Client extends BaseClient
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.3.0';
+    const SDK_VERSION = '1.4.0';
 
     /**
      * Доступные способы оплаты.
