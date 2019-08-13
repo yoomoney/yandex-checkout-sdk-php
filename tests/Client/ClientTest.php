@@ -1210,10 +1210,12 @@ class ClientTest extends TestCase
     public function errorResponseDataProvider()
     {
         return array(
-            array(\YandexCheckout\Common\Exceptions\BadApiRequestException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\BadApiRequestException'),
-            array(\YandexCheckout\Common\Exceptions\ForbiddenException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\ForbiddenException'),
-            array(\YandexCheckout\Common\Exceptions\UnauthorizedException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\UnauthorizedException'),
-            array(\YandexCheckout\Common\Exceptions\InternalServerError::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\InternalServerError'),
+            array(NotFoundException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\NotFoundException'),
+            array(BadApiRequestException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\BadApiRequestException'),
+            array(BadApiRequestException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\BadApiRequestException'),
+            array(ForbiddenException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\ForbiddenException'),
+            array(UnauthorizedException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\UnauthorizedException'),
+            array(TooManyRequestsException::HTTP_CODE, '{}', 'YandexCheckout\Common\Exceptions\TooManyRequestsException'),
         );
     }
 
