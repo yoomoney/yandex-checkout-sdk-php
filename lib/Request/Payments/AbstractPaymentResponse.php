@@ -27,13 +27,13 @@
 namespace YandexCheckout\Request\Payments;
 
 use InvalidArgumentException;
-use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\AuthorizationDetails;
 use YandexCheckout\Model\CancellationDetails;
 use YandexCheckout\Model\Confirmation\ConfirmationCodeVerification;
 use YandexCheckout\Model\Confirmation\ConfirmationDeepLink;
 use YandexCheckout\Model\Confirmation\ConfirmationEmbedded;
+use YandexCheckout\Model\Confirmation\ConfirmationQr;
 use YandexCheckout\Model\Confirmation\ConfirmationRedirect;
 use YandexCheckout\Model\Confirmation\ConfirmationExternal;
 use YandexCheckout\Model\ConfirmationType;
@@ -109,21 +109,31 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
                         $confirmation->setReturnUrl($paymentInfo['confirmation']['return_url']);
                     }
                     break;
+
                 case ConfirmationType::EMBEDDED:
                     $confirmation = new ConfirmationEmbedded();
-
                     if (!empty($paymentInfo['confirmation']['confirmation_token'])) {
                         $confirmation->setConfirmationToken($paymentInfo['confirmation']['confirmation_token']);
                     }
                     break;
+
                 case ConfirmationType::EXTERNAL:
                     $confirmation = new ConfirmationExternal();
                     break;
+
                 case ConfirmationType::CODE_VERIFICATION:
                     $confirmation = new ConfirmationCodeVerification();
                     break;
+
                 case ConfirmationType::DEEPLINK:
                     $confirmation = new ConfirmationDeepLink();
+                    break;
+
+                case ConfirmationType::QR:
+                    $confirmation = new ConfirmationQr();
+                    if (!empty($paymentInfo['confirmation']['confirmation_data'])) {
+                        $confirmation->setConfirmationData($paymentInfo['confirmation']['confirmation_data']);
+                    }
                     break;
             }
 

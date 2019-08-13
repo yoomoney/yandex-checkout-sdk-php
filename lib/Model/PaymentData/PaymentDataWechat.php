@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The MIT License
  *
@@ -24,41 +23,15 @@
  * THE SOFTWARE.
  */
 
-namespace YandexCheckout\Common\Exceptions;
+namespace YandexCheckout\Model\PaymentData;
 
-class ForbiddenException extends ApiException
+
+use YandexCheckout\Model\PaymentMethodType;
+
+class PaymentDataWechat extends AbstractPaymentData
 {
-    const HTTP_CODE = 403;
-
-    public $type;
-
-    public $retryAfter;
-
-    public function __construct($responseHeaders = array(), $responseBody = null)
+    public function __construct()
     {
-        $errorData = json_decode($responseBody, true);
-        $message   = '';
-
-        if (isset($errorData['description'])) {
-            $message .= $errorData['description'] . '. ';
-        }
-
-        if (isset($errorData['code'])) {
-            $message .= sprintf('Error code: %s. ', $errorData['code']);
-        }
-
-        if (isset($errorData['parameter'])) {
-            $message .= sprintf('Parameter name: %s. ', $errorData['parameter']);
-        }
-
-        if (isset($errorData['retry_after'])) {
-            $this->retryAfter = $errorData['retry_after'];
-        }
-
-        if (isset($errorData['type'])) {
-            $this->type = $errorData['type'];
-        }
-
-        parent::__construct(trim($message), self::HTTP_CODE, $responseHeaders, $responseBody);
+        $this->_setType(PaymentMethodType::WECHAT);
     }
 }
