@@ -27,6 +27,7 @@
 namespace YandexCheckout\Request\Payments;
 
 use YandexCheckout\Model\AmountInterface;
+use YandexCheckout\Model\Confirmation\ConfirmationRedirect;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\LegInterface;
 use YandexCheckout\Model\PassengerInterface;
@@ -68,7 +69,8 @@ class CreatePaymentRequestSerializer
         PaymentMethodType::MOBILE_BALANCE => 'serializePaymentDataMobilePhone',
         PaymentMethodType::INSTALLMENTS   => 'serializePaymentData',
         PaymentMethodType::B2B_SBERBANK   => 'serializePaymentDataB2BSberbank',
-        PaymentMethodType::TINKOFF_BANK   => 'serializePaymentData'
+        PaymentMethodType::TINKOFF_BANK   => 'serializePaymentData',
+        PaymentMethodType::WECHAT         => 'serializePaymentData',
     );
 
     public function serialize(CreatePaymentRequestInterface $request)
@@ -99,6 +101,7 @@ class CreatePaymentRequestSerializer
             );
             $confirmation           = $request->getConfirmation();
             if ($confirmation->getType() === ConfirmationType::REDIRECT) {
+                /** @var ConfirmationRedirect $confirmation */
                 if ($confirmation->getEnforce()) {
                     $result['confirmation']['enforce'] = $confirmation->getEnforce();
                 }

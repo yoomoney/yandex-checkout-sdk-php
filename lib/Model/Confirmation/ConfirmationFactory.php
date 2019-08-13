@@ -41,6 +41,7 @@ class ConfirmationFactory
         ConfirmationType::EXTERNAL          => 'ConfirmationExternal',
         ConfirmationType::REDIRECT          => 'ConfirmationRedirect',
         ConfirmationType::EMBEDDED          => 'ConfirmationEmbedded',
+        ConfirmationType::QR                => 'ConfirmationQr',
     );
 
     /**

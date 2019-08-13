@@ -44,6 +44,7 @@ use YandexCheckout\Common\AbstractEnum;
  * |b2b_sberbank|Сбербанк Бизнес Онлайн|
  * |tinkoff_bank|Интернет-банк Тинькофф|
  * |psb|ПромсвязьБанк|
+ * |wechat|Платеж через WeChat|
  */
 class PaymentMethodType extends AbstractEnum
 {
@@ -61,6 +62,7 @@ class PaymentMethodType extends AbstractEnum
     const B2B_SBERBANK   = 'b2b_sberbank';
     const TINKOFF_BANK   = 'tinkoff_bank';
     const PSB            = 'psb';
+    const WECHAT         = 'wechat';
 
     protected static $validValues = array(
         self::YANDEX_MONEY   => true,
@@ -77,5 +79,6 @@ class PaymentMethodType extends AbstractEnum
         self::INSTALLMENTS   => true,
         self::B2B_SBERBANK   => true,
         self::PSB            => false,
+        self::WECHAT         => true,
     );
 }

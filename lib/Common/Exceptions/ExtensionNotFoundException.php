@@ -26,39 +26,21 @@
 
 namespace YandexCheckout\Common\Exceptions;
 
-class ForbiddenException extends ApiException
+use Exception;
+
+class ExtensionNotFoundException extends Exception
 {
-    const HTTP_CODE = 403;
+    /**
+     * Constructor
+     *
+     * @param string $name extension name
+     * @param int $code error code
+     */
 
-    public $type;
-
-    public $retryAfter;
-
-    public function __construct($responseHeaders = array(), $responseBody = null)
+    public function __construct($name, $code = 0)
     {
-        $errorData = json_decode($responseBody, true);
-        $message   = '';
+        $message = sprintf('%s extension is not loaded!', $name);
 
-        if (isset($errorData['description'])) {
-            $message .= $errorData['description'] . '. ';
-        }
-
-        if (isset($errorData['code'])) {
-            $message .= sprintf('Error code: %s. ', $errorData['code']);
-        }
-
-        if (isset($errorData['parameter'])) {
-            $message .= sprintf('Parameter name: %s. ', $errorData['parameter']);
-        }
-
-        if (isset($errorData['retry_after'])) {
-            $this->retryAfter = $errorData['retry_after'];
-        }
-
-        if (isset($errorData['type'])) {
-            $this->type = $errorData['type'];
-        }
-
-        parent::__construct(trim($message), self::HTTP_CODE, $responseHeaders, $responseBody);
+        parent::__construct($message, $code);
     }
 }
