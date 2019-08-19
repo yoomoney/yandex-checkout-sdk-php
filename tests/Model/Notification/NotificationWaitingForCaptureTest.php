@@ -12,7 +12,7 @@ use YandexCheckout\Model\NotificationType;
 use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
-use YandexCheckout\Model\Status;
+use YandexCheckout\Model\PaymentStatus;
 
 require_once __DIR__ . '/AbstractNotificationTest.php';
 
@@ -57,7 +57,7 @@ class NotificationWaitingForCaptureTest extends AbstractNotificationTest
     public function validDataProvider()
     {
         $result = array();
-        $statuses = Status::getValidValues();
+        $statuses = PaymentStatus::getValidValues();
         $receiptRegistrations = ReceiptRegistrationStatus::getValidValues();
 
         $confirmations = array(

@@ -13,7 +13,6 @@ use YandexCheckout\Model\PaymentInterface;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
-use YandexCheckout\Model\Status;
 
 class NotificationCanceledTest extends \PHPUnit_Framework_TestCase
 {

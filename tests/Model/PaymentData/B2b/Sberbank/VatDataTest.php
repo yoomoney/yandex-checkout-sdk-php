@@ -133,6 +133,7 @@ class VatDataTest extends TestCase
             array(VatDataRate::RATE_7),
             array(VatDataRate::RATE_10),
             array(VatDataRate::RATE_18),
+            array(VatDataRate::RATE_20),
         );
 
         return $result;

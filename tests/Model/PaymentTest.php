@@ -12,9 +12,9 @@ use YandexCheckout\Model\Metadata;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\Payment;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodQiwi;
+use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Recipient;
-use YandexCheckout\Model\Status;
 
 class PaymentTest extends TestCase
 {
@@ -726,7 +726,7 @@ class PaymentTest extends TestCase
         for ($i = 0; $i < 20; $i++) {
             $payment = array(
                 'id' => Random::str(36),
-                'status' => Random::value(Status::getValidValues()),
+                'status' => Random::value(PaymentStatus::getValidValues()),
                 'recipient' => new Recipient(),
                 'amount' => new MonetaryAmount(Random::int(1, 10000), 'RUB'),
                 'description' => ($i == 0 ? null : ($i == 1 ? '' : ($i == 2 ? Random::str(Payment::MAX_LENGTH_DESCRIPTION)
