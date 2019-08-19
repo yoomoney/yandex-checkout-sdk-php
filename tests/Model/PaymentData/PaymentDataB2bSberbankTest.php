@@ -154,8 +154,14 @@ class PaymentDataB2bSberbankTest extends AbstractPaymentDataTest
             ),
             array(
                 array(
+                    'type'   => VatDataType::MIXED,
+                    'amount' => new MonetaryAmount(Random::int(1, 10000), CurrencyCode::EUR),
+                )
+            ),
+            array(
+                array(
                     'type'   => VatDataType::CALCULATED,
-                    'rate'   => VatDataRate::RATE_10,
+                    'rate'   => VatDataRate::RATE_20,
                     'amount' => array(
                         'value'    => Random::int(1, 10000),
                         'currency' => CurrencyCode::USD,
