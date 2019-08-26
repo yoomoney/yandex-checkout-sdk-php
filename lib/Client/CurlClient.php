@@ -31,7 +31,6 @@ use YandexCheckout\Common\Exceptions\ApiConnectionException;
 use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Common\Exceptions\AuthorizeException;
 use YandexCheckout\Common\Exceptions\ExtensionNotFoundException;
-use YandexCheckout\Common\HttpVerb;
 use YandexCheckout\Common\ResponseObject;
 use YandexCheckout\Helpers\RawHeadersParser;
 
@@ -76,6 +75,9 @@ class CurlClient implements ApiClientInterface
      */
     private $proxy;
 
+    /** @var UserAgent */
+    private $userAgent;
+
     /**
      * @var bool
      */
@@ -98,6 +100,14 @@ class CurlClient implements ApiClientInterface
      * @var LoggerInterface|null
      */
     private $logger;
+
+    /**
+     * CurlClient constructor.
+     */
+    public function __construct()
+    {
+        $this->userAgent = new UserAgent();
+    }
 
     /**
      * @param LoggerInterface|null $logger
@@ -310,6 +320,14 @@ class CurlClient implements ApiClientInterface
     }
 
     /**
+     * @return UserAgent
+     */
+    public function getUserAgent()
+    {
+        return $this->userAgent;
+    }
+
+    /**
      * @param string $bearerToken
      *
      * @return static $this
@@ -378,6 +396,8 @@ class CurlClient implements ApiClientInterface
     {
         $headers = array_merge($this->defaultHeaders, $headers);
 
+        $headers['YM-User-Agent'] = $this->getUserAgent()->getHeaderString();
+
         if ($this->shopId && $this->shopPassword) {
             $encodedAuth              = base64_encode($this->shopId.":".$this->shopPassword);
             $headers["Authorization"] = "Basic ".$encodedAuth;
@@ -390,7 +410,7 @@ class CurlClient implements ApiClientInterface
         }
 
         $headers = array_map(function ($key, $value) {
-            return $key.":".$value;
+            return $key . ":" . $value;
         }, array_keys($headers), $headers);
 
 
