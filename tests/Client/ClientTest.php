@@ -1098,7 +1098,7 @@ class ClientTest extends TestCase
         $apiClient->setLogger($logger);
 
         $clientMock = $this->getMockBuilder('YandexCheckout\Client\ApiClientInterface')
-            ->setMethods(array('setLogger', 'setConfig', 'call'))
+            ->setMethods(array('setLogger', 'setConfig', 'call', 'getUserAgent'))
             ->disableOriginalConstructor()
             ->getMock();
         $expectedLoggers = array();
