@@ -213,17 +213,18 @@ class UserAgent
     private function parseSmartLinuxRelease()
     {
         $vars = array();
-        $files = glob('/etc/*elease');
 
-        foreach ($files as $file) {
-            $lines = array_filter(array_map(array($this, 'callbackSmartLinux'), file($file)));
-            foreach ($lines as $line) {
-                $vars[$line[0]] = trim($line[1]);
+        if ($files = glob('/etc/*elease')) {
+            foreach ($files as $file) {
+                $lines = array_filter(array_map(array($this, 'callbackSmartLinux'), file($file)));
+                foreach ($lines as $line) {
+                    $vars[$line[0]] = trim($line[1]);
+                }
             }
-        }
 
-        if (!empty($vars['NAME']) && !empty($vars['VERSION_ID'])) {
-            return array( 'name' => $vars['NAME'], 'version' => $vars['VERSION_ID'] );
+            if (!empty($vars['NAME']) && !empty($vars['VERSION_ID'])) {
+                return array('name' => $vars['NAME'], 'version' => $vars['VERSION_ID']);
+            }
         }
 
         return null;
