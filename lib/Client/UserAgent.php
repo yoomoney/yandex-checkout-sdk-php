@@ -251,11 +251,12 @@ class UserAgent
     private function parseSimpleLinuxRelease()
     {
         $vars = array();
-        $files = glob('/etc/*elease');
 
-        foreach ($files as $file) {
-            $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
-            $vars = array_merge($vars, array_shift($data));
+        if ($files = glob('/etc/*elease')) {
+            foreach ($files as $file) {
+                $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
+                $vars = array_merge($vars, array_shift($data));
+            }
         }
 
         return !empty($vars['name']) && !empty($vars['version']) ? $vars : null;

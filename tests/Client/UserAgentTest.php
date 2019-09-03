@@ -114,8 +114,8 @@ class UserAgentTest extends TestCase
                 'Ubuntu.GNU.Linux/14.04'
             ),
             array(
-                array('name' => 'YandexCheckout PHP', 'version' => '1/4.2'),
-                'YandexCheckout.PHP/1.4.2'
+                array('name' => 'YandexCheckout PHP', 'version' => '1/4.3'),
+                'YandexCheckout.PHP/1.4.3'
             ),
         );
     }
