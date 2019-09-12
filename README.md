@@ -1,6 +1,9 @@
 # Yandex.Checkout API PHP Client Library
 
 [![Build Status](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php.svg?branch=master)](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php)
+[![Latest Stable Version](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/v/stable)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
+[![Total Downloads](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/downloads)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
+[![License](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/license)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
 
 Russian | [English](https://github.com/yandex-money/yandex-checkout-sdk-php/blob/master/README.en.md)
 
@@ -56,4 +59,4 @@ use YandexCheckout\Client;
 $client = new Client();
 $client->setAuth('shopId', 'secretKey');
 ```
-3. Вызовите нужный метод API. [Подробнее в документации к API Яндекс.Кассы](https://kassa.yandex.ru/docs/checkout-api/)
+3. Вызовите нужный метод API. [Подробнее в документации к API Яндекс.Кассы](https://kassa.yandex.ru/developers/api#%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5_%D0%BF%D0%BB%D0%B0%D1%82%D0%B5%D0%B6%D0%B0)

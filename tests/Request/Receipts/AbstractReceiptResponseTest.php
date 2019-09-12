@@ -124,6 +124,7 @@ abstract class AbstractReceiptResponseTest extends TestCase
             'type' => $type,
             'status' => Random::value(array('pending', 'succeeded', 'canceled')),
             'items' => $this->generateItems(),
+            'settlements' => $this->generateSettlements(),
             'tax_system_code' => Random::int(1 ,6),
         );
 
@@ -145,6 +146,31 @@ abstract class AbstractReceiptResponseTest extends TestCase
     }
 
     private function generateItem()
+    {
+        return array(
+            'description' => Random::str(1, 128),
+            'amount' => array(
+                'value' => round(Random::float(1.00, 100.00), 2),
+                'currency' => 'RUB',
+            ),
+            'quantity' => round(Random::float(0.001, 99.999), 3),
+            'vat_code' => Random::int(1 ,6),
+        );
+    }
+
+    private function generateSettlements()
+    {
+        $return = array();
+        $count = Random::int(1, 10);
+
+        for ($i=0; $i < $count; $i++) {
+            $return[] = $this->generateSettlement();
+        }
+
+        return $return;
+    }
+
+    private function generateSettlement()
     {
         return array(
             'description' => Random::str(1, 128),

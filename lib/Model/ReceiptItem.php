@@ -113,6 +113,17 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     private $_shipping = false;
 
     /**
+     * ReceiptItem constructor.
+     * @param array|null $data Массив для инициализации нового объекта
+     */
+    public function __construct($data = null)
+    {
+        if (!empty($data) && is_array($data)) {
+            $this->fromArray($data);
+        }
+    }
+
+    /**
      * Возвращает наименование товара
      * @return string Наименование товара
      */
@@ -450,6 +461,7 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
      *
      * @param bool $value True если айтем является доставкой, false если нет
      *
+     * @return ReceiptItem
      * @throws InvalidPropertyValueException Генерируется если передано значение невалидного типа
      */
     public function setIsShipping($value)
@@ -499,8 +511,6 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
      *
      * @param float $count Количество на которое уменьшаем позицию в чеке
      *
-     * @return ReceiptItem Новый инстанс позиции в чеке
-     *
      * @throws EmptyPropertyValueException Выбрасывается если было передано пустое значение
      * @throws InvalidPropertyValueException Выбрасывается если в качестве аргумента был передан ноль
      * или отрицательное число, или число больше текущего количества покупаемого товара
@@ -535,6 +545,20 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     }
 
     /**
+     * Устанавливает значения свойств текущего объекта из массива
+     * @param array|\Traversable $sourceArray Ассоциативный массив с настройками
+     */
+    public function fromArray($sourceArray)
+    {
+        $amount = new ReceiptItemAmount();
+        $amount->fromArray($sourceArray['amount']);
+        $sourceArray['price'] = $amount;
+        unset($sourceArray['amount']);
+
+        parent::fromArray($sourceArray);
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize()
@@ -555,6 +579,10 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
 
         if ($this->getPaymentMode()) {
             $result['payment_mode'] = $this->getPaymentMode();
+        }
+
+        if ($this->getProductCode()) {
+            $result['product_code'] = $this->getProductCode();
         }
 
         if ($this->getCountryOfOriginCode()) {

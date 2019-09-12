@@ -5,8 +5,6 @@ namespace Tests\YandexCheckout\Request\Receipts;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Request\Receipts\RefundReceiptResponse;
 
-require_once __DIR__ . '/AbstractReceiptResponseTest.php';
-
 class RefundReceiptResponseTest extends AbstractReceiptResponseTest
 {
     protected $type = 'refund';

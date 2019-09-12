@@ -26,8 +26,10 @@
 
 namespace YandexCheckout\Request\Receipts;
 
-use YandexCheckout\Model\ReceiptType;
-
+/**
+ * Class ReceiptsResponse
+ * @package YandexCheckout\Request\Receipts
+ */
 class ReceiptsResponse
 {
     /**
@@ -45,19 +47,27 @@ class ReceiptsResponse
     private $items;
 
     /**
+     * @var ReceiptResponseFactory Фабрика для создания чеков
+     */
+    private $factory;
+
+    /**
      * Конструктор, устанавливает список полученых от API чеков
      *
      * @param array $response Разобранный ответ от API в виде чеков
+     * @throws \Exception
      */
     public function __construct($response)
     {
+        $this->factory = new ReceiptResponseFactory();
+
         if (!empty($response['type'])) {
             $this->type = $response['type'];
         }
 
         $this->items = array();
         foreach ($response['items'] as $item) {
-            if ($receipt = $this->createReceipt($item)) {
+            if ($receipt = $this->factory->factory($item)) {
                 $this->items[] = $receipt;
             }
         }
@@ -81,30 +91,4 @@ class ReceiptsResponse
         return $this->items;
     }
 
-    /**
-     * Создает объект ReceiptInterface из массива
-     *
-     * @param array $receiptData
-     *
-     * @return ReceiptResponseInterface|null
-     */
-    private function createReceipt($receiptData)
-    {
-        if (empty($receiptData['type']) || !in_array($receiptData['type'], ReceiptType::getEnabledValues())) {
-            return null;
-        }
-
-        switch ($receiptData['type']) {
-            case ReceiptType::PAYMENT :
-                $receipt = new PaymentReceiptResponse($receiptData);
-                break;
-            case ReceiptType::REFUND :
-                $receipt = new RefundReceiptResponse($receiptData);
-                break;
-            default:
-                $receipt = null;
-        }
-
-        return $receipt;
-    }
 }

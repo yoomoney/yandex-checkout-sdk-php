@@ -34,6 +34,12 @@ use YandexCheckout\Helpers\TypeCast;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
 
+/**
+ * Class ReceiptItemAmount
+ * @package YandexCheckout\Model\Receipt
+ *
+ * @method fromArray($sourceArray)
+ */
 class ReceiptItemAmount extends AbstractObject implements AmountInterface
 {
     /**

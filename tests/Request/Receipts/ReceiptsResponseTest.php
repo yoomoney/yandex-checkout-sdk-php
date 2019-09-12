@@ -5,6 +5,8 @@ namespace YandexCheckout\Request\Receipts;
 
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
+use YandexCheckout\Helpers\UUID;
+use YandexCheckout\Model\Receipt\SettlementType;
 use YandexCheckout\Model\ReceiptType;
 
 class ReceiptsResponseTest extends TestCase
@@ -12,6 +14,7 @@ class ReceiptsResponseTest extends TestCase
     /**
      * @dataProvider validDataProvider
      * @param array $options
+     * @throws \Exception
      */
     public function testGetType($options)
     {
@@ -23,6 +26,7 @@ class ReceiptsResponseTest extends TestCase
     /**
      * @dataProvider validDataProvider
      * @param array $options
+     * @throws \Exception
      */
     public function testGetItems($options)
     {
@@ -68,13 +72,15 @@ class ReceiptsResponseTest extends TestCase
     }
 
     private function generateReceipt()
-    {
+    {   $type = Random::value(ReceiptType::getEnabledValues());
         return array(
             'id' => Random::str(39),
-            'type' => Random::value(ReceiptType::getEnabledValues()),
+            'type' => $type,
             'status' => Random::value(array('pending', 'succeeded', 'canceled')),
             'items' => $this->generateItems(),
+            'settlements' => $this->generateItems(),
             'tax_system_code' => Random::int(1 ,6),
+            $type . '_id' => UUID::v4(),
         );
     }
 
@@ -100,6 +106,29 @@ class ReceiptsResponseTest extends TestCase
             ),
             'quantity' => round(Random::float(0.001, 99.999), 3),
             'vat_code' => Random::int(1 ,6),
+        );
+    }
+
+    private function generateSettlements()
+    {
+        $return = array();
+        $count = Random::int(1, 10);
+
+        for ($i=0; $i < $count; $i++) {
+            $return[] = $this->generateSettlement();
+        }
+
+        return $return;
+    }
+
+    private function generateSettlement()
+    {
+        return array(
+            'type' => Random::value(SettlementType::getValidValues()),
+            'amount' => array(
+                'value' => round(Random::float(1.00, 100.00), 2),
+                'currency' => 'RUB',
+            ),
         );
     }
 }

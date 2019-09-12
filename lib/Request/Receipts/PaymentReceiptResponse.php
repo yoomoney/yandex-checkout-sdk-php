@@ -39,6 +39,8 @@ use YandexCheckout\Helpers\TypeCast;
  */
 class PaymentReceiptResponse extends AbstractReceiptResponse
 {
+    const LENGTH_PAYMENT_ID = 36;
+
     private $_payment_id;
 
     /**
@@ -50,7 +52,7 @@ class PaymentReceiptResponse extends AbstractReceiptResponse
      */
     public function setSpecificProperties($receiptData)
     {
-        $this->setPaymentId(!empty($receiptData['payment_id']) ? $receiptData['payment_id'] : null);
+        $this->setPaymentId($this->getObjectId());
     }
 
     /**

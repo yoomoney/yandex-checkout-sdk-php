@@ -14,8 +14,6 @@ use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\PaymentStatus;
 
-require_once __DIR__ . '/AbstractNotificationTest.php';
-
 class NotificationWaitingForCaptureTest extends AbstractNotificationTest
 {
     /**
