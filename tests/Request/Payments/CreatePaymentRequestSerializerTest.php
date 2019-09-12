@@ -74,6 +74,9 @@ class CreatePaymentRequestSerializerTest extends TestCase
             $expected['confirmation'] = array(
                 'type' => $options['confirmation']->getType(),
             );
+            if ($locale = $options['confirmation']->getLocale()) {
+                $expected['confirmation']['locale'] = $locale;
+            }
             if ($options['confirmation']->getType() === ConfirmationType::REDIRECT) {
                 $expected['confirmation']['enforce']    = $options['confirmation']->enforce;
                 $expected['confirmation']['return_url'] = $options['confirmation']->returnUrl;
@@ -184,6 +187,10 @@ class CreatePaymentRequestSerializerTest extends TestCase
         self::assertEquals($expected, $data);
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function validDataProvider()
     {
         $airline = new Airline();
@@ -291,6 +298,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
         ));
         $paymentData[10] = $paymentDataB2bSberbank;
 
+        $confirmations[0]->setLocale('en_US');
         $confirmations[1]->setEnforce(true);
         $confirmations[1]->setReturnUrl(Random::str(10));
         foreach ($paymentData as $i => $paymentMethodData) {
@@ -307,7 +315,7 @@ class CreatePaymentRequestSerializerTest extends TestCase
                 'clientIp'          => long2ip(mt_rand(0, pow(2, 32))),
                 'metadata'          => array('test' => uniqid()),
                 'receipt' => array(
-                    'items' => $this->getReceipt($i + 1),
+                    'items' => $this->getReceiptItem($i + 1),
                     'customer' => array(
                         'email' => Random::str(10),
                         'phone' => Random::str(12, '0123456789'),
@@ -322,7 +330,12 @@ class CreatePaymentRequestSerializerTest extends TestCase
         return $result;
     }
 
-    private function getReceipt($count)
+    /**
+     * @param $count
+     * @return array
+     * @throws \Exception
+     */
+    private function getReceiptItem($count)
     {
         $result = array();
         for ($i = 0; $i < $count; $i++) {

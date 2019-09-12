@@ -5,8 +5,6 @@ namespace Tests\YandexCheckout\Model\PaymentData;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\PaymentData\PaymentDataApplePay;
 
-require_once __DIR__ . '/AbstractPaymentDataTest.php';
-
 abstract class AbstractPaymentDataApplePayTest extends AbstractPaymentDataTest
 {
     /**

@@ -39,11 +39,18 @@ namespace YandexCheckout\Model;
 interface ReceiptInterface
 {
     /**
+     * Возвращает Id объекта чека
+     *
+     * @return string Id объекта чека
+     */
+    public function getObjectId();
+
+    /**
      * Возвращает информацию о плательщике
      *
      * @return ReceiptCustomerInterface Информация о плательщике
      */
-    function getCustomer();
+    public function getCustomer();
 
     /**
      * Возвращает телефон плательщика
@@ -51,7 +58,7 @@ interface ReceiptInterface
      * @deprecated
      * @return string Телефон плательщика
      */
-    function getPhone();
+    public function getPhone();
 
     /**
      * Возвращает email плательщика
@@ -59,26 +66,33 @@ interface ReceiptInterface
      * @deprecated
      * @return string Email плательщика
      */
-    function getEmail();
+    public function getEmail();
 
     /**
      * Возвращает список позиций в текущем чеке
      *
      * @return ReceiptItemInterface[] Список товаров в заказе
      */
-    function getItems();
+    public function getItems();
+
+    /**
+     * Возвращает массив оплат, обеспечивающих выдачу товара.
+     *
+     * @return SettlementInterface[] Массив оплат, обеспечивающих выдачу товара.
+     */
+    public function getSettlements();
 
     /**
      * Возвращает код системы налогообложения
      *
      * @return int Код системы налогообложения. Число 1-6.
      */
-    function getTaxSystemCode();
+    public function getTaxSystemCode();
 
     /**
      * Проверяет есть ли в чеке хотя бы одна позиция
      *
      * @return bool True если чек не пуст, false если в чеке нет ни одной позиции
      */
-    function notEmpty();
+    public function notEmpty();
 }

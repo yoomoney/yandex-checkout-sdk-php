@@ -5,8 +5,6 @@ namespace Tests\YandexCheckout\Model\PaymentData;
 use YandexCheckout\Model\PaymentData\PaymentDataWechat;
 use YandexCheckout\Model\PaymentMethodType;
 
-require_once __DIR__ . '/AbstractPaymentDataTest.php';
-
 class PaymentDataWechatTest extends AbstractPaymentDataTest
 {
     /**

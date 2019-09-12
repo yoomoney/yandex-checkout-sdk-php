@@ -27,7 +27,8 @@
 namespace YandexCheckout\Request\Payments;
 
 use YandexCheckout\Model\AmountInterface;
-use YandexCheckout\Model\Confirmation\ConfirmationRedirect;
+use YandexCheckout\Model\ConfirmationAttributes\AbstractConfirmationAttributes;
+use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesRedirect;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\LegInterface;
 use YandexCheckout\Model\PassengerInterface;
@@ -96,17 +97,8 @@ class CreatePaymentRequestSerializer
             $result['payment_method_data'] = $this->{$method}($request->getPaymentMethodData());
         }
         if ($request->hasConfirmation()) {
-            $result['confirmation'] = array(
-                'type' => $request->getConfirmation()->getType(),
-            );
             $confirmation           = $request->getConfirmation();
-            if ($confirmation->getType() === ConfirmationType::REDIRECT) {
-                /** @var ConfirmationRedirect $confirmation */
-                if ($confirmation->getEnforce()) {
-                    $result['confirmation']['enforce'] = $confirmation->getEnforce();
-                }
-                $result['confirmation']['return_url'] = $confirmation->getReturnUrl();
-            }
+            $result['confirmation'] = $this->serializeConfirmation($confirmation);
         }
         if ($request->hasMetadata()) {
             $result['metadata'] = $request->getMetadata()->toArray();
@@ -153,6 +145,25 @@ class CreatePaymentRequestSerializer
             if (!empty($value)) {
                 $result[$name] = $value;
             }
+        }
+
+        return $result;
+    }
+
+    private function serializeConfirmation(AbstractConfirmationAttributes $confirmation)
+    {
+        $result = array(
+            'type' => $confirmation->getType(),
+        );
+        if ($locale = $confirmation->getLocale()) {
+            $result['locale'] = $locale;
+        }
+        if ($confirmation->getType() === ConfirmationType::REDIRECT) {
+            /** @var ConfirmationAttributesRedirect $confirmation */
+            if ($confirmation->getEnforce()) {
+                $result['enforce'] = $confirmation->getEnforce();
+            }
+            $result['return_url'] = $confirmation->getReturnUrl();
         }
 
         return $result;

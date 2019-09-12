@@ -11,8 +11,6 @@ use YandexCheckout\Model\PaymentData\B2b\Sberbank\VatDataType;
 use YandexCheckout\Model\PaymentData\PaymentDataB2bSberbank;
 use YandexCheckout\Model\PaymentMethodType;
 
-require_once __DIR__.'/AbstractPaymentDataTest.php';
-
 class PaymentDataB2bSberbankTest extends AbstractPaymentDataTest
 {
     /**

@@ -60,6 +60,11 @@ use YandexCheckout\Request\Payments\PaymentsRequest;
 use YandexCheckout\Request\Payments\PaymentsRequestInterface;
 use YandexCheckout\Request\Payments\PaymentsRequestSerializer;
 use YandexCheckout\Request\Payments\PaymentsResponse;
+use YandexCheckout\Request\Receipts\AbstractReceiptResponse;
+use YandexCheckout\Request\Receipts\CreatePostReceiptRequest;
+use YandexCheckout\Request\Receipts\CreatePostReceiptRequestInterface;
+use YandexCheckout\Request\Receipts\CreatePostReceiptRequestSerializer;
+use YandexCheckout\Request\Receipts\ReceiptResponseFactory;
 use YandexCheckout\Request\Receipts\ReceiptsResponse;
 use YandexCheckout\Request\Refunds\CreateRefundRequest;
 use YandexCheckout\Request\Refunds\CreateRefundRequestInterface;
@@ -84,7 +89,7 @@ class Client extends BaseClient
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.4.3';
+    const SDK_VERSION = '1.5.0';
 
     /**
      * Доступные способы оплаты.
@@ -195,7 +200,7 @@ class Client extends BaseClient
      * </ul>
      *
      * @param CreatePaymentRequestInterface|array $payment
-     * @param string $idempotencyKey {@link https://kassa.yandex.ru/docs/checkout-api/?php#idempotentnost}
+     * @param string|null $idempotenceKey {@link https://kassa.yandex.ru/docs/checkout-api/?php#idempotentnost}
      *
      * @return CreatePaymentResponse
      * @throws ApiException
@@ -208,14 +213,14 @@ class Client extends BaseClient
      * @throws UnauthorizedException
      * @throws \Exception
      */
-    public function createPayment($payment, $idempotencyKey = null)
+    public function createPayment($payment, $idempotenceKey = null)
     {
         $path = self::PAYMENTS_PATH;
 
         $headers = array();
 
-        if ($idempotencyKey) {
-            $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotencyKey;
+        if ($idempotenceKey) {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotenceKey;
         } else {
             $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
         }
@@ -714,6 +719,58 @@ class Client extends BaseClient
         }
 
         return $receiptsResponse;
+    }
+
+    /**
+     * @param CreatePostReceiptRequestInterface|array $receipt
+     * @param string|null $idempotenceKey
+     *
+     * @return AbstractReceiptResponse|null
+     *
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws Common\Exceptions\ApiConnectionException
+     * @throws Common\Exceptions\AuthorizeException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     * @throws \Exception
+     */
+    public function createReceipt($receipt, $idempotenceKey = null)
+    {
+        $path = self::RECEIPTS_PATH;
+
+        $headers = array();
+
+        if ($idempotenceKey) {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = $idempotenceKey;
+        } else {
+            $headers[self::IDEMPOTENCY_KEY_HEADER] = UUID::v4();
+        }
+
+        if (is_array($receipt)) {
+            $receipt = CreatePostReceiptRequest::builder()->build($receipt);
+        }
+
+        $serializer     = new CreatePostReceiptRequestSerializer();
+        $serializedData = $serializer->serialize($receipt);
+        $httpBody       = $this->encodeData($serializedData);
+
+        $response = $this->execute($path, HttpVerb::POST, null, $httpBody, $headers);
+
+        $receiptResponse = null;
+        if ($response->getCode() == 200) {
+            $resultArray = $this->decodeData($response);
+            $factory = new ReceiptResponseFactory();
+            $receiptResponse = $factory->factory($resultArray);
+        } else {
+            $this->handleError($response);
+        }
+
+        return $receiptResponse;
     }
 
     /**

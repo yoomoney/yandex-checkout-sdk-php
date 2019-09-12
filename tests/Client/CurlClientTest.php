@@ -6,8 +6,6 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Client\CurlClient;
 use YandexCheckout\Common\HttpVerb;
 
-require_once __DIR__ . '/ClientTest.php';
-
 class CurlClientTest extends TestCase
 {
     public function testConnectionTimeout()

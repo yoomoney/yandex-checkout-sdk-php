@@ -130,6 +130,7 @@ class CurlClient implements ApiClientInterface
      * @throws ApiConnectionException
      * @throws ApiException
      * @throws AuthorizeException
+     * @throws ExtensionNotFoundException
      */
     public function call($path, $method, $queryParams, $httpBody = null, $headers = array())
     {
@@ -480,6 +481,7 @@ class CurlClient implements ApiClientInterface
      * @param $httpBody
      * @param $headers
      * @param $url
+     * @throws ExtensionNotFoundException
      */
     private function prepareCurl($method, $httpBody, $headers, $url)
     {

@@ -1,8 +1,6 @@
 <?php
 
-namespace Common\Exceptions;
-
-require_once __DIR__ . '/ApiExceptionTest.php';
+namespace Tests\YandexCheckout\Common\Exceptions;
 
 abstract class AbstractApiRequestExceptionTest extends ApiExceptionTest
 {

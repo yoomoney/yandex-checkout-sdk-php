@@ -2,6 +2,8 @@
 
 namespace Tests\YandexCheckout\Request\Payments;
 
+use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
@@ -20,6 +22,12 @@ use YandexCheckout\Request\Payments\CreatePaymentRequestBuilder;
 
 class CreatePaymentRequestBuilderTest extends TestCase
 {
+    /**
+     * @param null $testingProperty
+     * @param null $paymentType
+     * @return array
+     * @throws Exception
+     */
     protected function getRequiredData($testingProperty = null, $paymentType = null)
     {
         $result = array();
@@ -49,6 +57,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetAccountId($options)
     {
@@ -72,6 +81,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetProductGroupId($options)
     {
@@ -95,6 +105,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetAmount($options)
     {
@@ -132,7 +143,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @dataProvider invalidAmountDataProvider
      *
      * @param $value
@@ -147,6 +158,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetCurrency($options)
     {
@@ -173,6 +185,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetReceiptItems($options)
     {
@@ -194,6 +207,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testAddReceiptItems($options)
     {
@@ -228,6 +242,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testAddReceiptShipping($options)
     {
@@ -258,7 +273,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidItemsDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param $items
      */
@@ -333,6 +348,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetReceiptEmail($options)
     {
@@ -352,7 +368,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidEmailDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param $value
      */
@@ -366,6 +382,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetReceiptPhone($options)
     {
@@ -386,7 +403,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidPhoneDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param $value
      */
@@ -400,6 +417,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetReceiptTaxSystemCode($options)
     {
@@ -420,7 +438,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidVatIdDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param $value
      */
@@ -434,6 +452,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetPaymentToken($options)
     {
@@ -468,6 +487,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetPaymentMethodId($options)
     {
@@ -490,6 +510,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetPaymentData($options)
     {
@@ -526,6 +547,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetConfirmationAttributes($options)
     {
@@ -546,6 +568,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
                 self::assertEquals($options['confirmation'], $instance->getConfirmation()->getType());
             } else {
                 self::assertEquals($options['confirmation']['type'], $instance->getConfirmation()->getType());
+                self::assertEquals($options['confirmation']['locale'], $instance->getConfirmation()->getLocale());
             }
         }
 
@@ -562,6 +585,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetCreateRecurring($options)
     {
@@ -584,6 +608,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetCapture($options)
     {
@@ -606,6 +631,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetClientIp($options)
     {
@@ -628,6 +654,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetMetadata($options)
     {
@@ -650,6 +677,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetRecipient($options)
     {
@@ -675,7 +703,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidRecipientDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param mixed $value
      */
@@ -698,6 +726,9 @@ class CreatePaymentRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSetReceipt()
     {
         $receipt = array(
@@ -742,7 +773,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidReceiptDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param mixed $value
      */
@@ -765,6 +796,10 @@ class CreatePaymentRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function validDataProvider()
     {
         $receiptItem = new ReceiptItem();
@@ -841,6 +876,11 @@ class CreatePaymentRequestBuilderTest extends TestCase
             ConfirmationType::EXTERNAL,
             array(
                 'type' => ConfirmationType::EXTERNAL,
+                'locale' => 'en_US',
+            ),
+            array(
+                'type' => ConfirmationType::QR,
+                'locale' => 'ru_RU',
             ),
         );
         for ($i = 0; $i < 10; $i++) {
@@ -871,6 +911,9 @@ class CreatePaymentRequestBuilderTest extends TestCase
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function invalidAmountDataProvider()
     {
         return array(
@@ -882,6 +925,9 @@ class CreatePaymentRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function invalidEmailDataProvider()
     {
         return array(
@@ -892,6 +938,10 @@ class CreatePaymentRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function invalidPhoneDataProvider()
     {
         return array(
@@ -905,6 +955,10 @@ class CreatePaymentRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function invalidVatIdDataProvider()
     {
         return array(
@@ -923,6 +977,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws Exception
      */
     public function testSetDescription($options)
     {
@@ -939,7 +994,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testSetInvalidTypeDescription()
     {
@@ -948,7 +1003,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testSetInvalidLengthDescription()
     {
@@ -959,7 +1014,7 @@ class CreatePaymentRequestBuilderTest extends TestCase
 
     /**
      * @dataProvider invalidVatIdDataProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      *
      * @param $value
      */

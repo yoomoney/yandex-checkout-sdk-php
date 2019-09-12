@@ -9,7 +9,9 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionMethod;
 use YandexCheckout\Client;
+use YandexCheckout\Common\Exceptions\ApiConnectionException;
 use YandexCheckout\Common\Exceptions\ApiException;
+use YandexCheckout\Common\Exceptions\AuthorizeException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
 use YandexCheckout\Common\Exceptions\ForbiddenException;
 use YandexCheckout\Common\Exceptions\InternalServerError;
@@ -21,6 +23,14 @@ use YandexCheckout\Common\Exceptions\UnauthorizedException;
 use YandexCheckout\Common\LoggerWrapper;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
+use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\MonetaryAmount;
+use YandexCheckout\Model\Receipt\ReceiptItemAmount;
+use YandexCheckout\Model\Receipt\SettlementType;
+use YandexCheckout\Model\ReceiptCustomer;
+use YandexCheckout\Model\ReceiptItem;
+use YandexCheckout\Model\ReceiptType;
+use YandexCheckout\Model\Settlement;
 use YandexCheckout\Request\PaymentOptionsRequest;
 use YandexCheckout\Request\PaymentOptionsResponse;
 use YandexCheckout\Request\PaymentOptionsResponseItem;
@@ -32,6 +42,8 @@ use YandexCheckout\Request\Payments\Payment\CreateCaptureResponse;
 use YandexCheckout\Request\Payments\PaymentResponse;
 use YandexCheckout\Request\Payments\PaymentsRequest;
 use YandexCheckout\Request\Payments\PaymentsResponse;
+use YandexCheckout\Request\Receipts\AbstractReceiptResponse;
+use YandexCheckout\Request\Receipts\CreatePostReceiptRequest;
 use YandexCheckout\Request\Refunds\CreateRefundRequest;
 use YandexCheckout\Request\Refunds\CreateRefundResponse;
 use YandexCheckout\Request\Refunds\RefundResponse;
@@ -1193,6 +1205,195 @@ class ClientTest extends TestCase
         self::assertTrue($response instanceof CreatePaymentResponse);
         self::assertEquals("canceled", $response->getStatus());
         self::assertEquals("general_decline", $response->getCancellationDetails()->getReason());
+    }
+
+    /**
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     * @throws ApiConnectionException
+     * @throws AuthorizeException
+     */
+    public function testCreateReceipt()
+    {
+        // Create Receipt via object
+        $receipt = $this->createReceiptViaObject();
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                $this->getFixtures('createReceiptFixtures.json'),
+                array('http_code' => 200)
+            ));
+
+        $apiClient = new Client();
+        $response = $apiClient
+            ->setApiClient($curlClientStub)
+            ->setAuth('shopId', 'shopPassword')
+            ->createReceipt($receipt);
+
+        self::assertSame($curlClientStub, $apiClient->getApiClient());
+        self::assertTrue($response instanceof AbstractReceiptResponse);
+
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                $this->getFixtures('createReceiptFixtures.json'),
+                array('http_code' => 200)
+            ));
+
+        // Create Receipt via array
+        $receipt = $this->createReceiptViaArray();
+        $apiClient = new Client();
+        $response = $apiClient
+            ->setApiClient($curlClientStub)
+            ->setAuth('shopId', 'shopPassword')
+            ->createReceipt($receipt, 123);
+
+        self::assertSame($curlClientStub, $apiClient->getApiClient());
+        self::assertTrue($response instanceof AbstractReceiptResponse);
+
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->any())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                '{"type":"error","code":"request_accepted","retry_after":1800}',
+                array('http_code' => 202)
+            ));
+
+        try {
+            $response = $apiClient
+                ->setApiClient($curlClientStub)
+                ->setAuth('shopId', 'shopPassword')
+                ->createReceipt($receipt, 123);
+            self::fail('Исключение не было выброшено');
+        } catch (ApiException $e) {
+            self::assertInstanceOf('YandexCheckout\Common\Exceptions\ResponseProcessingException', $e);
+            return;
+        }
+
+        $curlClientStub = $this->getCurlClientStub();
+        $curlClientStub
+            ->expects($this->any())
+            ->method('sendRequest')
+            ->willReturn(array(
+                array('Header-Name' => 'HeaderValue'),
+                '{"type":"error","code":"request_accepted"}',
+                array('http_code' => 202)
+            ));
+
+        try {
+            $apiClient->setRetryTimeout(0);
+            $response = $apiClient
+                ->setApiClient($curlClientStub)
+                ->setAuth('shopId', 'shopPassword')
+                ->createReceipt($receipt, 123);
+            self::fail('Исключение не было выброшено');
+        } catch (ResponseProcessingException $e) {
+            self::assertEquals(Client::DEFAULT_DELAY, $e->retryAfter);
+            return;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function createReceiptViaArray()
+    {
+        return array(
+            'customer' => array(
+                'full_name' => 'Иванов Иван Иванович',
+                'inn' => '6321341814',
+                'email' => 'johndoe@yandex.ru',
+                'phone' => '79000000000'
+            ),
+            'items' => array(
+                array(
+                    'description' => 'string',
+                    'quantity' => 1,
+                    'amount' => array(
+                        'value' => '10.00',
+                        'currency' => 'RUB'
+                    ),
+                    'vat_code' => 1,
+                    'payment_subject' => 'commodity',
+                    'payment_mode' => 'full_prepayment',
+                    'product_code' => '00 00 00 01 00 21 FA 41 00 23 05 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 12 00 AB 00',
+                    'country_of_origin_code' => 'RU',
+                    'customs_declaration_number' => '10714040/140917/0090376',
+                    'excise' => '20.00'
+                )
+            ),
+            'tax_system_code' => 1,
+            'type' => 'payment',
+            'send' => true,
+            'settlements' => array(
+                array(
+                    'type' => 'cashless',
+                    'amount' => array(
+                        'value' => '10.00',
+                        'currency' => 'RUB'
+                    )
+                )
+            ),
+            'payment_id' => '1da5c87d-0984-50e8-a7f3-8de646dd9ec9'
+        );
+    }
+
+    /**
+     * @return CreatePostReceiptRequest
+     */
+    private function createReceiptViaObject()
+    {
+        $customer = new ReceiptCustomer(array(
+            'full_name' => 'Иванов Иван Иванович',
+            'inn' => '6321341814',
+            'email' => 'johndoe@yandex.ru',
+            'phone' => '79000000000'
+        ));
+        $settlement = new Settlement(array(
+            'type' => 'cashless',
+            'amount' => array(
+                'value' => '10.00',
+                'currency' => 'RUB'
+            )
+        ));
+        $receiptItem = new ReceiptItem(array(
+            'description' => 'string',
+            'quantity' => 1,
+            'amount' => array(
+                'value' => '10.00',
+                'currency' => 'RUB'
+            ),
+            'vat_code' => 1,
+            'payment_subject' => 'commodity',
+            'payment_mode' => 'full_prepayment',
+            'product_code' => '00 00 00 01 00 21 FA 41 00 23 05 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 12 00 AB 00',
+            'country_of_origin_code' => 'RU',
+            'customs_declaration_number' => '10714040/140917/0090376',
+            'excise' => '20.00'
+        ));
+
+        return CreatePostReceiptRequest::builder()
+            ->setCustomer($customer)
+            ->setType(ReceiptType::PAYMENT)
+            ->setObjectId('1da5c87d-0984-50e8-a7f3-8de646dd9ec9')
+            ->setSend(true)
+            ->setSettlements(array($settlement))
+            ->setItems(array($receiptItem))
+            ->build();
     }
 
     /**

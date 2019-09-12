@@ -5,8 +5,6 @@ namespace Tests\YandexCheckout\Model\PaymentData;
 use YandexCheckout\Model\PaymentData\PaymentDataGooglePay;
 use YandexCheckout\Model\PaymentMethodType;
 
-require_once __DIR__ . '/AbstractPaymentDataGooglePayTest.php';
-
 class PaymentDataGooglePayTest extends AbstractPaymentDataGooglePayTest
 {
     /**

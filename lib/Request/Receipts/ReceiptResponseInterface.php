@@ -26,6 +26,8 @@
 
 namespace YandexCheckout\Request\Receipts;
 
+use YandexCheckout\Model\SettlementInterface;
+
 /**
  * Interface ReceiptInterface
  *
@@ -39,6 +41,7 @@ namespace YandexCheckout\Request\Receipts;
  * @property-read int $taxSystemCode Код системы налогообложения. Число 1-6.
  * @property-read int $tax_system_code Код системы налогообложения. Число 1-6.
  * @property-read ReceiptResponseItemInterface[] $items Список товаров в заказе
+ * @property-read SettlementInterface[] $settlements Список товаров в заказе
  */
 interface ReceiptResponseInterface
 {
@@ -79,11 +82,18 @@ interface ReceiptResponseInterface
     public function getTaxSystemCode();
 
     /**
-     * Возвращает
+     * Возвращает список товаров в заказ
      *
      *  @return ReceiptResponseItemInterface[]
      */
     public function getItems();
+
+    /**
+     * Возвращает список расчетов
+     *
+     *  @return SettlementInterface[]
+     */
+    public function getSettlements();
 
     /**
      * Проверяет есть ли в чеке хотя бы одна позиция
