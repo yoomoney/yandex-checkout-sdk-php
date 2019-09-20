@@ -35,6 +35,7 @@ use YandexCheckout\Client;
  */
 class UserAgent
 {
+    const HEADER            = 'YM-User-Agent';
     const VERSION_DELIMITER = '/';
     const PART_DELIMITER    = ' ';
 
@@ -216,9 +217,11 @@ class UserAgent
 
         if ($files = glob('/etc/*elease')) {
             foreach ($files as $file) {
-                $lines = array_filter(array_map(array($this, 'callbackSmartLinux'), file($file)));
-                foreach ($lines as $line) {
-                    $vars[$line[0]] = trim($line[1]);
+                if (is_file($file)) {
+                    $lines = array_filter(array_map(array($this, 'callbackSmartLinux'), file($file)));
+                    foreach ($lines as $line) {
+                        $vars[strtoupper($line[0])] = trim($line[1]);
+                    }
                 }
             }
 
@@ -255,8 +258,10 @@ class UserAgent
 
         if ($files = glob('/etc/*elease')) {
             foreach ($files as $file) {
-                $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
-                $vars = array_merge($vars, array_shift($data));
+                if (is_file($file)) {
+                    $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
+                    $vars = array_merge($vars, array_shift($data));
+                }
             }
         }
 
