@@ -134,11 +134,11 @@ class CurlClient implements ApiClientInterface
      */
     public function call($path, $method, $queryParams, $httpBody = null, $headers = array())
     {
+        $headers = $this->prepareHeaders($headers);
+
         $this->logRequestParams($path, $method, $queryParams, $httpBody, $headers);
 
         $url = $this->prepareUrl($path, $queryParams);
-
-        $headers = $this->prepareHeaders($headers);
 
         $this->prepareCurl($method, $httpBody, $headers, $url);
 

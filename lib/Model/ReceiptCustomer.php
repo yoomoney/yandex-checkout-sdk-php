@@ -120,7 +120,6 @@ class ReceiptCustomer extends AbstractObject implements ReceiptCustomerInterface
      * @param string $value Номер телефона плательщика в формате ITU-T E.164
      *
      * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве значения была передана не строка
-     * @throws InvalidPropertyValueException Выбрасывается если телефон не соответствует формату ITU-T E.164
      */
     public function setPhone($value)
     {
@@ -128,8 +127,6 @@ class ReceiptCustomer extends AbstractObject implements ReceiptCustomerInterface
             $this->_phone = null;
         } elseif (!TypeCast::canCastToString($value)) {
             throw new InvalidPropertyValueTypeException('Invalid phone value type', 0, 'receipt.customer.phone');
-        } elseif (!preg_match('/^[0-9]{4,15}$/', (string)$value)) {
-            throw new InvalidPropertyValueException('Invalid phone value: "'.$value.'"', 0, 'receipt.customer.phone');
         } else {
             $this->_phone = (string)$value;
         }
