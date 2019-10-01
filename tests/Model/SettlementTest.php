@@ -71,6 +71,10 @@ class SettlementTest extends TestCase
         $this->getTestInstance()->setType($value);
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function validDataProvider()
     {
         $result = array();
@@ -78,7 +82,7 @@ class SettlementTest extends TestCase
             $result[] = array(
                 'type' => Random::value(SettlementType::getValidValues()),
                 'amount' => array(
-                    'value' => round(Random::float(0.1, 99.99), 2),
+                    'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
                     'currency' => Random::value(CurrencyCode::getValidValues())
                 )
             );

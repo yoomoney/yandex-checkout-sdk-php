@@ -339,13 +339,9 @@ class ReceiptTest extends TestCase
     {
         return array(
             array(new \stdClass()),
-            array('invalid_value'),
-            array(324),
-            array(0),
+            array(array()),
             array(true),
             array(false),
-            array(1.43),
-            array(7),
         );
     }
 

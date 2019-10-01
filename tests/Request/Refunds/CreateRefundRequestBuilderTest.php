@@ -38,6 +38,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetAmountValue($options)
     {
@@ -79,6 +80,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetAmountCurrency($options)
     {
@@ -96,6 +98,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetComment($options)
     {
@@ -146,6 +149,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetReceiptItems($options)
     {
@@ -167,6 +171,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testAddReceiptItems($options)
     {
@@ -199,6 +204,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testAddReceiptShipping($options)
     {
@@ -240,7 +246,7 @@ class CreateRefundRequestBuilderTest extends TestCase
     }
 
     /**
-     *
+     * @throws \Exception
      */
     public function testSetReceipt()
     {
@@ -296,6 +302,9 @@ class CreateRefundRequestBuilderTest extends TestCase
         $builder->setReceipt($value);
     }
 
+    /**
+     * @return array
+     */
     public function invalidReceiptDataProvider()
     {
         return array(
@@ -309,6 +318,9 @@ class CreateRefundRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function invalidItemsDataProvider()
     {
         return array(
@@ -374,6 +386,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetReceiptEmail($options)
     {
@@ -407,6 +420,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetReceiptPhone($options)
     {
@@ -441,6 +455,7 @@ class CreateRefundRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      *
      * @param $options
+     * @throws \Exception
      */
     public function testSetReceiptTaxSystemCode($options)
     {
@@ -472,6 +487,10 @@ class CreateRefundRequestBuilderTest extends TestCase
     }
 
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function validDataProvider()
     {
         $result = array(
@@ -533,6 +552,10 @@ class CreateRefundRequestBuilderTest extends TestCase
         return $result;
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     private function getRequiredData()
     {
         return array(
@@ -541,6 +564,9 @@ class CreateRefundRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function invalidEmailDataProvider()
     {
         return array(
@@ -551,19 +577,23 @@ class CreateRefundRequestBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function invalidPhoneDataProvider()
     {
         return array(
+            array(new \stdClass()),
             array(array()),
             array(true),
             array(false),
-            array(new \stdClass()),
-            array(Random::str(1, '0123456789')),
-            array(Random::str(32)),
-            array(Random::str(18, '0123456789')),
         );
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function invalidVatIdDataProvider()
     {
         return array(
