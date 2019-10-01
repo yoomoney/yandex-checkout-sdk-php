@@ -26,10 +26,13 @@
 
 namespace YandexCheckout;
 
+use Exception;
 use InvalidArgumentException;
 use YandexCheckout\Client\BaseClient;
 use YandexCheckout\Common\Exceptions\ApiException;
+use YandexCheckout\Common\Exceptions\AuthorizeException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
+use YandexCheckout\Common\Exceptions\ExtensionNotFoundException;
 use YandexCheckout\Common\Exceptions\ForbiddenException;
 use YandexCheckout\Common\Exceptions\InternalServerError;
 use YandexCheckout\Common\Exceptions\NotFoundException;
@@ -89,50 +92,7 @@ class Client extends BaseClient
     /**
      * Текущая версия библиотеки
      */
-    const SDK_VERSION = '1.5.1';
-
-    /**
-     * Доступные способы оплаты.
-     * Используйте этот метод, чтобы получить способы оплаты и сценарии, доступные для вашего заказа.
-     *
-     * @param PaymentOptionsRequestInterface|array $paymentOptionsRequest
-     *
-     * @return PaymentOptionsResponse
-     * @throws ApiException
-     * @throws BadApiRequestException
-     * @throws ForbiddenException
-     * @throws InternalServerError
-     * @throws NotFoundException
-     * @throws ResponseProcessingException
-     * @throws TooManyRequestsException
-     * @throws UnauthorizedException
-     */
-    public function getPaymentOptions($paymentOptionsRequest = null)
-    {
-        $path = "/payment_options";
-
-        if ($paymentOptionsRequest === null) {
-            $queryParams = array();
-        } else {
-            if (is_array($paymentOptionsRequest)) {
-                $paymentOptionsRequest = PaymentOptionsRequest::builder()->build($paymentOptionsRequest);
-            }
-            $serializer  = new PaymentOptionsRequestSerializer();
-            $queryParams = $serializer->serialize($paymentOptionsRequest);
-        }
-
-        $response = $this->execute($path, HttpVerb::GET, $queryParams);
-
-        $result = null;
-        if ($response->getCode() == 200) {
-            $responseArray = $this->decodeData($response);
-            $result        = new PaymentOptionsResponse($responseArray);
-        } else {
-            $this->handleError($response);
-        }
-
-        return $result;
-    }
+    const SDK_VERSION = '1.5.2';
 
     /**
      * Получить список платежей магазина.
@@ -148,6 +108,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getPayments($filter = null)
     {
@@ -174,6 +135,50 @@ class Client extends BaseClient
         }
 
         return $paymentResponse;
+    }
+
+    /**
+     * Доступные способы оплаты.
+     * Используйте этот метод, чтобы получить способы оплаты и сценарии, доступные для вашего заказа.
+     *
+     * @param PaymentOptionsRequestInterface|array $paymentOptionsRequest
+     *
+     * @return PaymentOptionsResponse
+     * @throws ApiException
+     * @throws BadApiRequestException
+     * @throws ForbiddenException
+     * @throws InternalServerError
+     * @throws NotFoundException
+     * @throws ResponseProcessingException
+     * @throws TooManyRequestsException
+     * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
+     */
+    public function getPaymentOptions($paymentOptionsRequest = null)
+    {
+        $path = "/payment_options";
+
+        if ($paymentOptionsRequest === null) {
+            $queryParams = array();
+        } else {
+            if (is_array($paymentOptionsRequest)) {
+                $paymentOptionsRequest = PaymentOptionsRequest::builder()->build($paymentOptionsRequest);
+            }
+            $serializer  = new PaymentOptionsRequestSerializer();
+            $queryParams = $serializer->serialize($paymentOptionsRequest);
+        }
+
+        $response = $this->execute($path, HttpVerb::GET, $queryParams);
+
+        $result = null;
+        if ($response->getCode() == 200) {
+            $responseArray = $this->decodeData($response);
+            $result        = new PaymentOptionsResponse($responseArray);
+        } else {
+            $this->handleError($response);
+        }
+
+        return $result;
     }
 
     /**
@@ -211,7 +216,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createPayment($payment, $idempotenceKey = null)
     {
@@ -261,6 +266,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getPaymentInfo($paymentId)
     {
@@ -311,7 +317,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function capturePayment($captureRequest, $paymentId, $idempotencyKey = null)
     {
@@ -373,7 +379,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function cancelPayment($paymentId, $idempotencyKey = null)
     {
@@ -420,6 +426,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getRefunds($filter = null)
     {
@@ -467,7 +474,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createRefund($request, $idempotencyKey = null)
     {
@@ -515,6 +522,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getRefundInfo($refundId)
     {
@@ -550,14 +558,14 @@ class Client extends BaseClient
      *
      * @throws ApiException
      * @throws BadApiRequestException
-     * @throws Common\Exceptions\AuthorizeException
+     * @throws AuthorizeException
      * @throws ForbiddenException
      * @throws InternalServerError
      * @throws NotFoundException
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function addWebhook($request, $idempotencyKey = null)
     {
@@ -613,7 +621,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeWebhook($webhookId, $idempotencyKey = null)
     {
@@ -654,6 +662,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getWebhooks()
     {
@@ -687,6 +696,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function getReceipts($filter = null)
     {
@@ -737,7 +747,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createReceipt($receipt, $idempotenceKey = null)
     {
@@ -788,6 +798,7 @@ class Client extends BaseClient
      * @throws ResponseProcessingException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function me()
     {

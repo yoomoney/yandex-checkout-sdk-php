@@ -213,7 +213,7 @@ class ReceiptItemAmount extends AbstractObject implements AmountInterface
     public function jsonSerialize()
     {
         return array(
-            'value' => $this->_value / 100.0,
+            'value' => sprintf('%.2f',$this->_value / 100.0),
             'currency' => $this->_currency,
         );
     }

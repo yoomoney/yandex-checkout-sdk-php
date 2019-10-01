@@ -246,7 +246,6 @@ class Receipt extends AbstractObject implements ReceiptInterface
      * @param string $value Номер телефона плательщика в формате ITU-T E.164
      *
      * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве значения была передана не строка
-     * @throws InvalidPropertyValueException Выбрасывается если телефон не соответствует формату ITU-T E.164
      */
     public function setPhone($value)
     {

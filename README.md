@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php.svg?branch=master)](https://travis-ci.org/yandex-money/yandex-checkout-sdk-php)
 [![Latest Stable Version](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/v/stable)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
 [![Total Downloads](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/downloads)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
+[![Monthly Downloads](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/d/monthly)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
 [![License](https://poser.pugx.org/yandex-money/yandex-checkout-sdk-php/license)](https://packagist.org/packages/yandex-money/yandex-checkout-sdk-php)
 
 Russian | [English](https://github.com/yandex-money/yandex-checkout-sdk-php/blob/master/README.en.md)

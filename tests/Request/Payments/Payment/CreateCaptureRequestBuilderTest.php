@@ -524,13 +524,10 @@ class CreateCaptureRequestBuilderTest extends TestCase
     public function invalidPhoneDataProvider()
     {
         return array(
+            array(new \stdClass()),
             array(array()),
             array(true),
             array(false),
-            array(new \stdClass()),
-            array(Random::str(1, '0123456789')),
-            array(Random::str(32)),
-            array(Random::str(18, '0123456789')),
         );
     }
 
