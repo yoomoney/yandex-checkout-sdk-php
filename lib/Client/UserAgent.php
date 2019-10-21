@@ -219,8 +219,10 @@ class UserAgent
             foreach ($files as $file) {
                 if (is_file($file)) {
                     $lines = array_filter(array_map(array($this, 'callbackSmartLinux'), file($file)));
-                    foreach ($lines as $line) {
-                        $vars[strtoupper($line[0])] = trim($line[1]);
+                    if (is_array($lines)) {
+                        foreach ($lines as $line) {
+                            $vars[strtoupper($line[0])] = trim($line[1]);
+                        }
                     }
                 }
             }
@@ -260,7 +262,10 @@ class UserAgent
             foreach ($files as $file) {
                 if (is_file($file)) {
                     $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
-                    $vars = array_merge($vars, array_shift($data));
+                    $array = array_shift($data);
+                    if (!empty($array)) {
+                        $vars = array_merge($vars, array_shift($data));
+                    }
                 }
             }
         }
