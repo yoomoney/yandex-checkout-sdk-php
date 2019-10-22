@@ -262,9 +262,11 @@ class UserAgent
             foreach ($files as $file) {
                 if (is_file($file)) {
                     $data = array_map(array($this, 'callbackSimpleLinux'), file($file));
-                    $array = array_shift($data);
-                    if (!empty($array)) {
-                        $vars = array_merge($vars, array_shift($data));
+                    if (!empty($data)) {
+                        $array = array_shift($data);
+                        if (!empty($array) && is_array($array)) {
+                            $vars = array_merge($vars, $array);
+                        }
                     }
                 }
             }
