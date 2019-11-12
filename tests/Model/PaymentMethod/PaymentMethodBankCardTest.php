@@ -5,7 +5,6 @@ namespace Tests\YandexCheckout\Model\PaymentMethod;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodBankCard;
-use YandexCheckout\Model\PaymentMethod\PaymentMethodCardType;
 use YandexCheckout\Model\PaymentMethodType;
 
 class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
@@ -261,8 +260,8 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     public function validCardTypeDataProvider()
     {
         $result = array();
-        foreach (PaymentMethodCardType::getValidValues() as $value) {
-            $result[] = array($value);
+        for ($i = 0; $i < 10; $i++) {
+            $result[] = array(Random::str(3, 35));
         }
         return $result;
     }
@@ -341,8 +340,6 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
             array(false),
             array(array()),
             array(new \stdClass()),
-            array(Random::str(1, 10)),
-            array(new StringObject(Random::str(1, 10))),
         );
     }
 

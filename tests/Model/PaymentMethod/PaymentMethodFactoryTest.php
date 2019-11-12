@@ -5,7 +5,6 @@ namespace Tests\YandexCheckout\Model\PaymentMethodTest;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
-use YandexCheckout\Model\PaymentMethod\PaymentMethodCardType;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodFactory;
 use YandexCheckout\Model\PaymentMethodType;
 
@@ -157,7 +156,7 @@ class PaymentMethodFactoryTest extends TestCase
                     'first6'      => Random::str(6, '0123456789'),
                     'expiryYear'  => Random::int(2000, 2200),
                     'expiryMonth' => Random::value(array('01','02','03','04','05','06','07','08','09','10','11','12')),
-                    'cardType'    => Random::value(PaymentMethodCardType::getValidValues()),
+                    'cardType'    => Random::str(3, 10),
                 ),
             ),
             array(
@@ -170,7 +169,7 @@ class PaymentMethodFactoryTest extends TestCase
                     'first6'       => Random::str(6, '0123456789'),
                     'expiry_year'  => Random::int(2000, 2200),
                     'expiry_month' => Random::value(array('01','02','03','04','05','06','07','08','09','10','11','12')),
-                    'card_type'    => Random::value(PaymentMethodCardType::getValidValues()),
+                    'card_type'    => Random::str(3, 10),
                 ),
             ),
             array(
