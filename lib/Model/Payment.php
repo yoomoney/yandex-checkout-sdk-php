@@ -67,6 +67,11 @@ class Payment extends AbstractObject implements PaymentInterface
     const MAX_LENGTH_DESCRIPTION = 128;
 
     /**
+     * @var TransferInterface[]
+     */
+    private $_transfers = array();
+
+    /**
      * @var string Идентификатор платежа
      */
     private $_id;
@@ -597,6 +602,32 @@ class Payment extends AbstractObject implements PaymentInterface
     public function setAuthorizationDetails(AuthorizationDetailsInterface $value)
     {
         $this->_authorizationDetails = $value;
+    }
+
+    /**
+     * Устанавливает transfers (массив распределения денег между магазинами)
+     * @param $value
+     */
+    public function setTransfers($value)
+    {
+        if (!is_array($value)) {
+            $message = 'Transfers must be an array of TransferInterface';
+            throw new InvalidPropertyValueTypeException($message, 0, 'Payment.transfers', $value);
+        }
+
+        foreach ($value as $item) {
+            if (! $item instanceof TransferInterface) {
+                $message = 'Transfers must be an array of TransferInterface';
+                throw new InvalidPropertyValueTypeException($message, 0, 'Payment.transfers', $value);
+            }
+        }
+
+        $this->_transfers = $value;
+    }
+
+    public function getTransfers()
+    {
+        return $this->_transfers;
     }
 
     /**

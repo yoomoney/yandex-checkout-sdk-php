@@ -152,4 +152,10 @@ interface PaymentInterface
      * @since 1.0.18
      */
     public function getAuthorizationDetails();
+
+    /**
+     * Возвращает данные о распределении платежа между магазинами
+     * @return TransferInterface[]
+     */
+    public function getTransfers();
 }
