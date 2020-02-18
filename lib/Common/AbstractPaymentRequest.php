@@ -37,6 +37,7 @@ use YandexCheckout\Model\TransferInterface;
  *
  * @property AmountInterface $amount Сумма
  * @property ReceiptInterface $receipt Данные фискального чека 54-ФЗ
+ * @property TransferInterface[] $transfers Данные о распределении платежа между магазинами
  *
  * @since 1.0.18
  */

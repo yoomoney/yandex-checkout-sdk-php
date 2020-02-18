@@ -61,6 +61,7 @@ use YandexCheckout\Model\PaymentMethod\AbstractPaymentMethod;
  * @property CancellationDetailsInterface $cancellation_details Комментарий к отмене платежа
  * @property AuthorizationDetailsInterface $authorizationDetails Данные об авторизации платежа
  * @property AuthorizationDetailsInterface $authorization_details Данные об авторизации платежа
+ * @property TransferInterface[] $transfers Данные о распределении платежа между магазинами
  */
 class Payment extends AbstractObject implements PaymentInterface
 {
