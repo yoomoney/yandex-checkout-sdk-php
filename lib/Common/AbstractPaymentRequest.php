@@ -30,6 +30,7 @@ use YandexCheckout\Common\Exceptions\InvalidPropertyValueTypeException;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\Receipt;
 use YandexCheckout\Model\ReceiptInterface;
+use YandexCheckout\Model\TransferInterface;
 
 /**
  * Класс объекта запроса к API
@@ -50,6 +51,11 @@ class AbstractPaymentRequest extends AbstractRequest
      * @var Receipt Данные фискального чека 54-ФЗ
      */
     protected $_receipt;
+
+    /**
+     * @var TransferInterface[]
+     */
+    protected $_transfers = array();
 
     /**
      * Возвращает сумму оплаты
@@ -119,20 +125,69 @@ class AbstractPaymentRequest extends AbstractRequest
     }
 
     /**
+     * Устанавливает transfers (массив распределения денег между магазинами)
+     * @param $value
+     */
+    public function setTransfers($value)
+    {
+        if (!is_array($value)) {
+            $message = 'Transfers must be an array of TransferInterface';
+            throw new InvalidPropertyValueTypeException($message, 0, 'Payment.transfers', $value);
+        }
+
+        foreach ($value as $item) {
+            if (! $item instanceof TransferInterface) {
+                $message = 'Transfers must be an array of TransferInterface';
+                throw new InvalidPropertyValueTypeException($message, 0, 'Payment.transfers', $value);
+            }
+        }
+
+        $this->_transfers = $value;
+    }
+
+    /**
      * Валидирует объект запроса
      * @return bool True если запрос валиден и его можно отправить в API, false если нет
      */
     public function validate()
     {
-        if ($this->_amount === null) {
-            $this->setValidationError('Payment amount not specified');
+        if ($this->_amount === null && $this->_transfers === array()) {
+            $this->setValidationError('Neither payment amount nor transfer data were not specified');
             return false;
         }
 
-        $value = $this->_amount->getValue();
-        if (empty($value) || $value <= 0.0) {
-            $this->setValidationError('Invalid payment amount value: '.$value);
+        if ($this->_amount !== null && $this->_transfers !== array()) {
+            $this->setValidationError('You must specify either payment amount or transfer data, but not both together');
             return false;
+        }
+
+        if ($this->_amount !== null) {
+            $value = $this->_amount->getValue();
+            if (empty($value) || $value <= 0.0) {
+                $this->setValidationError('Invalid payment amount value: ' . $value);
+                return false;
+            }
+        }
+
+        if ($this->_transfers !== array()) {
+            foreach ($this->_transfers as $transfer) {
+                if ($transfer->getAmount() === null) {
+                    $this->setValidationError('Payment amount not specified');
+                    return false;
+                }
+
+                $value = $transfer->getAmount()->getValue();
+                if (empty($value) || $value <= 0.0) {
+                    $this->setValidationError('Invalid transfer amount value: ' . $value);
+                    return false;
+                }
+
+                $accountId = $transfer->getAccountId();
+                if (empty($accountId)) {
+                    $this->setValidationError('Transfer account id not specified');
+                    return false;
+                }
+            }
         }
 
         if ($this->_receipt !== null && $this->_receipt->notEmpty()) {
