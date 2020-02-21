@@ -20,6 +20,18 @@ class Transfer extends AbstractObject implements TransferInterface
     protected $_amount;
 
     /**
+     * Transfer constructor.
+     *
+     * @param string $accountId
+     * @param AmountInterface $amount
+     */
+    public function __construct($accountId = null, AmountInterface $amount = null)
+    {
+        $this->_account_id = $accountId;
+        $this->_amount = $amount;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setAccountId($value)
