@@ -35,6 +35,8 @@ use YandexCheckout\Model\Receipt\ReceiptItemAmount;
 use YandexCheckout\Model\ReceiptInterface;
 use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Model\ReceiptItemInterface;
+use YandexCheckout\Model\Transfer;
+use YandexCheckout\Model\TransferInterface;
 
 /**
  * Базовый класс объекта платежного запроса, передаваемого в методы клиента API
@@ -56,14 +58,28 @@ abstract class AbstractPaymentRequestBuilder extends AbstractRequestBuilder
     protected $receipt;
 
     /**
+     * @var TransferInterface[] Массив платежей в пользу разных мерчантов
+     */
+    protected $transfers;
+
+    /**
      * @return self
      */
     protected function initCurrentObject()
     {
         $this->amount  = new MonetaryAmount();
         $this->receipt = new Receipt();
+        $this->transfers = [];
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function build(array $options = null)
+    {
+        return parent::build($options);
     }
 
     /**
@@ -84,6 +100,34 @@ abstract class AbstractPaymentRequestBuilder extends AbstractRequestBuilder
             $this->amount->fromArray($value);
         } else {
             $this->amount->setValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает трансферы
+     *
+     * @param AmountInterface|array|string $value Массив трансферов
+     *
+     * @return self Инстанс билдера запросов
+     */
+    public function setTransfers($value)
+    {
+        $value = (array)$value;
+        $this->transfers = [];
+
+        foreach ($value as $item) {
+            $transfer = new Transfer();
+
+            if (is_object($item) && $item instanceof TransferInterface) {
+                $transfer->setAmount($item->getAmount());
+                $transfer->setAccountId($item->getAccountId());
+            } elseif (is_array($item)) {
+                $transfer->fromArray($item);
+            }
+
+            $this->transfers[] = $transfer;
         }
 
         return $this;

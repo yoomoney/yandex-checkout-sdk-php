@@ -152,25 +152,20 @@ class AbstractPaymentRequest extends AbstractRequest
      */
     public function validate()
     {
-        if ($this->_amount === null && $this->_transfers === array()) {
-            $this->setValidationError('Neither payment amount nor transfer data were not specified');
+        if ($this->_amount === null) {
+            $this->setValidationError('Payment amount not specified');
             return false;
         }
 
-        if ($this->_amount !== null && $this->_transfers !== array()) {
-            $this->setValidationError('You must specify either payment amount or transfer data, but not both together');
-            return false;
-        }
+        $value = $this->_amount->getValue();
+        if (empty($value) || $value <= 0.0) {
+            $this->setValidationError('Invalid payment amount value: ' . $value);
 
-        if ($this->_amount !== null) {
-            $value = $this->_amount->getValue();
-            if (empty($value) || $value <= 0.0) {
-                $this->setValidationError('Invalid payment amount value: ' . $value);
-                return false;
-            }
+            return false;
         }
 
         if ($this->_transfers !== array()) {
+            $sum = 0;
             foreach ($this->_transfers as $transfer) {
                 if ($transfer->getAmount() === null) {
                     $this->setValidationError('Payment amount not specified');
@@ -182,12 +177,17 @@ class AbstractPaymentRequest extends AbstractRequest
                     $this->setValidationError('Invalid transfer amount value: ' . $value);
                     return false;
                 }
+                $sum += (float) $value;
 
                 $accountId = $transfer->getAccountId();
                 if (empty($accountId)) {
                     $this->setValidationError('Transfer account id not specified');
                     return false;
                 }
+            }
+
+            if ($sum !== (float) $this->getAmount()->getValue()) {
+                $this->setValidationError('Transfer amount sum does not match top-level amount');
             }
         }
 
@@ -201,5 +201,15 @@ class AbstractPaymentRequest extends AbstractRequest
         }
 
         return true;
+    }
+
+    public function hasTransfers()
+    {
+        return $this->_transfers !== array();
+    }
+
+    public function getTransfers()
+    {
+        return $this->_transfers;
     }
 }
