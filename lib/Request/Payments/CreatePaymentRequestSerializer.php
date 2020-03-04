@@ -349,7 +349,7 @@ class CreatePaymentRequestSerializer
         $result = array();
         foreach ($transfers as $transfer) {
             $result[] = array(
-                'accountId' => $transfer->accountId,
+                'account_id' => $transfer->accountId,
                 'amount' => $this->serializeAmount($transfer->amount)
             );
         }
