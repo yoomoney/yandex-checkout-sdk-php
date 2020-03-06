@@ -28,6 +28,7 @@ namespace YandexCheckout\Request\Payments\Payment;
 
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\ReceiptItem;
+use YandexCheckout\Model\TransferInterface;
 
 /**
  * Класс объекта осуществляющего сериализацию запроса к API на подтверждение заказа
@@ -48,6 +49,9 @@ class CreateCaptureRequestSerializer
         $result = array();
         if ($request->hasAmount()) {
             $result['amount'] = $this->serializeAmount($request->getAmount());
+        }
+        if ($request->hasTransfers()) {
+            $result['transfers'] = $this->serializeTransfers($request->getTransfers());
         }
         if ($request->hasReceipt()) {
             $receipt = $request->getReceipt();
@@ -100,7 +104,7 @@ class CreateCaptureRequestSerializer
             }
         }
 
-        return $result;
+        return $result === array() ? null : $result;
     }
 
     private function serializeAmount(AmountInterface $amount)
@@ -109,5 +113,23 @@ class CreateCaptureRequestSerializer
             'value'    => $amount->getValue(),
             'currency' => $amount->getCurrency(),
         );
+    }
+
+    /**
+     * @param TransferInterface[] $transfers
+     *
+     * @return array
+     */
+    private function serializeTransfers(array $transfers)
+    {
+        $result = array();
+        foreach ($transfers as $transfer) {
+            $result[] = array(
+                'account_id' => $transfer->accountId,
+                'amount' => $this->serializeAmount($transfer->amount)
+            );
+        }
+
+        return $result;
     }
 }
