@@ -28,6 +28,7 @@ namespace YandexCheckout\Request\Refunds;
 
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\ReceiptInterface;
+use YandexCheckout\Model\TransferInterface;
 
 /**
  * Интерфейс объекта запроса на возврат
@@ -45,35 +46,45 @@ interface CreateRefundRequestInterface
      * Возвращает айди платежа для которого создаётся возврат средств
      * @return string Айди платежа для которого создаётся возврат
      */
-    function getPaymentId();
+    public function getPaymentId();
 
     /**
      * Возвращает сумму возвращаемых средств
      * @return AmountInterface Сумма возврата
      */
-    function getAmount();
+    public function getAmount();
 
     /**
      * Возвращает комментарий к возврату или null, если комментарий не задан
      * @return string Комментарий к операции возврата, основание для возврата средств покупателю.
      */
-    function getComment();
+    public function getComment();
 
     /**
      * Проверяет задан ли комментарий к создаваемому возврату
      * @return bool True если комментарий установлен, false если нет
      */
-    function hasComment();
+    public function hasComment();
 
     /**
      * Возвращает инстанс чека или null если чек не задан
      * @return ReceiptInterface|null Инстанс чека или null
      */
-    function getReceipt();
+    public function getReceipt();
+
+    /**
+     * @return bool
+     */
+    public function hasTransfers();
+
+    /**
+     * @return TransferInterface[]
+     */
+    public function getTransfers();
 
     /**
      * Проверяет задан ли чек
      * @return bool True если чек есть, false если нет
      */
-    function hasReceipt();
+    public function hasReceipt();
 }
