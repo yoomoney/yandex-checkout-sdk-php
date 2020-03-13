@@ -429,16 +429,17 @@ class CurlClient implements ApiClientInterface
     {
         if ($this->logger !== null) {
             $message = 'Send request: ' . $method . ' ' . $path;
+            $context = array();
             if (!empty($queryParams)) {
-                $message .= ' with query params: ' . json_encode($queryParams);
+                $context['query_params'] = $queryParams;
             }
             if (!empty($httpBody)) {
-                $message .= ' with body: ' . $httpBody;
+                $context['body'] = $httpBody;
             }
             if (!empty($headers)) {
-                $message .= ' with headers: ' . json_encode($headers);
+                $context['headers'] = $headers;
             }
-            $this->logger->info($message);
+            $this->logger->info($message, $context);
         }
     }
 
@@ -467,12 +468,15 @@ class CurlClient implements ApiClientInterface
     private function logResponse($httpBody, $responseInfo, $httpHeaders)
     {
         if ($this->logger !== null) {
-            $message = 'Response with code ' . $responseInfo['http_code'] . ' received with headers: '
-                     . json_encode($httpHeaders);
+            $message = 'Response with code ' . $responseInfo['http_code'] . ' received.';
+            $context = array();
             if (!empty($httpBody)) {
-                $message .= ' and body: ' . $httpBody;
+                $context['body'] = $httpBody;
             }
-            $this->logger->info($message);
+            if (!empty($httpHeaders)) {
+                $context['headers'] = $httpHeaders;
+            }
+            $this->logger->info($message, $context);
         }
     }
 
