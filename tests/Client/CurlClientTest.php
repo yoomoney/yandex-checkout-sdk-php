@@ -52,12 +52,13 @@ class CurlClientTest extends TestCase
 
     public function testCloseConnection()
     {
-        $wrapped        = new ArrayLogger();
+        $wrapped        = new \Tests\YandexCheckout\Client\ArrayLogger();
         $logger         = new \YandexCheckout\Common\LoggerWrapper($wrapped);
         $curlClientMock = $this->getMockBuilder('YandexCheckout\Client\CurlClient')
                                ->setMethods(array('closeCurlConnection', 'sendRequest'))
                                ->getMock();
         $curlClientMock->setLogger($logger);
+        $curlClientMock->setConfig(array('url' => 'test:url'));
         $curlClientMock->setKeepAlive(false);
         $curlClientMock->setShopId(123);
         $curlClientMock->setShopPassword(234);
