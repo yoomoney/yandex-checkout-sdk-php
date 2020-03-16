@@ -431,13 +431,17 @@ class CurlClient implements ApiClientInterface
             $message = 'Send request: ' . $method . ' ' . $path;
             $context = array();
             if (!empty($queryParams)) {
-                $context['query_params'] = $queryParams;
+                $context['_params'] = $queryParams;
             }
             if (!empty($httpBody)) {
-                $context['body'] = $httpBody;
+                $data = json_decode($httpBody, true);
+                if (JSON_ERROR_NONE !== json_last_error()) {
+                    $data = $httpBody;
+                }
+                $context['_body'] = $data;
             }
             if (!empty($headers)) {
-                $context['headers'] = $headers;
+                $context['_headers'] = $headers;
             }
             $this->logger->info($message, $context);
         }
@@ -475,10 +479,10 @@ class CurlClient implements ApiClientInterface
                 if (JSON_ERROR_NONE !== json_last_error()) {
                     $data = $httpBody;
                 }
-                $context['body'] = $data;
+                $context['_body'] = $data;
             }
             if (!empty($httpHeaders)) {
-                $context['headers'] = $httpHeaders;
+                $context['_headers'] = $httpHeaders;
             }
             $this->logger->info($message, $context);
         }

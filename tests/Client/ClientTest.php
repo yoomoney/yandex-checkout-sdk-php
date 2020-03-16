@@ -13,6 +13,7 @@ use YandexCheckout\Common\Exceptions\ApiConnectionException;
 use YandexCheckout\Common\Exceptions\ApiException;
 use YandexCheckout\Common\Exceptions\AuthorizeException;
 use YandexCheckout\Common\Exceptions\BadApiRequestException;
+use YandexCheckout\Common\Exceptions\ExtensionNotFoundException;
 use YandexCheckout\Common\Exceptions\ForbiddenException;
 use YandexCheckout\Common\Exceptions\InternalServerError;
 use YandexCheckout\Common\Exceptions\JsonException;
@@ -23,10 +24,6 @@ use YandexCheckout\Common\Exceptions\UnauthorizedException;
 use YandexCheckout\Common\LoggerWrapper;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
-use YandexCheckout\Model\CurrencyCode;
-use YandexCheckout\Model\MonetaryAmount;
-use YandexCheckout\Model\Receipt\ReceiptItemAmount;
-use YandexCheckout\Model\Receipt\SettlementType;
 use YandexCheckout\Model\ReceiptCustomer;
 use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Model\ReceiptType;
@@ -63,6 +60,7 @@ class ClientTest extends TestCase
      * @throws NotFoundException
      * @throws TooManyRequestsException
      * @throws UnauthorizedException
+     * @throws ExtensionNotFoundException
      */
     public function testPaymentOptions($paymentOptionsRequest)
     {
