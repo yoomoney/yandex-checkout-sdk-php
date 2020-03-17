@@ -140,7 +140,7 @@ class CurlClient implements ApiClientInterface
 
         $url = $this->prepareUrl($path, $queryParams);
 
-        $this->prepareCurl($method, $httpBody, $headers, $url);
+        $this->prepareCurl($method, $httpBody, $this->implodeHeaders($headers), $url);
 
         list($httpHeaders, $httpBody, $responseInfo) = $this->sendRequest();
 
@@ -410,12 +410,16 @@ class CurlClient implements ApiClientInterface
             throw new AuthorizeException('Authorization headers not set');
         }
 
-        $headers = array_map(function ($key, $value) {
-            return $key . ":" . $value;
-        }, array_keys($headers), $headers);
-
-
         return $headers;
+    }
+
+    /**
+     * @param array $headers
+     * @return array
+     */
+    private function implodeHeaders($headers)
+    {
+        return array_map(function ($key, $value) { return $key . ':' . $value; }, array_keys($headers), $headers);
     }
 
     /**
