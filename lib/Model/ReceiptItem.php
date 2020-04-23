@@ -52,11 +52,28 @@ use YandexCheckout\Model\Receipt\ReceiptItemAmount;
  * @property string $country_of_origin_code Код страны происхождения товара
  * @property string $customsDeclarationNumber Номер таможенной декларации (от 1 до 32 символов)
  * @property string $customs_declaration_number Номер таможенной декларации (от 1 до 32 символов)
+ * @property string $agent_type Тип посредника, реализующего товар или услугу
  * @property float $excise Сумма акциза товара с учетом копеек
  * @property-write bool $isShipping Флаг доставки
  */
 class ReceiptItem extends AbstractObject implements ReceiptItemInterface
 {
+    /**
+     * Тип посредника, реализующего товар или услугу.
+     * Параметр предусмотрен форматом фискальных документов (ФФД) и является обязательным, начиная с версии 1.1
+     *
+     * @var string[]
+     */
+    private $agentTypes = array(
+        'banking_payment_agent', // Банковский платежный агент
+        'banking_payment_subagent', // Банковский платежный субагент
+        'payment_agent', // Платежный агент
+        'payment_subagent', // Платежный субагент
+        'attorney', // Поверенный
+        'commissioner', // Комиссионер
+        'agent', // Агент
+    );
+    
     /**
      * @var string Наименование товара
      */
@@ -107,6 +124,11 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
      */
     private $_excise;
 
+    /**
+     * @var string|null Тип посредника, реализующего товар или услугу. Перечень возможных значений в документации.
+     */
+    private $_agent_type;
+    
     /**
      * @var bool True если текущий айтем доставка, false если нет
      */
@@ -457,6 +479,39 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
     }
 
     /**
+     * Возвращает nип посредника, реализующего товар или услугу
+     * @return string|null Тип посредника, реализующего товар или услугу
+     */
+    public function getAgentType()
+    {
+        return $this->_agent_type;
+    }
+    
+    /**
+     * Устанавливает тип посредника, реализующего товар или услугу
+     *
+     * @param string $value Тип посредника, реализующего товар или услугу
+     *
+     * @throws InvalidPropertyValueTypeException Выбрасывается если в качестве аргумента было передано неправильное значение
+     */
+    public function setAgentType($value)
+    {
+        if ($value === null || $value === '') {
+            $this->_agent_type = null;
+        } elseif (!is_string($value)) {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid agent_type value type', 0, 'ReceiptItem._agent_type', $value
+            );
+        } elseif (!in_array($value, $this->agentTypes)) {
+            throw new InvalidPropertyValueException(
+                'Invalid agent_type value in ReceiptItem', 0, 'ReceiptItem._agent_type', $value
+            );
+        } else {
+            $this->_agent_type = $value;
+        }
+    }
+    
+    /**
      * Устанавливает флаг доставки для текущего объекта айтема в чеке
      *
      * @param bool $value True если айтем является доставкой, false если нет
@@ -595,6 +650,10 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
 
         if ($this->getExcise()) {
             $result['excise'] = $this->getExcise();
+        }
+
+        if ($this->getAgentType()) {
+            $result['agent_type'] = $this->getAgentType();
         }
 
         return $result;

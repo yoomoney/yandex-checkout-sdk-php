@@ -1136,4 +1136,83 @@ class ReceiptItemTest extends TestCase
             array(new \stdClass()),
         );
     }
+    
+    /**
+     * @dataProvider validAgentTypeDataProvider
+     *
+     * @param $value
+     */
+    public function testGetSetAgentType($value)
+    {
+        $instance = $this->getTestInstance();
+        
+        self::assertNull($instance->getAgentType());
+        self::assertNull($instance->agent_type);
+        $instance->setAgentType($value);
+        self::assertEquals((string)$value, $instance->getAgentType());
+        self::assertEquals((string)$value, $instance->agent_type);
+    }
+    
+    /**
+     * @dataProvider validAgentTypeDataProvider
+     *
+     * @param $value
+     */
+    public function testSetterAgentType($value)
+    {
+        $instance = $this->getTestInstance();
+        
+        $instance->agent_type = $value;
+        self::assertEquals((string)$value, $instance->getAgentType());
+        self::assertEquals((string)$value, $instance->agent_type);
+    }
+    
+    public function validAgentTypeDataProvider()
+    {
+        return array(
+            array(null),
+            array(''),
+            array('banking_payment_agent'),
+            array('banking_payment_subagent'),
+            array('payment_agent'),
+            array('payment_subagent'),
+            array('attorney'),
+            array('commissioner'),
+            array('agent'),
+        );
+    }
+    
+    /**
+     * @dataProvider invalidAgentTypeDataProvider
+     * @expectedException \InvalidArgumentException
+     *
+     * @param $value
+     */
+    public function testSetInvalidAgentType($value)
+    {
+        $this->getTestInstance()->setAgentType($value);
+    }
+    
+    /**
+     * @dataProvider invalidAgentTypeDataProvider
+     * @expectedException \InvalidArgumentException
+     *
+     * @param $value
+     */
+    public function testSetterInvalidAgentType($value)
+    {
+        $this->getTestInstance()->agent_type = $value;
+    }
+    
+    public function invalidAgentTypeDataProvider()
+    {
+        return array(
+            array(0.0),
+            array(false),
+            array(Random::float(-100, 100)),
+            array(array()),
+            array(new \stdClass()),
+            array('some_other_text_value')
+        );
+    }
 }

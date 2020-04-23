@@ -118,6 +118,12 @@ interface ReceiptItemInterface
     function getExcise();
 
     /**
+     * Возвращает nип посредника, реализующего товар или услугу
+     * @return string|null Тип посредника, реализующего товар или услугу
+     */
+    function getAgentType();
+    
+    /**
      * Проверяет, является ли текущий элемент чека доставкой
      * @return bool True если доставка, false если обычный товар
      */
