@@ -5,12 +5,14 @@ namespace Tests\YandexCheckout\Request\Payments;
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationAttributes\ConfirmationAttributesExternal;
+use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\Metadata;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\PaymentData\PaymentDataQiwi;
 use YandexCheckout\Model\Receipt;
 use YandexCheckout\Model\ReceiptItem;
 use YandexCheckout\Model\Recipient;
+use YandexCheckout\Model\Transfer;
 use YandexCheckout\Request\Payments\CreatePaymentRequest;
 use YandexCheckout\Request\Payments\CreatePaymentRequestBuilder;
 
@@ -538,6 +540,41 @@ class CreatePaymentRequestTest extends TestCase
             array(true),
             array(false),
         );
+    }
+
+    /**
+     * @dataProvider validTransfers
+     * @param $value
+     */
+    public function testSetTransfer($value)
+    {
+        $instance = new CreatePaymentRequest();
+        $instance->setTransfers($value);
+        if (is_array($value)) {
+            $value = array(new Transfer($value[0]));
+        }
+        self::assertEquals($value, $instance->getTransfers());
+    }
+
+    /**
+     * @return array[]
+     * @throws \Exception
+     */
+    public function validTransfers()
+    {
+        $transfers = array();
+        for($i = 0; $i < 10; $i++) {
+            $transfers[$i][] = array(
+                'account_id' => (string)Random::int(11111111, 99999999),
+                'amount' => array(
+                    'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
+                    'currency' => Random::value(CurrencyCode::getValidValues())
+                )
+            );
+        }
+        $transfers[$i][] = array(new Transfer($transfers[0]));
+
+        return array($transfers);
     }
 
     /**
