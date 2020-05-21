@@ -1108,7 +1108,7 @@ class ClientTest extends TestCase
         $apiClient->setLogger($logger);
 
         $clientMock = $this->getMockBuilder('YandexCheckout\Client\ApiClientInterface')
-            ->setMethods(array('setLogger', 'setConfig', 'call', 'getUserAgent'))
+            ->setMethods(array('setLogger', 'setConfig', 'call', 'setShopId', 'getUserAgent', 'setBearerToken', 'setShopPassword'))
             ->disableOriginalConstructor()
             ->getMock();
         $expectedLoggers = array();
@@ -1390,6 +1390,7 @@ class ClientTest extends TestCase
             ->setObjectId('1da5c87d-0984-50e8-a7f3-8de646dd9ec9')
             ->setSend(true)
             ->setSettlements(array($settlement))
+            ->setOnBehalfOf('545665')
             ->setItems(array($receiptItem))
             ->build();
     }

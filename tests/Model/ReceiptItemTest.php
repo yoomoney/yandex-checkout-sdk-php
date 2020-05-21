@@ -7,10 +7,12 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\Receipt\AgentType;
 use YandexCheckout\Model\Receipt\PaymentMode;
 use YandexCheckout\Model\Receipt\PaymentSubject;
 use YandexCheckout\Model\Receipt\ReceiptItemAmount;
 use YandexCheckout\Model\ReceiptItem;
+use YandexCheckout\Model\Supplier;
 
 class ReceiptItemTest extends TestCase
 {
@@ -216,6 +218,71 @@ class ReceiptItemTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider validDataAgent
+     * @param $value
+     */
+    public function testSetAgentType($value)
+    {
+        $instance = $this->getTestInstance();
+        self::assertNull($instance->getAgentType());
+        $instance->setAgentType($value);
+        self::assertSame($value, $instance->getAgentType());
+    }
+
+    public function validDataAgent()
+    {
+        $values = array();
+        for ($i = 0; $i < 5; $i++) {
+            $values[] = array(Random::value(AgentType::getValidValues()));
+        }
+        return $values;
+    }
+
+    /**
+     * @dataProvider validDataSupplier
+     * @param $value
+     */
+    public function testSetSupplier($value)
+    {
+        $instance = $this->getTestInstance();
+        self::assertNull($instance->getSupplier());
+        $instance->setSupplier($value);
+        if (is_array($value)) {
+            $value = new Supplier($value);
+        }
+        self::assertEquals($value, $instance->getSupplier());
+    }
+
+    /**
+     * @return array[]
+     * @throws \Exception
+     */
+    public function validDataSupplier()
+    {
+        $validData = array(
+            array(
+                array(
+                    'name' => Random::str(1, 100),
+                    'phone' => '79000000000',
+                    'inn' => '1000000000',
+                ),
+            ),
+        );
+        for ($i = 0; $i < 3; $i++) {
+            $supplier = array(
+                new Supplier(
+                    array(
+                        'name' => Random::str(1, 100),
+                        'phone' => '79000000000',
+                        'inn' => '1000000000',
+                    )
+                )
+            );
+            $validData[] = $supplier;
+        }
+        return $validData;
+    }
     /**
      * @dataProvider validVatCodeDataProvider
      *

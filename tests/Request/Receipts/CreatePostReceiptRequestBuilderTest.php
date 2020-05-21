@@ -4,6 +4,7 @@ namespace Tests\YandexCheckout\Request\Receipts;
 
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
+use YandexCheckout\Helpers\StringObject;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\Receipt\PaymentMode;
 use YandexCheckout\Model\Receipt\PaymentSubject;
@@ -173,11 +174,27 @@ class CreatePostReceiptRequestBuilderTest extends TestCase
         $builder->setTaxSystemCode($value);
     }
 
+    /**
+     * @dataProvider validDataProvider
+     * @param $value
+     */
+    public function testSetOnBehalfOf($options)
+    {
+        $builder = new CreatePostReceiptRequestBuilder();
+        $instance = $builder->build($options);
+
+        if (empty($options['on_behalf_of'])) {
+            self::assertNull($instance->getOnBehalfOf());
+        } else {
+            self::assertNotNull($instance->getOnBehalfOf());
+            self::assertEquals($options['on_behalf_of'], $instance->getOnBehalfOf());
+        }
+    }
+
     public function validDataProvider()
     {
         $type = Random::value(ReceiptType::getValidValues());
         $result = array(
-
             array(
                 array(
                     'customer' => array(
@@ -248,6 +265,7 @@ class CreatePostReceiptRequestBuilderTest extends TestCase
                 'tax_system_code' => Random::int(1, 6),
                 'type' => $type,
                 'send' => true,
+                'on_behalf_of' => Random::int(99999, 999999),
                 'settlements' => array(
                     array(
                         'type' => Random::value(SettlementType::getValidValues()),

@@ -6,10 +6,14 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
 use YandexCheckout\Model\AmountInterface;
+use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Refund;
 use YandexCheckout\Model\RefundStatus;
+use YandexCheckout\Model\Source;
+use YandexCheckout\Model\Transfer;
+use YandexCheckout\Request\Refunds\CreateRefundRequest;
 
 class RefundTest extends TestCase
 {
@@ -90,6 +94,41 @@ class RefundTest extends TestCase
             array(true),
             array(false),
         );
+    }
+
+    /**
+     * @dataProvider validSources
+     * @param $value
+     */
+    public function testSetSources($value)
+    {
+        $instance = new CreateRefundRequest();
+        $instance->setSources($value);
+        if (is_array($value)) {
+            $value = array(new Source($value[0]));
+        }
+        self::assertEquals($value, $instance->getSources());
+    }
+
+    /**
+     * @return array[]
+     * @throws \Exception
+     */
+    public function validSources()
+    {
+        $transfers = array();
+        for($i = 0; $i < 10; $i++) {
+            $transfers[$i][] = array(
+                'account_id' => (string)Random::int(11111111, 99999999),
+                'amount' => array(
+                    'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
+                    'currency' => Random::value(CurrencyCode::getValidValues())
+                )
+            );
+        }
+        $transfers[$i][] = array(new Transfer($transfers[0]));
+
+        return array($transfers);
     }
 
     /**

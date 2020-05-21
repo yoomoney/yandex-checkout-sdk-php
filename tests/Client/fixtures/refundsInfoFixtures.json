@@ -15,7 +15,12 @@
         "currency": "RUB"
       },
       "receipt_registered": "succeeded",
-      "comment": "string"
+      "comment": "string",
+      "requestor": {
+        "type": "RequestorThirdPartyService",
+        "client_id": "12345",
+        "client_name": "test"
+      }
     }
   ],
   "next_page": "01234567890ABCDEF"
