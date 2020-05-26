@@ -4,6 +4,7 @@ namespace Tests\YandexCheckout\Model\PaymentMethod;
 
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Helpers\StringObject;
+use YandexCheckout\Model\PaymentMethod\BankCardSource;
 use YandexCheckout\Model\PaymentMethod\PaymentMethodBankCard;
 use YandexCheckout\Model\PaymentMethodType;
 
@@ -171,6 +172,33 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     }
 
     /**
+     * @dataProvider validIssuerCountryDataProvider
+     * @param $value
+     */
+    public function testGetSetIssuerCountry($value)
+    {
+        $this->getAndSetTest($value, 'issuerCountry', 'issuer_country');
+    }
+
+    /**
+     * @dataProvider validIssuerNameDataProvider
+     * @param $value
+     */
+    public function testGetSetIssuerName($value)
+    {
+        $this->getAndSetTest($value, 'issuerName', 'issuer_name');
+    }
+
+    /**
+     * @dataProvider validSourceDataProvider
+     * @param $value
+     */
+    public function testGetSetSource($value)
+    {
+        $this->getAndSetTest($value, 'source', 'source');
+    }
+
+    /**
      * @dataProvider invalidCardTypeDataProvider
      * @expectedException \InvalidArgumentException
      * @param mixed $value
@@ -198,6 +226,86 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
     public function testSetterInvalidCard_type($value)
     {
         $this->getTestInstance()->card_type = $value;
+    }
+
+    /**
+     * @dataProvider invalidIssuerCountryDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetInvalidIssuerCountry($value)
+    {
+        $this->getTestInstance()->setIssuerCountry($value);
+    }
+
+    /**
+     * @dataProvider invalidIssuerCountryDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidIssuerCountry($value)
+    {
+        $this->getTestInstance()->issuerCountry = $value;
+    }
+
+    /**
+     * @dataProvider invalidIssuerCountryDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidIssuer_country($value)
+    {
+        $this->getTestInstance()->issuer_country = $value;
+    }
+
+    /**
+     * @dataProvider invalidIssuerNameDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetInvalidIssuerName($value)
+    {
+        $this->getTestInstance()->setIssuerName($value);
+    }
+
+    /**
+     * @dataProvider invalidIssuerNameDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidIssuerName($value)
+    {
+        $this->getTestInstance()->issuerName = $value;
+    }
+
+    /**
+     * @dataProvider invalidIssuerNameDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidIssuer_name($value)
+    {
+        $this->getTestInstance()->issuer_name = $value;
+    }
+
+    /**
+     * @dataProvider invalidSourceDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetInvalidSource($value)
+    {
+        $this->getTestInstance()->setSource($value);
+    }
+
+    /**
+     * @dataProvider invalidSourceDataProvider
+     * @expectedException \InvalidArgumentException
+     * @param mixed $value
+     */
+    public function testSetterInvalidSource($value)
+    {
+        $this->getTestInstance()->source = $value;
     }
 
     /**
@@ -263,6 +371,43 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
         for ($i = 0; $i < 10; $i++) {
             $result[] = array(Random::str(3, 35));
         }
+
+        return $result;
+    }
+
+    public function validIssuerCountryDataProvider()
+    {
+        return array(
+            array('RU'),
+            array('EN'),
+            array('UK'),
+            array('AU'),
+            array(null),
+            array(''),
+        );
+    }
+
+    public function validIssuerNameDataProvider()
+    {
+        $result = array();
+        for ($i = 0; $i < 10; $i++) {
+            $result[] = array(Random::str(3, 35));
+        }
+        $result[] = array("");
+        $result[] = array(null);
+
+        return $result;
+    }
+
+    public function validSourceDataProvider()
+    {
+        $result = array();
+        foreach (BankCardSource::getValidValues() as $value) {
+            $result[] = array($value);
+        }
+        $result[] = array("");
+        $result[] = array(null);
+
         return $result;
     }
 
@@ -336,6 +481,39 @@ class PaymentMethodBankCardTest extends AbstractPaymentMethodTest
         return array(
             array(''),
             array(null),
+            array(true),
+            array(false),
+            array(array()),
+            array(new \stdClass()),
+        );
+    }
+
+    public function invalidIssuerCountryDataProvider()
+    {
+        return array(
+            array(Random::str(3, 4)),
+            array(true),
+            array(false),
+            array(array()),
+            array(new \stdClass()),
+        );
+    }
+
+    public function invalidIssuerNameDataProvider()
+    {
+        return array(
+            array(true),
+            array(false),
+            array(array()),
+            array(new \stdClass()),
+        );
+    }
+
+    public function invalidSourceDataProvider()
+    {
+        return array(
+            array(Random::str(3, 6)),
+            array(Random::int(1, 2)),
             array(true),
             array(false),
             array(array()),
