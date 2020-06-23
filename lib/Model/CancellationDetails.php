@@ -128,19 +128,10 @@ class CancellationDetails extends AbstractObject implements CancellationDetailsI
     {
         if ($value === null || $value === '') {
             throw new EmptyPropertyValueException('Empty reason value', 0, 'cancellation_details.reason');
-        }
-        if (TypeCast::canCastToEnumString($value)) {
-            $value = strtolower((string)$value);
-            if (CancellationDetailsReasonCode::valueExists($value)) {
-                $this->_reason = $value;
-            } else {
-                throw new InvalidPropertyValueException(
-                    'Invalid reason value: "'.$value.'"', 0, 'cancellation_details.reason', $value
-                );
-            }
+        } elseif (!TypeCast::canCastToString($value)) {
+            throw new InvalidPropertyValueTypeException('Invalid reason value type', 0, 'cancellation_details.reason');
         } else {
-            throw new InvalidPropertyValueTypeException('Invalid reason value type', 0, 'cancellation_details.reason',
-                $value);
+            $this->_reason = strtolower((string)$value);
         }
     }
 }

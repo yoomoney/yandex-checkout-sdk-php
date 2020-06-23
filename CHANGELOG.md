@@ -1,3 +1,6 @@
+### v1.6.2 от 23.06.2020
+* Добавлены новые коды ошибок
+
 ### v1.6.1 от 26.05.2020
 * Добавлены новые параметры для PaymentMethodBankCard
 * Исправлен баг с serialized receipt, когда параметры 'product_code', 'excise', 'customs_declaration_number', 'country_of_origin_code' не попадали в запрос
