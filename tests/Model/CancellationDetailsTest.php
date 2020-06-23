@@ -125,10 +125,6 @@ class CancellationDetailsTest extends TestCase
             array('', $exceptionNamespace.'EmptyPropertyValueException'),
             array(array(), $exceptionNamespace.'InvalidPropertyValueTypeException'),
             array(fopen(__FILE__, 'r'), $exceptionNamespace.'InvalidPropertyValueTypeException'),
-            array('invalid_value', $exceptionNamespace.'InvalidPropertyValueException'),
-            array(-1, $exceptionNamespace.'InvalidPropertyValueTypeException'),
-            array(-0.01, $exceptionNamespace.'InvalidPropertyValueTypeException'),
-            array(0.0, $exceptionNamespace.'InvalidPropertyValueTypeException'),
             array(true, $exceptionNamespace.'InvalidPropertyValueTypeException'),
             array(false, $exceptionNamespace.'InvalidPropertyValueTypeException'),
         );
