@@ -263,7 +263,11 @@ class BaseClient
      */
     protected function encodeData($serializedData)
     {
-        $result = json_encode($serializedData, JSON_FORCE_OBJECT);
+        if ($serializedData === array()) {
+            return '{}';
+        }
+
+        $result = json_encode($serializedData);
         if ($result === false) {
             $errorCode = json_last_error();
             throw new JsonException("Failed serialize json.", $errorCode);
