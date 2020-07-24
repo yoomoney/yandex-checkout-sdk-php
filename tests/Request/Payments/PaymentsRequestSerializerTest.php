@@ -10,14 +10,13 @@ use YandexCheckout\Request\Payments\PaymentsRequestSerializer;
 class PaymentsRequestSerializerTest extends TestCase
 {
     private $fieldMap = array(
-        'page'               => 'page',
         'createdAtGte'       => 'created_at.gte',
         'createdAtGt'        => 'created_at.gt',
         'createdAtLte'       => 'created_at.lte',
         'createdAtLt'        => 'created_at.lt',
-        'limit'              => 'limit',
-        'recipientGatewayId' => 'recipient.gateway_id',
         'status'             => 'status',
+        'limit'              => 'limit',
+        'cursor'             => 'cursor',
     );
 
     /**
@@ -49,28 +48,26 @@ class PaymentsRequestSerializerTest extends TestCase
             ),
             array(
                 array(
-                    'page'               => '',
                     'createdAtGte'       => '',
                     'createdAtGt'        => '',
                     'createdAtLte'       => '',
                     'createdAtLt'        => '',
                     'limit'              => 0,
-                    'recipientGatewayId' => '',
                     'status'             => '',
+                    'cursor'             => '',
                 ),
             ),
         );
         $statuses = PaymentStatus::getValidValues();
         for ($i = 0; $i < 10; $i++) {
             $request  = array(
-                'page'               => $this->randomString(mt_rand(1, 30)),
                 'createdAtGte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtGt'        => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLt'        => date(DATE_ATOM, mt_rand(1, time())),
                 'limit'              => mt_rand(1, 100),
-                'recipientGatewayId' => $this->randomString(mt_rand(1, 10)),
                 'status'             => $statuses[mt_rand(0, count($statuses) - 1)],
+                'cursor'             => $this->randomString(mt_rand(1, 30)),
             );
             $result[] = array($request);
         }

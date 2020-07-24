@@ -12,19 +12,19 @@ class PaymentsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetPage($options)
+    public function testSetCursor($options)
     {
         $builder = new PaymentsRequestBuilder();
 
         $instance = $builder->build();
-        self::assertNull($instance->getPage());
+        self::assertNull($instance->getCursor());
 
-        $builder->setPage($options['page']);
+        $builder->setCursor($options['cursor']);
         $instance = $builder->build();
-        if (empty($options['page'])) {
-            self::assertNull($instance->getPage());
+        if (empty($options['cursor'])) {
+            self::assertNull($instance->getCursor());
         } else {
-            self::assertEquals($options['page'], $instance->getPage());
+            self::assertEquals($options['cursor'], $instance->getCursor());
         }
     }
 
@@ -125,26 +125,6 @@ class PaymentsRequestBuilderTest extends TestCase
             self::assertNull($instance->getLimit());
         } else {
             self::assertEquals($options['limit'], $instance->getLimit());
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetRecipientGatewayId($options)
-    {
-        $builder = new PaymentsRequestBuilder();
-
-        $instance = $builder->build(array());
-        self::assertNull($instance->getRecipientGatewayId());
-
-        $builder->setRecipientGatewayId(!empty($options['recipientGatewayId']) ? $options['recipientGatewayId'] : null);
-        $instance = $builder->build();
-        if (empty($options['recipientGatewayId'])) {
-            self::assertNull($instance->getRecipientGatewayId());
-        } else {
-            self::assertEquals($options['recipientGatewayId'], $instance->getRecipientGatewayId());
         }
     }
 

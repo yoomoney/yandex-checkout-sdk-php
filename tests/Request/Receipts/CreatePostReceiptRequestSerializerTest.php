@@ -112,7 +112,7 @@ class CreatePostReceiptRequestSerializerTest extends TestCase
         );
 
         for ($i = 0; $i < 10; $i++) {
-            $type = Random::value(ReceiptType::getValidValues());
+            $type = Random::value([ReceiptType::PAYMENT, ReceiptType::REFUND]);
             $request = array(
                 'items' => $this->getReceiptItems($i + 1),
                 'customer' => array(

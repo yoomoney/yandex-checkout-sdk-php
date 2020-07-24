@@ -42,13 +42,13 @@ class PaymentsResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
-    public function testGetNextPage($options)
+    public function testGetNextCursor($options)
     {
         $instance = new PaymentsResponse($options);
-        if (empty($options['next_page'])) {
-            self::assertNull($instance->getNextPage());
+        if (empty($options['next_cursor'])) {
+            self::assertNull($instance->getNextCursor());
         } else {
-            self::assertEquals($options['next_page'], $instance->getNextPage());
+            self::assertEquals($options['next_cursor'], $instance->getNextCursor());
         }
     }
 
@@ -59,10 +59,10 @@ class PaymentsResponseTest extends TestCase
     public function testHasNext($options)
     {
         $instance = new PaymentsResponse($options);
-        if (empty($options['next_page'])) {
-            self::assertFalse($instance->hasNextPage());
+        if (empty($options['next_cursor'])) {
+            self::assertFalse($instance->hasNextCursor());
         } else {
-            self::assertTrue($instance->hasNextPage());
+            self::assertTrue($instance->hasNextCursor());
         }
     }
 
@@ -93,7 +93,7 @@ class PaymentsResponseTest extends TestCase
                             'refundable' => false,
                         )
                     ),
-                    'next_page' => uniqid(),
+                    'next_cursor' => uniqid(),
                 ),
             ),
             array(
@@ -149,7 +149,7 @@ class PaymentsResponseTest extends TestCase
                             'receipt_registration' => ReceiptRegistrationStatus::PENDING,
                         ),
                     ),
-                    'next_page' => uniqid(),
+                    'next_cursor' => uniqid(),
                 ),
             ),
             array(
@@ -177,7 +177,7 @@ class PaymentsResponseTest extends TestCase
                             ),
                         ),
                     ),
-                    'next_page' => uniqid(),
+                    'next_cursor' => uniqid(),
                 ),
             ),
         );
