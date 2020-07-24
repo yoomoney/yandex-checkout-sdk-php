@@ -36,13 +36,13 @@ class RefundsResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
-    public function testGetNextPage($options)
+    public function testGetNextCursor($options)
     {
         $instance = new RefundsResponse($options);
-        if (empty($options['next_page'])) {
-            self::assertNull($instance->getNextPage());
+        if (empty($options['next_cursor'])) {
+            self::assertNull($instance->getNextCursor());
         } else {
-            self::assertEquals($options['next_page'], $instance->getNextPage());
+            self::assertEquals($options['next_cursor'], $instance->getNextCursor());
         }
     }
 
@@ -50,13 +50,13 @@ class RefundsResponseTest extends TestCase
      * @dataProvider validDataProvider
      * @param array $options
      */
-    public function testHasNextPage($options)
+    public function testHasNextCursor($options)
     {
         $instance = new RefundsResponse($options);
-        if (empty($options['next_page'])) {
-            self::assertFalse($instance->hasNextPage());
+        if (empty($options['next_cursor'])) {
+            self::assertFalse($instance->hasNextCursor());
         } else {
-            self::assertTrue($instance->hasNextPage());
+            self::assertTrue($instance->hasNextCursor());
         }
     }
 
@@ -82,7 +82,7 @@ class RefundsResponseTest extends TestCase
                             'created_at' => date(DATE_ATOM, Random::int(0, time())),
                         )
                     ),
-                    'next_page' => Random::str(1, 64),
+                    'next_cursor' => Random::str(1, 64),
                 ),
             ),
             array(
@@ -112,7 +112,7 @@ class RefundsResponseTest extends TestCase
                             'comment' => Random::str(64, 250),
                         ),
                     ),
-                    'next_page' => Random::str(1, 64),
+                    'next_cursor' => Random::str(1, 64),
                 ),
             ),
         );

@@ -10,19 +10,14 @@ use YandexCheckout\Request\Refunds\RefundsRequestSerializer;
 class RefundsRequestSerializerTest extends TestCase
 {
     private $fieldMap = array(
-        'refundId'       => 'refund_id',
         'paymentId'      => 'payment_id',
-        'gatewayId'      => 'gateway_id',
-        'createdGte'     => 'created_gte',
-        'createdGt'      => 'created_gt',
-        'createdLte'     => 'created_lte',
-        'createdLt'      => 'created_lt',
-        'authorizedGte'  => 'authorized_gte',
-        'authorizedGt'   => 'authorized_gt',
-        'authorizedLte'  => 'authorized_lte',
-        'authorizedLt'   => 'authorized_lt',
+        'createdAtGte'   => 'created_at.gte',
+        'createdAtGt'    => 'created_at.gt',
+        'createdAtLte'   => 'created_at.lte',
+        'createdAtLt'    => 'created_at.lt',
         'status'         => 'status',
-        'nextPage'       => 'next_page',
+        'cursor'         => 'cursor',
+        'limit'          => 'limit',
     );
 
     /**
@@ -34,9 +29,7 @@ class RefundsRequestSerializerTest extends TestCase
         $serializer = new RefundsRequestSerializer();
         $data = $serializer->serialize(RefundsRequest::builder()->build($options));
 
-        $expected = array(
-            'account_id' => $options['accountId'],
-        );
+        $expected = array();
         foreach ($this->fieldMap as $field => $mapped) {
             if (isset($options[$field])) {
                 $value = $options[$field];
@@ -58,40 +51,28 @@ class RefundsRequestSerializerTest extends TestCase
             ),
             array(
                 array(
-                    'accountId' => uniqid(),
-                    'refundId' => '',
                     'paymentId' => '',
-                    'gatewayId' => '',
-                    'createGte' => '',
-                    'createGt' => '',
-                    'createLte' => '',
-                    'createLt' => '',
-                    'authorizedGte' => '',
-                    'authorizedGt' => '',
-                    'authorizedLte' => '',
-                    'authorizedLt' => '',
+                    'createAtGte' => '',
+                    'createAtGt' => '',
+                    'createAtLte' => '',
+                    'createAtLt' => '',
                     'status' => '',
-                    'nextPage' => '',
+                    'cursor' => '',
+                    'limit' => '',
                 ),
             ),
         );
         $statuses = RefundStatus::getValidValues();
         for ($i = 0; $i < 10; $i++) {
             $request = array(
-                'accountId' => uniqid(),
-                'gatewayId' => uniqid(),
-                'refundId' => $this->randomString(36),
                 'paymentId' => $this->randomString(36),
-                'createGte' => date(DATE_ATOM, mt_rand(1, time())),
-                'createGt' => date(DATE_ATOM, mt_rand(1, time())),
-                'createLte' => date(DATE_ATOM, mt_rand(1, time())),
-                'createLt' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedGte' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedGt' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedLte' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedLt' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtGte' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtGt' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtLte' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtLt' => date(DATE_ATOM, mt_rand(1, time())),
                 'status' => $statuses[mt_rand(0, count($statuses) - 1)],
-                'nextPage' => uniqid(),
+                'cursor' => uniqid(),
+                'limit' => mt_rand(1, RefundsRequest::MAX_LIMIT_VALUE),
             );
             $result[] = array($request);
         }
