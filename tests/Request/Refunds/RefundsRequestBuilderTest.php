@@ -4,6 +4,7 @@ namespace Tests\YandexCheckout\Request\Refunds;
 
 use PHPUnit\Framework\TestCase;
 use YandexCheckout\Model\RefundStatus;
+use YandexCheckout\Request\Refunds\RefundsRequest;
 use YandexCheckout\Request\Refunds\RefundsRequestBuilder;
 
 class RefundsRequestBuilderTest extends TestCase
@@ -12,58 +13,15 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetAccountId($options)
-    {
-        $builder = new RefundsRequestBuilder();
-        try {
-            $builder->build();
-        } catch (\RuntimeException $e) {
-            $builder->setAccountId($options['accountId']);
-            if (!empty($options['accountId'])) {
-                $instance = $builder->build();
-                self::assertEquals($options['accountId'], $instance->getAccountId());
-                return;
-            } else {
-                $this->setExpectedException('\RuntimeException');
-                $builder->build();
-            }
-        }
-        self::fail('Exception not thrown');
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetRefundId($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getRefundId());
-
-        $builder->setRefundId($options['refundId']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['refundId'])) {
-            self::assertNull($instance->getRefundId());
-        } else {
-            self::assertEquals($options['refundId'], $instance->getRefundId());
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
     public function testSetPaymentId($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
+        $instance = $builder->build();
         self::assertNull($instance->getPaymentId());
 
         $builder->setPaymentId($options['paymentId']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
+        $instance = $builder->build();
         if (empty($options['paymentId'])) {
             self::assertNull($instance->getPaymentId());
         } else {
@@ -75,19 +33,19 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetProductGroupId($options)
+    public function testSetCreateAtGte($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getGatewayId());
+        $instance = $builder->build();
+        self::assertNull($instance->getCreatedAtGte());
 
-        $builder->setGatewayId($options['gatewayId']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['gatewayId'])) {
-            self::assertNull($instance->getGatewayId());
+        $builder->setCreatedAtGte($options['createAtGte']);
+        $instance = $builder->build();
+        if (empty($options['createAtGte'])) {
+            self::assertNull($instance->getCreatedAtGte());
         } else {
-            self::assertEquals($options['gatewayId'], $instance->getGatewayId());
+            self::assertEquals($options['createAtGte'], $instance->getCreatedAtGte()->format(DATE_ATOM));
         }
     }
 
@@ -95,19 +53,19 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetCreateGte($options)
+    public function testSetCreateAtGt($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getCreatedGte());
+        $instance = $builder->build();
+        self::assertNull($instance->getCreatedAtGt());
 
-        $builder->setCreatedGte($options['createGte']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['createGte'])) {
-            self::assertNull($instance->getCreatedGte());
+        $builder->setCreatedAtGt($options['createAtGt']);
+        $instance = $builder->build();
+        if (empty($options['createAtGt'])) {
+            self::assertNull($instance->getCreatedAtGt());
         } else {
-            self::assertEquals($options['createGte'], $instance->getCreatedGte()->format(DATE_ATOM));
+            self::assertEquals($options['createAtGt'], $instance->getCreatedAtGt()->format(DATE_ATOM));
         }
     }
 
@@ -115,19 +73,19 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetCreateGt($options)
+    public function testSetCreateAtLte($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getCreatedGt());
+        $instance = $builder->build();
+        self::assertNull($instance->getCreatedAtLte());
 
-        $builder->setCreatedGt($options['createGt']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['createGt'])) {
-            self::assertNull($instance->getCreatedGt());
+        $builder->setCreatedAtLte($options['createAtLte']);
+        $instance = $builder->build();
+        if (empty($options['createAtLte'])) {
+            self::assertNull($instance->getCreatedAtLte());
         } else {
-            self::assertEquals($options['createGt'], $instance->getCreatedGt()->format(DATE_ATOM));
+            self::assertEquals($options['createAtLte'], $instance->getCreatedAtLte()->format(DATE_ATOM));
         }
     }
 
@@ -135,119 +93,19 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetCreateLte($options)
+    public function testSetCreateAtLt($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getCreatedLte());
+        $instance = $builder->build();
+        self::assertNull($instance->getCreatedAtLt());
 
-        $builder->setCreatedLte($options['createLte']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['createLte'])) {
-            self::assertNull($instance->getCreatedLte());
+        $builder->setCreatedAtLt($options['createAtLt']);
+        $instance = $builder->build();
+        if (empty($options['createAtLt'])) {
+            self::assertNull($instance->getCreatedAtLt());
         } else {
-            self::assertEquals($options['createLte'], $instance->getCreatedLte()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetCreateLt($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getCreatedLt());
-
-        $builder->setCreatedLt($options['createLt']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['createLt'])) {
-            self::assertNull($instance->getCreatedLt());
-        } else {
-            self::assertEquals($options['createLt'], $instance->getCreatedLt()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetAuthorizedGte($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getAuthorizedGte());
-
-        $builder->setAuthorizedGte($options['authorizedGte']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['authorizedGte'])) {
-            self::assertNull($instance->getAuthorizedGte());
-        } else {
-            self::assertEquals($options['authorizedGte'], $instance->getAuthorizedGte()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetAuthorizedGt($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getAuthorizedGt());
-
-        $builder->setAuthorizedGt($options['authorizedGt']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['authorizedGt'])) {
-            self::assertNull($instance->getAuthorizedGt());
-        } else {
-            self::assertEquals($options['authorizedGt'], $instance->getAuthorizedGt()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetAuthorizedLte($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getAuthorizedLte());
-
-        $builder->setAuthorizedLte($options['authorizedLte']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['authorizedLte'])) {
-            self::assertNull($instance->getAuthorizedLte());
-        } else {
-            self::assertEquals($options['authorizedLte'], $instance->getAuthorizedLte()->format(DATE_ATOM));
-        }
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @param $options
-     */
-    public function testSetAuthorizedLt($options)
-    {
-        $builder = new RefundsRequestBuilder();
-
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getAuthorizedLt());
-
-        $builder->setAuthorizedLt($options['authorizedLt']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['authorizedLt'])) {
-            self::assertNull($instance->getAuthorizedLt());
-        } else {
-            self::assertEquals($options['authorizedLt'], $instance->getAuthorizedLt()->format(DATE_ATOM));
+            self::assertEquals($options['createAtLt'], $instance->getCreatedAtLt()->format(DATE_ATOM));
         }
     }
 
@@ -259,11 +117,11 @@ class RefundsRequestBuilderTest extends TestCase
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
+        $instance = $builder->build();
         self::assertNull($instance->getStatus());
 
         $builder->setStatus($options['status']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
+        $instance = $builder->build();
         if (empty($options['status'])) {
             self::assertNull($instance->getStatus());
         } else {
@@ -275,19 +133,39 @@ class RefundsRequestBuilderTest extends TestCase
      * @dataProvider validDataProvider
      * @param $options
      */
-    public function testSetNextPage($options)
+    public function testSetCursor($options)
     {
         $builder = new RefundsRequestBuilder();
 
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        self::assertNull($instance->getNextPage());
+        $instance = $builder->build();
+        self::assertNull($instance->getCursor());
 
-        $builder->setNextPage($options['nextPage']);
-        $instance = $builder->build(array('accountId' => 'valid_shopId'));
-        if (empty($options['nextPage'])) {
-            self::assertNull($instance->getNextPage());
+        $builder->setCursor($options['cursor']);
+        $instance = $builder->build();
+        if (empty($options['cursor'])) {
+            self::assertNull($instance->getCursor());
         } else {
-            self::assertEquals($options['nextPage'], $instance->getNextPage());
+            self::assertEquals($options['cursor'], $instance->getCursor());
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetLimit($options)
+    {
+        $builder = new RefundsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getLimit());
+
+        $builder->setLimit($options['limit']);
+        $instance = $builder->build();
+        if (empty($options['limit'])) {
+            self::assertNull($instance->getLimit());
+        } else {
+            self::assertEquals($options['limit'], $instance->getLimit());
         }
     }
 
@@ -296,58 +174,40 @@ class RefundsRequestBuilderTest extends TestCase
         $result = array(
             array(
                 array(
-                    'refundId' => null,
                     'paymentId' => null,
-                    'accountId' => null,
-                    'gatewayId' => null,
-                    'createGte' => null,
-                    'createGt' => null,
-                    'createLte' => null,
-                    'createLt' => null,
-                    'authorizedGte' => null,
-                    'authorizedGt' => null,
-                    'authorizedLte' => null,
-                    'authorizedLt' => null,
+                    'createAtGte' => null,
+                    'createAtGt' => null,
+                    'createAtLte' => null,
+                    'createAtLt' => null,
                     'status' => null,
-                    'nextPage' => null,
+                    'cursor' => null,
+                    'limit' => 1,
                 ),
             ),
             array(
                 array(
-                    'refundId' => '',
                     'paymentId' => '',
-                    'accountId' => '',
-                    'gatewayId' => '',
-                    'createGte' => '',
-                    'createGt' => '',
-                    'createLte' => '',
-                    'createLt' => '',
-                    'authorizedGte' => '',
-                    'authorizedGt' => '',
-                    'authorizedLte' => '',
-                    'authorizedLt' => '',
+                    'createAtGte' => '',
+                    'createAtGt' => '',
+                    'createAtLte' => '',
+                    'createAtLt' => '',
                     'status' => '',
-                    'nextPage' => '',
+                    'cursor' => '',
+                    'limit' => null,
                 ),
             ),
         );
         $statuses = RefundStatus::getValidValues();
         for ($i = 0; $i < 10; $i++) {
             $request = array(
-                'refundId' => $this->randomString(36),
                 'paymentId' => $this->randomString(36),
-                'accountId'    => uniqid(),
-                'gatewayId' => uniqid(),
-                'createGte' => date(DATE_ATOM, mt_rand(1, time())),
-                'createGt' => date(DATE_ATOM, mt_rand(1, time())),
-                'createLte' => date(DATE_ATOM, mt_rand(1, time())),
-                'createLt' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedGte' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedGt' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedLte' => date(DATE_ATOM, mt_rand(1, time())),
-                'authorizedLt' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtGte' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtGt' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtLte' => date(DATE_ATOM, mt_rand(1, time())),
+                'createAtLt' => date(DATE_ATOM, mt_rand(1, time())),
                 'status' => $statuses[mt_rand(0, count($statuses) - 1)],
-                'nextPage' => uniqid(),
+                'cursor' => uniqid(),
+                'limit' => mt_rand(1, RefundsRequest::MAX_LIMIT_VALUE),
             );
             $result[] = array($request);
         }
