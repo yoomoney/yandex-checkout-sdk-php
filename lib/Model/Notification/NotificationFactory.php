@@ -32,10 +32,11 @@ use YandexCheckout\Model\NotificationEventType;
 class NotificationFactory
 {
     private $typeClassMap = array(
-        NotificationEventType::PAYMENT_CANCELED            => 'NotificationCanceled',
-        NotificationEventType::REFUND_SUCCEEDED            => 'NotificationRefundSucceeded',
-        NotificationEventType::PAYMENT_SUCCEEDED           => 'NotificationSucceeded',
-        NotificationEventType::PAYMENT_WAITING_FOR_CAPTURE => 'NotificationWaitingForCapture',
+        NotificationEventType::PAYMENT_CANCELED                => 'NotificationCanceled',
+        NotificationEventType::REFUND_SUCCEEDED                => 'NotificationRefundSucceeded',
+        NotificationEventType::PAYMENT_SUCCEEDED               => 'NotificationSucceeded',
+        NotificationEventType::PAYMENT_WAITING_FOR_CAPTURE     => 'NotificationWaitingForCapture',
+        NotificationEventType::PAYMENT_EXPIRED_ON_CONFIRMATION => 'NotificationExpiredOnConfirmation',
     );
 
     /**

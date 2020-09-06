@@ -66,6 +66,13 @@ class WebhookTest extends TestCase
                     "url"   => Random::str(20),
                 ),
             ),
+            array(
+                array(
+                    "id"    => Random::str(20),
+                    "event" => NotificationEventType::PAYMENT_EXPIRED_ON_CONFIRMATION,
+                    "url"   => Random::str(20),
+                ),
+            ),
         );
     }
 }

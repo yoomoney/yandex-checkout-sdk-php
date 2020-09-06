@@ -204,6 +204,7 @@ class NotificationFactoryTest extends TestCase
                 break;
             case NotificationEventType::PAYMENT_SUCCEEDED:
             case NotificationEventType::PAYMENT_WAITING_FOR_CAPTURE:
+            case NotificationEventType::PAYMENT_EXPIRED_ON_CONFIRMATION:
             case NotificationEventType::PAYMENT_CANCELED:
                 self::assertTrue($object instanceof PaymentResponse);
                 self::assertEquals($object, new PaymentResponse($value));

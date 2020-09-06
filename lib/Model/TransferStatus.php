@@ -35,6 +35,7 @@ use YandexCheckout\Common\AbstractEnum;
  * --- | ---
  * |pending|Ожидает оплаты покупателем|
  * |waiting_for_capture|Успешно оплачен покупателем, ожидает подтверждения магазином (capture или aviso)|
+ * |expired_on_confirmation|Просрочено время ожидания подтверждения|
  * |succeeded|Успешно оплачен и получен магазином|
  * |canceled|Неуспех оплаты или отменен магазином (cancel)|
  *
@@ -43,12 +44,14 @@ class TransferStatus extends AbstractEnum
 {
     const PENDING = 'pending';
     const WAITING_FOR_CAPTURE = 'waiting_for_capture';
+    const EXPIRED_ON_CONFIRMATION = 'expired_on_confirmation';
     const SUCCEEDED = 'succeeded';
     const CANCELED = 'canceled';
 
     protected static $validValues = array(
         self::PENDING => true,
         self::WAITING_FOR_CAPTURE => true,
+        self::EXPIRED_ON_CONFIRMATION => true,
         self::SUCCEEDED => true,
         self::CANCELED => true,
     );

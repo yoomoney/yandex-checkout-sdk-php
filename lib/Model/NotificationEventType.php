@@ -31,14 +31,16 @@ use YandexCheckout\Common\AbstractEnum;
 class NotificationEventType extends AbstractEnum
 {
     const PAYMENT_WAITING_FOR_CAPTURE = 'payment.waiting_for_capture';
+    const PAYMENT_EXPIRED_ON_CONFIRMATION = 'payment.expired_on_confirmation';
     const PAYMENT_SUCCEEDED = 'payment.succeeded';
     const PAYMENT_CANCELED = 'payment.canceled';
     const REFUND_SUCCEEDED = 'refund.succeeded';
 
     protected static $validValues = array(
-        self::PAYMENT_WAITING_FOR_CAPTURE => true,
-        self::PAYMENT_SUCCEEDED           => true,
-        self::PAYMENT_CANCELED            => true,
-        self::REFUND_SUCCEEDED            => true,
+        self::PAYMENT_WAITING_FOR_CAPTURE     => true,
+        self::PAYMENT_EXPIRED_ON_CONFIRMATION => true,
+        self::PAYMENT_SUCCEEDED               => true,
+        self::PAYMENT_CANCELED                => true,
+        self::REFUND_SUCCEEDED                => true,
     );
 }

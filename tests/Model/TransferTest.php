@@ -253,6 +253,7 @@ class TransferTest extends TestCase
             array(TransferStatus::SUCCEEDED),
             array(TransferStatus::CANCELED),
             array(TransferStatus::WAITING_FOR_CAPTURE),
+            array(TransferStatus::EXPIRED_ON_CONFIRMATION),
             array(TransferStatus::PENDING),
         );
     }
