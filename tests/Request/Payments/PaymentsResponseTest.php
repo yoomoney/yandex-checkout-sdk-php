@@ -176,6 +176,25 @@ class PaymentsResponseTest extends TestCase
                                 'enforce' => false,
                             ),
                         ),
+                        array(
+                            'id' => Random::str(36),
+                            'status' => PaymentStatus::SUCCEEDED,
+                            'amount' => array(
+                                'value' => Random::int(1, 100000),
+                                'currency' => CurrencyCode::EUR,
+                            ),
+                            'description' => Random::str(20),
+                            'created_at' => date(DATE_ATOM),
+                            'payment_method' => array(
+                                'type' => PaymentMethodType::QIWI,
+                            ),
+                            'paid' => true,
+                            'refundable' => true,
+                            'confirmation' => array(
+                                'type' => ConfirmationType::REDIRECT,
+                                'confirmation_url' => Random::str(10),
+                            ),
+                        ),
                     ),
                     'next_cursor' => uniqid(),
                 ),
