@@ -92,10 +92,10 @@ abstract class AbstractRefundResponseTest extends TestCase
     public function testGetComment($options)
     {
         $instance = $this->getTestInstance($options);
-        if (empty($options['comment'])) {
-            self::assertNull($instance->getComment());
+        if (empty($options['description'])) {
+            self::assertNull($instance->getDescription());
         } else {
-            self::assertEquals($options['comment'], $instance->getComment());
+            self::assertEquals($options['description'], $instance->getDescription());
         }
     }
 
@@ -114,7 +114,7 @@ abstract class AbstractRefundResponseTest extends TestCase
                     'currency' => Random::value(CurrencyCode::getValidValues()),
                 ),
                 'receipt_registration' => Random::value(ReceiptRegistrationStatus::getValidValues()),
-                'comment' => uniqid(),
+                'description' => uniqid(),
             );
             $result[] = array($payment);
         }

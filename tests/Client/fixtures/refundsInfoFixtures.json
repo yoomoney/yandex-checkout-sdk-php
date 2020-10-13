@@ -15,7 +15,7 @@
         "currency": "RUB"
       },
       "receipt_registered": "succeeded",
-      "comment": "string",
+      "description": "string",
       "requestor": {
         "type": "RequestorThirdPartyService",
         "client_id": "12345",
