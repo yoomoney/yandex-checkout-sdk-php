@@ -532,21 +532,21 @@ class RefundTest extends TestCase
      * @dataProvider validCommentDataProvider
      * @param string $value
      */
-    public function testGetSetComment($value)
+    public function testGetSetDescription($value)
     {
         $instance = new Refund();
 
-        self::assertNull($instance->getComment());
-        self::assertNull($instance->comment);
+        self::assertNull($instance->getDescription());
+        self::assertNull($instance->description);
 
-        $instance->setComment($value);
-        self::assertEquals((string)$value, $instance->getComment());
-        self::assertEquals((string)$value, $instance->comment);
+        $instance->setDescription($value);
+        self::assertEquals((string)$value, $instance->getDescription());
+        self::assertEquals((string)$value, $instance->description);
 
         $instance = new Refund();
-        $instance->comment = $value;
-        self::assertEquals((string)$value, $instance->getComment());
-        self::assertEquals((string)$value, $instance->comment);
+        $instance->description = $value;
+        self::assertEquals((string)$value, $instance->getDescription());
+        self::assertEquals((string)$value, $instance->description);
     }
 
     public function validCommentDataProvider()
@@ -567,7 +567,7 @@ class RefundTest extends TestCase
     public function testSetInvalidComment($value)
     {
         $instance = new Refund();
-        $instance->setComment($value);
+        $instance->setDescription($value);
     }
 
     /**
@@ -578,7 +578,7 @@ class RefundTest extends TestCase
     public function testSetterInvalidComment($value)
     {
         $instance = new Refund();
-        $instance->comment = $value;
+        $instance->description = $value;
     }
 
     public function invalidCommentDataProvider()
@@ -586,8 +586,6 @@ class RefundTest extends TestCase
         return array(
             array(null),
             array(''),
-            array(Random::str(251)),
-            array(new StringObject(Random::str(251))),
             array(array()),
             array(true),
             array(false),

@@ -109,7 +109,7 @@ class RefundsResponseTest extends TestCase
                             'created_at' => date(DATE_ATOM, Random::int(0, time())),
                             'authorized_at' => date(DATE_ATOM, Random::int(0, time())),
                             'receipt_registered' => Random::value(ReceiptRegistrationStatus::getValidValues()),
-                            'comment' => Random::str(64, 250),
+                            'description' => Random::str(64, 250),
                         ),
                     ),
                     'next_cursor' => Random::str(1, 64),

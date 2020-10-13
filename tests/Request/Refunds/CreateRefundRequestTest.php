@@ -97,35 +97,35 @@ class CreateRefundRequestTest extends TestCase
     {
         $instance = new CreateRefundRequest();
 
-        self::assertFalse($instance->hasComment());
-        self::assertNull($instance->getComment());
-        self::assertNull($instance->comment);
+        self::assertFalse($instance->hasDescription());
+        self::assertNull($instance->getDescription());
+        self::assertNull($instance->description);
 
-        $instance->setComment($options['comment']);
-        if (empty($options['comment'])) {
-            self::assertFalse($instance->hasComment());
-            self::assertNull($instance->getComment());
-            self::assertNull($instance->comment);
+        $instance->setDescription($options['description']);
+        if (empty($options['description'])) {
+            self::assertFalse($instance->hasDescription());
+            self::assertNull($instance->getDescription());
+            self::assertNull($instance->description);
         } else {
-            self::assertTrue($instance->hasComment());
-            self::assertEquals($options['comment'], $instance->getComment());
-            self::assertEquals($options['comment'], $instance->comment);
+            self::assertTrue($instance->hasDescription());
+            self::assertEquals($options['description'], $instance->getDescription());
+            self::assertEquals($options['description'], $instance->description);
         }
 
-        $instance->setComment('');
-        self::assertFalse($instance->hasComment());
-        self::assertNull($instance->getComment());
-        self::assertNull($instance->comment);
+        $instance->setDescription('');
+        self::assertFalse($instance->hasDescription());
+        self::assertNull($instance->getDescription());
+        self::assertNull($instance->description);
 
-        $instance->comment = $options['comment'];
-        if (empty($options['comment'])) {
-            self::assertFalse($instance->hasComment());
-            self::assertNull($instance->getComment());
-            self::assertNull($instance->comment);
+        $instance->description = $options['description'];
+        if (empty($options['description'])) {
+            self::assertFalse($instance->hasDescription());
+            self::assertNull($instance->getDescription());
+            self::assertNull($instance->description);
         } else {
-            self::assertTrue($instance->hasComment());
-            self::assertEquals($options['comment'], $instance->getComment());
-            self::assertEquals($options['comment'], $instance->comment);
+            self::assertTrue($instance->hasDescription());
+            self::assertEquals($options['description'], $instance->getDescription());
+            self::assertEquals($options['description'], $instance->description);
         }
     }
 
@@ -137,7 +137,7 @@ class CreateRefundRequestTest extends TestCase
     public function testSetInvalidComment($value)
     {
         $instance = new CreateRefundRequest();
-        $instance->setComment($value);
+        $instance->setDescription($value);
     }
 
     /**
@@ -148,7 +148,7 @@ class CreateRefundRequestTest extends TestCase
     public function testSetterInvalidComment($value)
     {
         $instance = new CreateRefundRequest();
-        $instance->comment = $value;
+        $instance->description = $value;
     }
 
     public function testValidate()
@@ -225,14 +225,14 @@ class CreateRefundRequestTest extends TestCase
                 array(
                     'paymentId' => Random::str(36),
                     'amount' => new MonetaryAmount(mt_rand(1, 100)),
-                    'comment' => null,
+                    'description' => null,
                 )
             ),
             array(
                 array(
                     'paymentId' => Random::str(36),
                     'amount' => new MonetaryAmount(mt_rand(1, 100)),
-                    'comment' => '',
+                    'description' => '',
                 )
             )
         );
@@ -240,7 +240,7 @@ class CreateRefundRequestTest extends TestCase
             $request = array(
                 'paymentId' => Random::str(36),
                 'amount' => new MonetaryAmount(mt_rand(1, 100)),
-                'comment' => uniqid(),
+                'description' => uniqid(),
             );
             $result[] = array($request);
         }
@@ -265,7 +265,6 @@ class CreateRefundRequestTest extends TestCase
         return array(
             array(array()),
             array(new \stdClass()),
-            array(Random::str(270)),
         );
     }
 }
