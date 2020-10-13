@@ -13,5 +13,5 @@
     "currency": "RUB"
   },
   "receipt_registered": "succeeded",
-  "comment": "string"
+  "description": "string"
 }

@@ -53,22 +53,24 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidId($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->setId($value);
     }
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidId($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->id = $value;
     }
@@ -163,33 +165,36 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidPaymentId($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->setPaymentId($value);
     }
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidPaymentId($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->paymentId = $value;
     }
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidPayment_id($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->payment_id = $value;
     }
@@ -230,22 +235,24 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidStatus($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->setStatus($value);
     }
 
     /**
      * @dataProvider invalidIdDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidStatus($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->status = $value;
     }
@@ -307,33 +314,36 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidCreatedAtDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidCreatedAt($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->setCreatedAt($value);
     }
 
     /**
      * @dataProvider invalidCreatedAtDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidCreatedAt($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->createdAt = $value;
     }
 
     /**
      * @dataProvider invalidCreatedAtDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidCreated_at($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->created_at = $value;
     }
@@ -480,33 +490,36 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidReceiptRegisteredDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetInvalidReceiptRegistered($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->setReceiptRegistration($value);
     }
 
     /**
      * @dataProvider invalidReceiptRegisteredDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidReceiptRegistration($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->receiptRegistration = $value;
     }
 
     /**
      * @dataProvider invalidReceiptRegisteredDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param $value
      */
     public function testSetterInvalidReceipt_registration($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
         $instance->receipt_registration = $value;
     }
@@ -532,21 +545,21 @@ class RefundTest extends TestCase
      * @dataProvider validCommentDataProvider
      * @param string $value
      */
-    public function testGetSetComment($value)
+    public function testGetSetDescription($value)
     {
         $instance = new Refund();
 
-        self::assertNull($instance->getComment());
-        self::assertNull($instance->comment);
+        self::assertNull($instance->getDescription());
+        self::assertNull($instance->description);
 
-        $instance->setComment($value);
-        self::assertEquals((string)$value, $instance->getComment());
-        self::assertEquals((string)$value, $instance->comment);
+        $instance->setDescription($value);
+        self::assertEquals((string)$value, $instance->getDescription());
+        self::assertEquals((string)$value, $instance->description);
 
         $instance = new Refund();
-        $instance->comment = $value;
-        self::assertEquals((string)$value, $instance->getComment());
-        self::assertEquals((string)$value, $instance->comment);
+        $instance->description = $value;
+        self::assertEquals((string)$value, $instance->getDescription());
+        self::assertEquals((string)$value, $instance->description);
     }
 
     public function validCommentDataProvider()
@@ -561,24 +574,26 @@ class RefundTest extends TestCase
 
     /**
      * @dataProvider invalidCommentDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param mixed $value
      */
     public function testSetInvalidComment($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
-        $instance->setComment($value);
+        $instance->setDescription($value);
     }
 
     /**
      * @dataProvider invalidCommentDataProvider
-     * @expectedException \InvalidArgumentException
+     *
      * @param mixed $value
      */
     public function testSetterInvalidComment($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $instance = new Refund();
-        $instance->comment = $value;
+        $instance->description = $value;
     }
 
     public function invalidCommentDataProvider()
@@ -586,8 +601,6 @@ class RefundTest extends TestCase
         return array(
             array(null),
             array(''),
-            array(Random::str(251)),
-            array(new StringObject(Random::str(251))),
             array(array()),
             array(true),
             array(false),

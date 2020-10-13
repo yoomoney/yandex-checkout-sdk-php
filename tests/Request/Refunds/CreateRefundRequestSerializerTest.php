@@ -26,8 +26,8 @@ class CreateRefundRequestSerializerTest extends TestCase
                 'currency' => $options['currency'],
             ),
         );
-        if (!empty($options['comment'])) {
-            $expected['comment'] = $options['comment'];
+        if (!empty($options['description'])) {
+            $expected['description'] = $options['description'];
         }
 
         if (!empty($options['receiptItems'])) {
@@ -65,7 +65,7 @@ class CreateRefundRequestSerializerTest extends TestCase
                     'paymentId' => $this->randomString(36),
                     'amount' => mt_rand(1, 100000000),
                     'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
-                    'comment' => null,
+                    'description' => null,
                     'receiptItems' => array(),
                 ),
             ),
@@ -74,7 +74,7 @@ class CreateRefundRequestSerializerTest extends TestCase
                     'paymentId' => $this->randomString(36),
                     'amount' => mt_rand(1, 100000000),
                     'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
-                    'comment' => '',
+                    'description' => '',
                     'receiptItems' => array(
                         array(
                             'title' => Random::str(10),
@@ -93,7 +93,7 @@ class CreateRefundRequestSerializerTest extends TestCase
                 'paymentId' => $this->randomString(36),
                 'amount' => mt_rand(1, 100000000),
                 'currency' => $currencies[mt_rand(0, count($currencies) - 1)],
-                'comment' => uniqid(),
+                'description' => uniqid(),
                 'receiptItems' => $this->getReceipt($i + 1),
                 'receiptEmail' => Random::str(10),
                 'receiptPhone' => Random::str(12, '0123456789'),

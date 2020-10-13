@@ -107,17 +107,17 @@ class CreateRefundRequestBuilderTest extends TestCase
             'paymentId' => Random::str(36),
             'amount'    => mt_rand(1, 100),
         ));
-        self::assertNull($instance->getComment());
+        self::assertNull($instance->getDescription());
 
-        $builder->setComment($options['comment']);
+        $builder->setDescription($options['description']);
         $instance = $builder->build(array(
             'paymentId' => Random::str(36),
             'amount'    => mt_rand(1, 100),
         ));
-        if (empty($options['comment'])) {
-            self::assertNull($instance->getComment());
+        if (empty($options['description'])) {
+            self::assertNull($instance->getDescription());
         } else {
-            self::assertEquals($options['comment'], $instance->getComment());
+            self::assertEquals($options['description'], $instance->getDescription());
         }
     }
 
@@ -138,10 +138,10 @@ class CreateRefundRequestBuilderTest extends TestCase
             self::assertEquals($options['amount'], $instance->getAmount()->getValue());
         }
         self::assertEquals($options['currency'], $instance->getAmount()->getCurrency());
-        if (empty($options['comment'])) {
-            self::assertNull($instance->getComment());
+        if (empty($options['description'])) {
+            self::assertNull($instance->getDescription());
         } else {
-            self::assertEquals($options['comment'], $instance->getComment());
+            self::assertEquals($options['description'], $instance->getDescription());
         }
     }
 
@@ -499,7 +499,7 @@ class CreateRefundRequestBuilderTest extends TestCase
                     'paymentId'     => Random::str(36),
                     'amount'        => mt_rand(1, 100000000),
                     'currency'      => Random::value(CurrencyCode::getValidValues()),
-                    'comment'       => null,
+                    'description'       => null,
                     'receiptItems'  => array(),
                     'receiptEmail'  => null,
                     'receiptPhone'  => null,
@@ -514,7 +514,7 @@ class CreateRefundRequestBuilderTest extends TestCase
                         Random::value(CurrencyCode::getValidValues())
                     ),
                     'currency'      => Random::value(CurrencyCode::getValidValues()),
-                    'comment'       => '',
+                    'description'       => '',
                     'receiptItems'  => array(),
                     'receiptEmail'  => '',
                     'receiptPhone'  => '',
@@ -540,7 +540,7 @@ class CreateRefundRequestBuilderTest extends TestCase
                 'paymentId'     => Random::str(36),
                 'amount'        => mt_rand(1, 100000000),
                 'currency'      => Random::value(CurrencyCode::getValidValues()),
-                'comment'       => uniqid(),
+                'description'       => uniqid(),
                 'receiptItems'  => $items,
                 'receiptEmail'  => uniqid(),
                 'receiptPhone'  => Random::str(4, 15, '0123456789'),

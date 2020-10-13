@@ -1,3 +1,6 @@
+### v1.6.7 от 13.10.2020
+* Приведен в соответствие со спецификацией параметр Refund.description вместо Refund.comment
+
 ### v1.6.6 от 15.09.2020
 * Wechat deprecated
 
