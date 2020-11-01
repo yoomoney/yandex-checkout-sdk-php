@@ -62,6 +62,7 @@ class PaymentMethodType extends AbstractEnum
     const B2B_SBERBANK   = 'b2b_sberbank';
     const TINKOFF_BANK   = 'tinkoff_bank';
     const PSB            = 'psb';
+    const SBP            = 'sbp';
     /**
      * @deprecated Будет удален в следующих версиях
      */
@@ -83,5 +84,6 @@ class PaymentMethodType extends AbstractEnum
         self::B2B_SBERBANK   => true,
         self::PSB            => false,
         self::WECHAT         => true,
+        self::SBP            => true,
     );
 }
