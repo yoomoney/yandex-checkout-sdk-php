@@ -1,3 +1,6 @@
+### v1.6.8 от 03.11.2020
+* Добавлена поддержка параметров captured_at.* и payment_method для Client::getPayments()
+
 ### v1.6.7 от 13.10.2020
 * Приведен в соответствие со спецификацией параметр Refund.description вместо Refund.comment
 

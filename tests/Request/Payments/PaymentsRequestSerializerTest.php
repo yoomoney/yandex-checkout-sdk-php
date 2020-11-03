@@ -3,6 +3,7 @@
 namespace Tests\YandexCheckout\Request\Payments;
 
 use PHPUnit\Framework\TestCase;
+use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Request\Payments\PaymentsRequest;
 use YandexCheckout\Request\Payments\PaymentsRequestSerializer;
@@ -14,7 +15,12 @@ class PaymentsRequestSerializerTest extends TestCase
         'createdAtGt'        => 'created_at.gt',
         'createdAtLte'       => 'created_at.lte',
         'createdAtLt'        => 'created_at.lt',
+        'capturedAtGte'      => 'captured_at.gte',
+        'capturedAtGt'       => 'captured_at.gt',
+        'capturedAtLte'      => 'captured_at.lte',
+        'capturedAtLt'       => 'captured_at.lt',
         'status'             => 'status',
+        'paymentMethod'      => 'payment_method',
         'limit'              => 'limit',
         'cursor'             => 'cursor',
     );
@@ -52,21 +58,32 @@ class PaymentsRequestSerializerTest extends TestCase
                     'createdAtGt'        => '',
                     'createdAtLte'       => '',
                     'createdAtLt'        => '',
-                    'limit'              => 0,
+                    'capturedAtGte'      => '',
+                    'capturedAtGt'       => '',
+                    'capturedAtLte'      => '',
+                    'capturedAtLt'       => '',
+                    'paymentMethod'      => '',
                     'status'             => '',
+                    'limit'              => 0,
                     'cursor'             => '',
                 ),
             ),
         );
         $statuses = PaymentStatus::getValidValues();
+        $methods  = PaymentMethodType::getValidValues();
         for ($i = 0; $i < 10; $i++) {
             $request  = array(
                 'createdAtGte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtGt'        => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLt'        => date(DATE_ATOM, mt_rand(1, time())),
-                'limit'              => mt_rand(1, 100),
+                'capturedAtGte'      => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtGt'       => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtLte'      => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtLt'       => date(DATE_ATOM, mt_rand(1, time())),
+                'paymentMethod'      => $methods[mt_rand(0, count($methods) - 1)],
                 'status'             => $statuses[mt_rand(0, count($statuses) - 1)],
+                'limit'              => mt_rand(1, 100),
                 'cursor'             => $this->randomString(mt_rand(1, 30)),
             );
             $result[] = array($request);
