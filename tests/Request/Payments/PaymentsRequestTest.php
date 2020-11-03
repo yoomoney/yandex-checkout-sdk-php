@@ -45,7 +45,7 @@ class PaymentsRequestTest extends TestCase
      */
     public function testPaymentMethod($value)
     {
-        $this->getterAndSetterTest($value, 'cursor', $value);
+        $this->getterAndSetterTest($value, 'paymentMethod', $value);
     }
 
     /**

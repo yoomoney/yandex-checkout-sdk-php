@@ -3,6 +3,7 @@
 namespace Tests\YandexCheckout\Request\Payments;
 
 use PHPUnit\Framework\TestCase;
+use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Request\Payments\PaymentsRequestBuilder;
 
@@ -51,6 +52,7 @@ class PaymentsRequestBuilderTest extends TestCase
     /**
      * @dataProvider validDataProvider
      * @param $options
+     * @throws \Exception
      */
     public function testSetCreatedGt($options)
     {
@@ -71,6 +73,7 @@ class PaymentsRequestBuilderTest extends TestCase
     /**
      * @dataProvider validDataProvider
      * @param $options
+     * @throws \Exception
      */
     public function testSetCreatedLte($options)
     {
@@ -105,6 +108,109 @@ class PaymentsRequestBuilderTest extends TestCase
             self::assertNull($instance->getCreatedAtLt());
         } else {
             self::assertEquals($options['createdAtLt'], $instance->getCreatedAtLt()->format(DATE_ATOM));
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetCapturedAtGte($options)
+    {
+        $builder = new PaymentsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getCapturedAtGte());
+
+        $builder->setCapturedAtGte($options['capturedAtGte']);
+        $instance = $builder->build();
+        if (empty($options['capturedAtGte'])) {
+            self::assertNull($instance->getCapturedAtGte());
+        } else {
+            self::assertEquals($options['capturedAtGte'], $instance->getCapturedAtGte()->format(DATE_ATOM));
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     * @throws \Exception
+     */
+    public function testSetCapturedGt($options)
+    {
+        $builder = new PaymentsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getCapturedAtGt());
+
+        $builder->setCapturedAtGt($options['capturedAtGt']);
+        $instance = $builder->build();
+        if (empty($options['capturedAtGt'])) {
+            self::assertNull($instance->getCapturedAtGt());
+        } else {
+            self::assertEquals($options['capturedAtGt'], $instance->getCapturedAtGt()->format(DATE_ATOM));
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     * @throws \Exception
+     */
+    public function testSetCapturedLte($options)
+    {
+        $builder = new PaymentsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getCapturedAtLte());
+
+        $builder->setCapturedAtLte($options['capturedAtLte']);
+        $instance = $builder->build();
+        if (empty($options['capturedAtLte'])) {
+            self::assertNull($instance->getCapturedAtLte());
+        } else {
+            self::assertEquals($options['capturedAtLte'], $instance->getCapturedAtLte()->format(DATE_ATOM));
+        }
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetCapturedLt($options)
+    {
+        $builder = new PaymentsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getCapturedAtLt());
+
+        $builder->setCapturedAtLt($options['capturedAtLt']);
+        $instance = $builder->build();
+        if (empty($options['capturedAtLt'])) {
+            self::assertNull($instance->getCapturedAtLt());
+        } else {
+            self::assertEquals($options['capturedAtLt'], $instance->getCapturedAtLt()->format(DATE_ATOM));
+        }
+    }
+
+
+    /**
+     * @dataProvider validDataProvider
+     * @param $options
+     */
+    public function testSetPaymentMethod($options)
+    {
+        $builder = new PaymentsRequestBuilder();
+
+        $instance = $builder->build();
+        self::assertNull($instance->getPaymentMethod());
+
+        $builder->setPaymentMethod($options['paymentMethod']);
+        $instance = $builder->build();
+        if (empty($options['paymentMethod'])) {
+            self::assertNull($instance->getPaymentMethod());
+        } else {
+            self::assertEquals($options['paymentMethod'], $instance->getPaymentMethod());
         }
     }
 
@@ -157,7 +263,11 @@ class PaymentsRequestBuilderTest extends TestCase
                     'createdAtGt'        => null,
                     'createdAtLte'       => null,
                     'createdAtLt'        => null,
-                    'recipientGatewayId' => null,
+                    'capturedAtGte'      => null,
+                    'capturedAtGt'       => null,
+                    'capturedAtLte'      => null,
+                    'capturedAtLt'       => null,
+                    'paymentMethod'      => null,
                     'status'             => null,
                     'limit'              => null,
                     'cursor'             => null,
@@ -169,21 +279,30 @@ class PaymentsRequestBuilderTest extends TestCase
                     'createdAtGt'        => '',
                     'createdAtLte'       => '',
                     'createdAtLt'        => '',
-                    'recipientGatewayId' => '',
+                    'capturedAtGte'      => '',
+                    'capturedAtGt'       => '',
+                    'capturedAtLte'      => '',
+                    'capturedAtLt'       => '',
+                    'paymentMethod'      => '',
                     'status'             => '',
                     'limit'              => 0,
-                    'cursor'               => '',
+                    'cursor'             => '',
                 ),
             ),
         );
         $statuses = PaymentStatus::getValidValues();
+        $methods  = PaymentMethodType::getValidValues();
         for ($i = 0; $i < 10; $i++) {
             $request  = array(
                 'createdAtGte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtGt'        => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLte'       => date(DATE_ATOM, mt_rand(1, time())),
                 'createdAtLt'        => date(DATE_ATOM, mt_rand(1, time())),
-                'recipientGatewayId' => $this->randomString(mt_rand(1, 10)),
+                'capturedAtGte'      => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtGt'       => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtLte'      => date(DATE_ATOM, mt_rand(1, time())),
+                'capturedAtLt'       => date(DATE_ATOM, mt_rand(1, time())),
+                'paymentMethod'      => $methods[mt_rand(0, count($methods) - 1)],
                 'status'             => $statuses[mt_rand(0, count($statuses) - 1)],
                 'limit'              => mt_rand(1, 100),
                 'cursor'             => $this->randomString(mt_rand(1, 30)),
