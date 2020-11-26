@@ -32,7 +32,9 @@ namespace YandexCheckout\Model;
  * @package YandexCheckout\Model
  *
  * @property AmountInterface $amount
+ * @property AmountInterface $platform_fee_amount
  * @property string $accountId
+ * @property string $status
  */
 interface TransferInterface
 {
@@ -71,6 +73,26 @@ interface TransferInterface
      * @param AmountInterface|array $value Сумма оплаты
      */
     public function setAmount($value);
+
+    /**
+     * Возвращает комиссию за проданные товары и услуги, которая удерживается с магазина в вашу пользу
+     *
+     * @return AmountInterface Сумма комиссии
+     */
+    public function getPlatformFeeAmount();
+
+    /**
+     * Проверяет была ли установлена комиссия за проданные товары и услуги, которая удерживается с магазина в вашу пользу
+     *
+     * @return bool True если комиссия была установлена, false если нет
+     */
+    public function hasPlatformFeeAmount();
+
+    /**
+     * Устанавливает комиссию за проданные товары и услуги, которая удерживается с магазина в вашу пользу
+     * @param AmountInterface|array $value Сумма комиссии
+     */
+    public function setPlatformFeeAmount($value);
 
     /**
      * @return string|null статус операции распределения средств конечному получателю

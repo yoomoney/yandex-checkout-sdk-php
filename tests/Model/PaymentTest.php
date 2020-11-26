@@ -15,6 +15,7 @@ use YandexCheckout\Model\PaymentMethod\PaymentMethodQiwi;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Recipient;
+use YandexCheckout\Model\Transfer;
 
 class PaymentTest extends TestCase
 {
@@ -716,6 +717,27 @@ class PaymentTest extends TestCase
         self::assertSame($options['metadata'], $instance->metadata);
     }
 
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetSetTransfers($options)
+    {
+        $instance = new Payment();
+
+        self::assertEmpty($instance->getTransfers());
+        self::assertEmpty($instance->transfers);
+
+        $instance->setTransfers($options['transfers']);
+        self::assertSame($options['transfers'], $instance->getTransfers());
+        self::assertSame($options['transfers'], $instance->transfers);
+
+        $instance = new Payment();
+        $instance->transfers = $options['transfers'];
+        self::assertSame($options['transfers'], $instance->getTransfers());
+        self::assertSame($options['transfers'], $instance->transfers);
+    }
+
     public function validDataProvider()
     {
         $result = array();
@@ -747,6 +769,13 @@ class PaymentTest extends TestCase
                 'cancellation_details' => new CancellationDetails(
                     $cancellationDetailsParties[$i % $countCancellationDetailsParties],
                     $cancellationDetailsReasons[$i % $countCancellationDetailsReasons]
+                ),
+                'transfers' => array(
+                    new Transfer(array(
+                        'account_id' => Random::str(36),
+                        'amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'platform_fee_amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                    )),
                 )
             );
             $result[] = array($payment);

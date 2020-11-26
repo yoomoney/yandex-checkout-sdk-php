@@ -12,7 +12,6 @@ use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\Refund;
 use YandexCheckout\Model\RefundStatus;
 use YandexCheckout\Model\Source;
-use YandexCheckout\Model\Transfer;
 use YandexCheckout\Request\Refunds\CreateRefundRequest;
 
 class RefundTest extends TestCase
@@ -116,19 +115,23 @@ class RefundTest extends TestCase
      */
     public function validSources()
     {
-        $transfers = array();
+        $sources = array();
         for($i = 0; $i < 10; $i++) {
-            $transfers[$i][] = array(
+            $sources[$i][] = array(
                 'account_id' => (string)Random::int(11111111, 99999999),
                 'amount' => array(
                     'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
                     'currency' => Random::value(CurrencyCode::getValidValues())
-                )
+                ),
+                'platform_fee_amount' => array(
+                    'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
+                    'currency' => Random::value(CurrencyCode::getValidValues())
+                ),
             );
         }
-        $transfers[$i][] = array(new Transfer($transfers[0]));
+        $sources[$i][] = array(new Source($sources[0]));
 
-        return array($transfers);
+        return array($sources);
     }
 
     /**

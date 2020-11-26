@@ -6,9 +6,12 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\ConfirmationType;
 use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\PaymentMethodType;
 use YandexCheckout\Model\PaymentStatus;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
+use YandexCheckout\Model\Transfer;
+use YandexCheckout\Model\TransferStatus;
 use YandexCheckout\Request\Payments\PaymentResponse;
 
 abstract class AbstractPaymentResponseTest extends TestCase
@@ -210,6 +213,22 @@ abstract class AbstractPaymentResponseTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetTransfers($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['transfers'])) {
+            self::assertEmpty($instance->getMetadata());
+        } else {
+            foreach ($instance->getTransfers() as $transfer) {
+                self::assertInstanceOf('\YandexCheckout\Model\Transfer', $transfer);
+            }
+        }
+    }
+
     public function validDataProvider()
     {
         $result = array();
@@ -268,6 +287,14 @@ abstract class AbstractPaymentResponseTest extends TestCase
                     'rrn'       => Random::str(10),
                     'auth_code' => Random::str(10),
                 ),
+                'transfers' => array(
+                    new Transfer(array(
+                        'account_id' => Random::str(36),
+                        'amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'platform_fee_amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'status' => Random::value(TransferStatus::getValidValues()),
+                    )),
+                )
             );
             $result[] = array($payment);
         }
@@ -305,6 +332,14 @@ abstract class AbstractPaymentResponseTest extends TestCase
                 'refundable' => $trueFalse,
                 'test' => $trueFalse,
                 'metadata' => array(),
+                'transfers' => array(
+                    new Transfer(array(
+                        'account_id' => Random::str(36),
+                        'amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'platform_fee_amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'status' => Random::value(TransferStatus::getValidValues()),
+                    )),
+                )
             )
         );
 

@@ -569,6 +569,10 @@ class CreatePaymentRequestTest extends TestCase
                 'amount' => array(
                     'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
                     'currency' => Random::value(CurrencyCode::getValidValues())
+                ),
+                'platform_fee_amount' => array(
+                    'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
+                    'currency' => Random::value(CurrencyCode::getValidValues())
                 )
             );
         }

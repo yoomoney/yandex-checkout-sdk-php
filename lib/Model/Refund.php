@@ -219,7 +219,7 @@ class Refund extends AbstractObject implements RefundInterface
      * @throws EmptyPropertyValueException Выбрасывается если быо передано пустое значение
      * @throws InvalidPropertyValueException Выбрасывается если переданную строку или число не удалось интерпретировать
      * как дату и время
-     * @throws InvalidPropertyValueTypeException Выбрасывается если было передано значение невалидного типа
+     * @throws InvalidPropertyValueTypeException|\Exception Выбрасывается если было передано значение невалидного типа
      */
     public function setCreatedAt($value)
     {
@@ -345,6 +345,14 @@ class Refund extends AbstractObject implements RefundInterface
         } else {
             throw new InvalidPropertyValueTypeException('Empty refund description', 0, 'Refund.description', $value);
         }
+    }
+
+    /**
+     * @return SourceInterface[]
+     */
+    public function getSources()
+    {
+        return $this->_sources;
     }
 
     /**
