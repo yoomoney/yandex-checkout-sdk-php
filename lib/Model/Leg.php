@@ -108,6 +108,7 @@ class Leg extends AbstractObject implements LegInterface
 
     /**
      * @param \DateTime|string $value
+     * @throws \Exception
      */
     public function setDepartureDate($value)
     {

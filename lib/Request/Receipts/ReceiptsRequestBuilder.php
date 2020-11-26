@@ -126,7 +126,7 @@ class ReceiptsRequestBuilder extends AbstractRequestBuilder
      *
      * @throws InvalidPropertyValueException Генерируется если была передана дата в невалидном формате (была передана
      * строка или число, которые не удалось преобразовать в валидную дату)
-     * @throws InvalidPropertyValueTypeException Генерируется если была передана дата с не тем типом (передана не
+     * @throws InvalidPropertyValueTypeException|\Exception Генерируется если была передана дата с не тем типом (передана не
      * строка, не число и не значение типа \DateTime)
      */
     public function setCreatedAtGt($value)
@@ -142,7 +142,7 @@ class ReceiptsRequestBuilder extends AbstractRequestBuilder
      *
      * @throws InvalidPropertyValueException Генерируется если была передана дата в невалидном формате (была передана
      * строка или число, которые не удалось преобразовать в валидную дату)
-     * @throws InvalidPropertyValueTypeException Генерируется если была передана дата с не тем типом (передана не
+     * @throws InvalidPropertyValueTypeException|\Exception Генерируется если была передана дата с не тем типом (передана не
      * строка, не число и не значение типа \DateTime)
      */
     public function setCreatedAtGte($value)
@@ -158,7 +158,7 @@ class ReceiptsRequestBuilder extends AbstractRequestBuilder
      *
      * @throws InvalidPropertyValueException Генерируется если была передана дата в невалидном формате (была передана
      * строка или число, которые не удалось преобразовать в валидную дату)
-     * @throws InvalidPropertyValueTypeException Генерируется если была передана дата с не тем типом (передана не
+     * @throws InvalidPropertyValueTypeException|\Exception Генерируется если была передана дата с не тем типом (передана не
      * строка, не число и не значение типа \DateTime)
      */
     public function setCreatedAtLt($value)
@@ -174,7 +174,7 @@ class ReceiptsRequestBuilder extends AbstractRequestBuilder
      *
      * @throws InvalidPropertyValueException Генерируется если была передана дата в невалидном формате (была передана
      * строка или число, которые не удалось преобразовать в валидную дату)
-     * @throws InvalidPropertyValueTypeException Генерируется если была передана дата с не тем типом (передана не
+     * @throws InvalidPropertyValueTypeException|\Exception Генерируется если была передана дата с не тем типом (передана не
      * строка, не число и не значение типа \DateTime)
      */
     public function setCreatedAtLte($value)

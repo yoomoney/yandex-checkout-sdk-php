@@ -124,6 +124,9 @@ abstract class AbstractPaymentRequestBuilder extends AbstractRequestBuilder
             if ($item instanceof TransferInterface) {
                 $transfer->setAmount($item->getAmount());
                 $transfer->setAccountId($item->getAccountId());
+                if ($item->hasPlatformFeeAmount()) {
+                    $transfer->setPlatformFeeAmount($item->getPlatformFeeAmount());
+                }
             } elseif (is_array($item)) {
                 $transfer->fromArray($item);
             }

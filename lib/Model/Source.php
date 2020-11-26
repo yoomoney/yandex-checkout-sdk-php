@@ -48,6 +48,11 @@ class Source extends AbstractObject implements SourceInterface
     private $_amount;
 
     /**
+     * @var AmountInterface
+     */
+    private $_platform_fee_amount;
+
+    /**
      * Transfer constructor.
      * @param array $data
      */
@@ -59,6 +64,9 @@ class Source extends AbstractObject implements SourceInterface
             }
             if (!empty($data['amount'])) {
                 $this->setAmount($this->factoryAmount($data['amount']));
+            }
+            if (!empty($data['platform_fee_amount'])) {
+                $this->setPlatformFeeAmount($this->factoryAmount($data['platform_fee_amount']));
             }
         }
     }
@@ -121,6 +129,42 @@ class Source extends AbstractObject implements SourceInterface
         } else {
             throw new InvalidPropertyValueTypeException(
                 'Invalid value type for "amount" parameter in Source', 0, 'source.amount', $value
+            );
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPlatformFeeAmount()
+    {
+        return $this->_platform_fee_amount;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasPlatformFeeAmount()
+    {
+        return !empty($this->_platform_fee_amount);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPlatformFeeAmount($value)
+    {
+        if ($value === null || $value === '') {
+            throw new EmptyPropertyValueException(
+                'Empty value for "platform_fee_amount" parameter in Source', 0, 'source.platform_fee_amount'
+            );
+        } elseif (is_array($value)) {
+            $this->_platform_fee_amount = $this->factoryAmount($value);
+        } elseif ($value instanceof AmountInterface) {
+            $this->_platform_fee_amount = $value;
+        } else {
+            throw new InvalidPropertyValueTypeException(
+                'Invalid value type for "platform_fee_amount" parameter in Source', 0, 'source.platform_fee_amount', $value
             );
         }
     }

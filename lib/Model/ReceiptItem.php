@@ -487,6 +487,8 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
                 'Invalid isShipping value in ReceiptItem', 0, 'ReceiptItem.isShipping', $value
             );
         }
+
+        return $this;
     }
 
     /**
@@ -590,6 +592,8 @@ class ReceiptItem extends AbstractObject implements ReceiptItemInterface
      * Уменьшает количество покупаемого товара на указанное, возвращает объект позиции в чеке с уменьшаемым количеством
      *
      * @param float $count Количество на которое уменьшаем позицию в чеке
+     *
+     * @return ReceiptItem
      *
      * @throws EmptyPropertyValueException Выбрасывается если было передано пустое значение
      * @throws InvalidPropertyValueException Выбрасывается если в качестве аргумента был передан ноль

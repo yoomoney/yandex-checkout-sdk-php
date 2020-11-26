@@ -1,3 +1,6 @@
+### v1.6.9 от 26.11.2020
+* Добавлена поддержка параметра platform_fee_amount для Transfer и Source
+
 ### v1.6.8 от 03.11.2020
 * Добавлена поддержка параметров captured_at.* и payment_method для Client::getPayments()
 

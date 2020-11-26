@@ -98,4 +98,10 @@ interface RefundInterface
      * @return RequestorInterface
      */
     function getRequestor();
+
+    /**
+     * Возвращает информацию о распределении денег — сколько и в какой магазин нужно перевести
+     * @return SourceInterface[]
+     */
+    function getSources();
 }

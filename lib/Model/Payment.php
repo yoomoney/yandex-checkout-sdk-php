@@ -345,7 +345,7 @@ class Payment extends AbstractObject implements PaymentInterface
      *
      * @throws EmptyPropertyValueException Выбрасывается если в метод была передана пустая дата
      * @throws InvalidPropertyValueException Выбрасвается если передали строку, которую не удалось привести к дате
-     * @throws InvalidPropertyValueTypeException Выбрасывается если был передан аргумент, который невозможно
+     * @throws InvalidPropertyValueTypeException|\Exception Выбрасывается если был передан аргумент, который невозможно
      * интерпретировать как дату или время
      */
     public function setCreatedAt($value)
@@ -377,7 +377,7 @@ class Payment extends AbstractObject implements PaymentInterface
      * @param \DateTime|string|int|null $value Время подтверждения платежа магазином
      *
      * @throws InvalidPropertyValueException Выбрасвается если передали строку, которую не удалось привести к дате
-     * @throws InvalidPropertyValueTypeException Выбрасывается если был передан аргумент, который невозможно
+     * @throws InvalidPropertyValueTypeException|\Exception Выбрасывается если был передан аргумент, который невозможно
      * интерпретировать как дату или время
      */
     public function setCapturedAt($value)
@@ -558,7 +558,7 @@ class Payment extends AbstractObject implements PaymentInterface
      * @param \DateTime|string|int|null $value Время, до которого можно бесплатно отменить или подтвердить платеж
      *
      * @throws InvalidPropertyValueException Выбрасывается если передали строку, которую не удалось привести к дате
-     * @throws InvalidPropertyValueTypeException Выбрасывается если был передан аргумент, который невозможно
+     * @throws InvalidPropertyValueTypeException|\Exception Выбрасывается если был передан аргумент, который невозможно
      * интерпретировать как дату или время
      *
      * @since 1.0.2

@@ -6,8 +6,10 @@ use PHPUnit\Framework\TestCase;
 use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
+use YandexCheckout\Model\MonetaryAmount;
 use YandexCheckout\Model\ReceiptRegistrationStatus;
 use YandexCheckout\Model\RefundStatus;
+use YandexCheckout\Model\Source;
 use YandexCheckout\Request\Refunds\AbstractRefundResponse;
 
 abstract class AbstractRefundResponseTest extends TestCase
@@ -99,6 +101,22 @@ abstract class AbstractRefundResponseTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider validDataProvider
+     * @param array $options
+     */
+    public function testGetSources($options)
+    {
+        $instance = $this->getTestInstance($options);
+        if (empty($options['sources'])) {
+            self::assertEmpty($instance->getSources());
+        } else {
+            foreach ($instance->getSources() as $sources) {
+                self::assertInstanceOf('\YandexCheckout\Model\Source', $sources);
+            }
+        }
+    }
+
     public function validDataProvider()
     {
         $result = array();
@@ -115,6 +133,13 @@ abstract class AbstractRefundResponseTest extends TestCase
                 ),
                 'receipt_registration' => Random::value(ReceiptRegistrationStatus::getValidValues()),
                 'description' => uniqid(),
+                'sources' => array(
+                    new Source(array(
+                        'account_id' => Random::str(36),
+                        'amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                        'platform_fee_amount' => new MonetaryAmount(Random::int(1, 1000), 'RUB'),
+                    )),
+                )
             );
             $result[] = array($payment);
         }

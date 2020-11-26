@@ -40,7 +40,7 @@ abstract class AbstractRefundResponse extends Refund
      * Конструктор
      * @param array $options Ассоциативный массив с информацией, вернувшейся от API
      */
-    public function __construct(array $options)
+    public function __construct($options)
     {
         $this->setId(empty($options['id']) ? null : $options['id']);
         $this->setPaymentId(empty($options['payment_id']) ? null : $options['payment_id']);
@@ -50,6 +50,10 @@ abstract class AbstractRefundResponse extends Refund
 
         if (!empty($options['requestor'])) {
             $this->setRequestor($options['requestor']);
+        }
+
+        if (!empty($options['sources'])) {
+            $this->setSources($options['sources']);
         }
 
         if (!empty($options['receipt_registration'])) {

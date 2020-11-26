@@ -172,18 +172,7 @@ abstract class AbstractPaymentResponse extends Payment implements PaymentInterfa
         if (!empty($paymentInfo['transfers'])) {
             $transfers = array();
             foreach ($paymentInfo['transfers'] as $transferDefinition) {
-                $amount = new MonetaryAmount();
-                $amount->setValue($transferDefinition['amount']['value']);
-                if (!empty($transferDefinition['amount']['currency'])) {
-                    $amount->setCurrency($transferDefinition['amount']['currency']);
-                }
-
-                $transfer = new Transfer();
-                $transfer->setAccountId($transferDefinition['account_id']);
-                $transfer->setAmount($amount);
-                $transfer->setStatus($transferDefinition['status']);
-
-                $transfers[] = $transfer;
+                $transfers[] = new Transfer($transferDefinition);
             }
 
             $this->setTransfers($transfers);

@@ -7,17 +7,16 @@ use YandexCheckout\Helpers\Random;
 use YandexCheckout\Model\AmountInterface;
 use YandexCheckout\Model\CurrencyCode;
 use YandexCheckout\Model\MonetaryAmount;
-use YandexCheckout\Model\Transfer;
-use YandexCheckout\Model\TransferStatus;
+use YandexCheckout\Model\Source;
 
-class TransferTest extends TestCase
+class SourceTest extends TestCase
 {
     /**
-     * @return Transfer
+     * @return Source
      */
     protected function getTestInstance()
     {
-        return new Transfer();
+        return new Source();
     }
 
     /**
@@ -32,11 +31,9 @@ class TransferTest extends TestCase
         self::assertNull($instance->getAmount());
         self::assertNull($instance->getPlatformFeeAmount());
         self::assertNull($instance->getAccountId());
-        self::assertNull($instance->getStatus());
         self::assertNull($instance->amount);
         self::assertNull($instance->platform_fee_amount);
         self::assertNull($instance->accountId);
-        self::assertNull($instance->status);
 
         $instance->fromArray($value);
 
@@ -46,8 +43,6 @@ class TransferTest extends TestCase
         self::assertSame($value['amount'], $instance->amount->jsonSerialize());
         self::assertSame($value['platform_fee_amount'], $instance->getPlatformFeeAmount()->jsonSerialize());
         self::assertSame($value['platform_fee_amount'], $instance->platform_fee_amount->jsonSerialize());
-        self::assertSame($value['status'], $instance->getStatus());
-        self::assertSame($value['status'], $instance->status);
 
         self::assertSame($value, $instance->jsonSerialize());
     }
@@ -98,8 +93,7 @@ class TransferTest extends TestCase
                 'platform_fee_amount' => array(
                     'value' => sprintf('%.2f', round(Random::float(0.1, 99.99), 2)),
                     'currency' => Random::value(CurrencyCode::getValidValues())
-                ),
-                'status' => Random::value(TransferStatus::getValidValues())
+                )
             );
         }
         return array($result);
@@ -279,84 +273,6 @@ class TransferTest extends TestCase
             array(1),
             array(true),
             array(false),
-            array(new \stdClass()),
-        );
-    }
-
-    /**
-     * @dataProvider validStatusProvider
-     *
-     * @param $value
-     */
-    public function testSetStatus($value)
-    {
-        $instance = $this->getTestInstance();
-        self::assertNull($instance->getStatus());
-        $instance->setStatus($value);
-        self::assertEquals($value, $instance->getStatus());
-    }
-
-    /**
-     * @dataProvider validStatusProvider
-     *
-     * @param $value
-     */
-    public function testSetterStatus($value)
-    {
-        $instance = $this->getTestInstance();
-        self::assertNull($instance->status);
-        $instance->status = $value;
-        self::assertEquals($value, $instance->status);
-        self::assertEquals($value, $instance->getStatus());
-    }
-
-    /**
-     * @return array[]
-     */
-    public function validStatusProvider()
-    {
-        return array(
-            array(TransferStatus::SUCCEEDED),
-            array(TransferStatus::CANCELED),
-            array(TransferStatus::WAITING_FOR_CAPTURE),
-            array(TransferStatus::PENDING),
-        );
-    }
-
-    /**
-     * @dataProvider invalidStatusProvider
-     *
-     * @expectedException \InvalidArgumentException
-     *
-     * @param mixed $value
-     */
-    public function testGetSetInvalidStatus($value)
-    {
-        $this->getTestInstance()->setStatus($value);
-    }
-
-    /**
-     * @dataProvider invalidStatusProvider
-     *
-     * @expectedException \InvalidArgumentException
-     *
-     * @param $value
-     */
-    public function testSetterInvalidStatus($value)
-    {
-        $this->getTestInstance()->status = $value;
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function invalidStatusProvider()
-    {
-        return array(
-            array(null),
-            array(''),
-            array(Random::str(15, 100)),
             array(new \stdClass()),
         );
     }
