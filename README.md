@@ -1,8 +1,8 @@
 # YooKassa API PHP Client Library
 
-Russian | [English](https://github.com/yoomoney/yandex-checkout-sdk-php/blob/master/README.en.md)
+Russian | [English](https://github.com/yoomoney/yandex-checkout-sdk-php/blob/master/README.en.md).
 
-Клиент для работы с платежами по [API Яндекс.Кассы](https://yookassa.ru/developers/api)
+Клиент для работы с платежами по [API ЮKassa](https://yookassa.ru/developers/api).
 
 Подходит тем, у кого способ подключения к ЮKassa называется API.
 
