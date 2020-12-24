@@ -73,6 +73,7 @@ class CreatePaymentRequestSerializer
         PaymentMethodType::B2B_SBERBANK   => 'serializePaymentDataB2BSberbank',
         PaymentMethodType::TINKOFF_BANK   => 'serializePaymentData',
         PaymentMethodType::WECHAT         => 'serializePaymentData',
+        PaymentMethodType::SBP            => 'serializePaymentData',
     );
 
     public function serialize(CreatePaymentRequestInterface $request)

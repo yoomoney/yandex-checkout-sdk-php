@@ -46,6 +46,7 @@ class PaymentMethodFactory
         PaymentMethodType::TINKOFF_BANK   => 'PaymentMethodTinkoffBank',
         PaymentMethodType::PSB            => 'PaymentMethodPsb',
         PaymentMethodType::WECHAT         => 'PaymentMethodWechat',
+        PaymentMethodType::SBP            => 'PaymentMethodSbp',
     );
 
     private $optionsMap = array(
